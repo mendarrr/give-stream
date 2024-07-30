@@ -36,7 +36,7 @@ class CharityApplication(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     description = db.Column(db.Text, nullable=False)
     status = db.Column(db.String(20), default='pending') 
-    submission_date = db.Column(db.DateTime, default=datetime.utcnow)
+    submission_date = db.Column(db.DateTime, default=datetime.now)
     reviewed_by = db.Column(db.Integer, db.ForeignKey('admins.id'))
     review_date = db.Column(db.DateTime)
 
@@ -48,7 +48,7 @@ class Donation(db.Model):
     donor_id = db.Column(db.Integer, db.ForeignKey('donors.id'), nullable=False)
     charity_id = db.Column(db.Integer, db.ForeignKey('charities.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False)
-    date = db.Column(db.DateTime, default=datetime.utcnow)
+    date = db.Column(db.DateTime, default=datetime.now)
     is_anonymous = db.Column(db.Boolean, default=False)
     is_recurring = db.Column(db.Boolean, default=False)
     recurring_frequency = db.Column(db.String(20)) 
@@ -60,7 +60,7 @@ class Story(db.Model):
     charity_id = db.Column(db.Integer, db.ForeignKey('charities.id'), nullable=False)
     title = db.Column(db.String(128), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    date_posted = db.Column(db.DateTime, default=datetime.utcnow)
+    date_posted = db.Column(db.DateTime, default=datetime.now)
 
 class Beneficiary(db.Model):
     __tablename__ = 'beneficiaries'
@@ -75,4 +75,4 @@ class Inventory(db.Model):
     charity_id = db.Column(db.Integer, db.ForeignKey('charities.id'), nullable=False)
     item_name = db.Column(db.String(128), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
-    date_updated = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    date_updated = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
