@@ -51,8 +51,20 @@ class Donation(db.Model):
     date = db.Column(db.DateTime, default=datetime.now)
     is_anonymous = db.Column(db.Boolean, default=False)
     is_recurring = db.Column(db.Boolean, default=False)
-    recurring_frequency = db.Column(db.String(20)) 
-    next_donation_date = db.Column(db.DateTime)
+    recurring_frequency = db.Column(db.String(20))
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'donor_id': self.donor_id,
+            'charity_id': self.charity_id,
+            'amount': self.amount,
+            'date': self.date.isoformat(),
+            'is_anonymous': self.is_anonymous,
+            'is_recurring': self.is_recurring,
+            'recurring_frequency': self.recurring_frequency
+        }
+
 
 class Story(db.Model):
     __tablename__ = 'stories'
