@@ -193,11 +193,94 @@ class Donations(Resource):
             return donation.to_dict()
         else:
             return {'message': 'Donation not found'}, 404
+        
+        
+class StoryResource(Resource):
+    def get(self, id=None):
+        try:
+            if id is None:
+                stories = Story.query.all()
+                return make_response(jsonify([story.to_dict() for story in stories]), 200)
+            else:
+                story = Story.query.get(id)
+                if story:
+                    return make_response(story.to_dict(), 200)
+                return make_response(jsonify({"error": "Story not found"}), 404)
+        except Exception as e:
+            print(f"Error during GET: {e}")
+            return make_response(jsonify({"error": "An error occurred during GET"}), 500)
+
+    def post(self):
+        try:
+            data = request.get_json()
+            # Parse the date_posted string to a datetime object
+            date_posted_str = data.get('date_posted')
+            if date_posted_str:
+                date_posted = datetime.strptime(date_posted_str, "%a, %d %b %Y %H:%M:%S GMT")
+            else:
+                date_posted = datetime.utcnow()  # default to current time if not provided
+
+            new_story = Story(
+                title=data['title'],
+                content=data['content'],
+                charity_id=data['charity_id'],
+                date_posted=date_posted
+            )
+            db.session.add(new_story)
+            db.session.commit()
+            return make_response(new_story.to_dict(), 201)
+        except Exception as e:
+            print(f"Error during POST: {e}")
+            return make_response(jsonify({"error": "An error occurred during POST"}), 500)
+
+    def put(self, id):
+        try:
+            data = request.get_json()
+            story = Story.query.get(id)
+            if story:
+                story.title = data['title']
+                story.content = data['content']
+                db.session.commit()
+                return make_response(story.to_dict(), 200)
+            return make_response(jsonify({"error": "Story not found"}), 404)
+        except Exception as e:
+            print(f"Error during PUT: {e}")
+            return make_response(jsonify({"error": "An error occurred during PUT"}), 500)
+
+    def patch(self, id):
+        try:
+            data = request.get_json()
+            story = Story.query.get(id)
+            if story:
+                if 'title' in data:
+                    story.title = data['title']
+                if 'content' in data:
+                    story.content = data['content']
+                db.session.commit()
+                return make_response(story.to_dict(), 200)
+            return make_response(jsonify({"error": "Story not found"}), 404)
+        except Exception as e:
+            print(f"Error during PATCH: {e}")
+            return make_response(jsonify({"error": "An error occurred during PATCH"}), 500)
+
+    def delete(self, id):
+        try:
+            story = Story.query.get(id)
+            if story:
+                db.session.delete(story)
+                db.session.commit()
+                return make_response('', 204)
+            return make_response(jsonify({"error": "Story not found"}), 404)
+        except Exception as e:
+            print(f"Error during DELETE: {e}")
+            return make_response(jsonify({"error": "An error occurred during DELETE"}), 500)
+
+
     
 # Routes
 api.add_resource(Login, '/login');    
 api.add_resource(Donations, '/donations','/donations/<int:id>', '/donations/donor/<int:donor_id>', '/donations/charity/<int:charity_id>')
-        
+api.add_resource(StoryResource, '/stories', '/stories/<int:id>')     
 
 if __name__ == '__main__':
     app.run(debug=True)
