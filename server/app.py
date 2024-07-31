@@ -193,10 +193,22 @@ class Donations(Resource):
             return donation.to_dict()
         else:
             return {'message': 'Donation not found'}, 404
-    
+        
+class Beneficiaries(Resource):
+    # Retrieve all beneficiaries
+    def get(self, beneficiary_id=None):
+        if beneficiary_id:
+            beneficiary = Beneficiary.query.get_or_404(beneficiary_id)
+            return beneficiary.to_dict()
+        else:
+            beneficiaries = Beneficiary.query.all()
+            return [beneficiary.to_dict() for beneficiary in beneficiaries]
+
+
 # Routes
 api.add_resource(Login, '/login');    
 api.add_resource(Donations, '/donations','/donations/<int:id>', '/donations/donor/<int:donor_id>', '/donations/charity/<int:charity_id>')
+api.add_resource(Beneficiaries, '/beneficiaries', '/beneficiaries/<int:beneficiary_id>')
         
 
 if __name__ == '__main__':

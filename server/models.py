@@ -53,7 +53,7 @@ class Donor(db.Model):
         return f"<Donor {self.id}: {self.username}>"
 
 
-class Charity(db.Model):
+class Charity(db.Model, SerializerMixin):
     __tablename__ = 'charities'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
@@ -64,7 +64,7 @@ class Charity(db.Model):
     needed_donation = db.Column(db.Float)
     donations = db.relationship('Donation', backref='charity', lazy='dynamic')
     stories = db.relationship('Story', backref='charity', lazy='dynamic')
-    beneficiaries = db.relationship('Beneficiary', backref='charity', lazy='dynamic')
+    beneficiaries = db.relationship('Beneficiary', back_populates='charity', cascade='all, delete-orphan')
     inventories = db.relationship('Inventory', backref='charity', lazy='dynamic')
 
     @hybrid_property
@@ -162,12 +162,17 @@ class Story(db.Model):
     content = db.Column(db.Text, nullable=False)
     date_posted = db.Column(db.DateTime, default=datetime.utcnow)
 
-class Beneficiary(db.Model):
+class Beneficiary(db.Model, SerializerMixin):
     __tablename__ = 'beneficiaries'
+    serialize_rules = ('-charity',)
+    serialize_only = ('id', 'charity_id', 'name', 'description')
+
     id = db.Column(db.Integer, primary_key=True)
     charity_id = db.Column(db.Integer, db.ForeignKey('charities.id'), nullable=False)
     name = db.Column(db.String(128), nullable=False)
     description = db.Column(db.Text)
+    
+    charity = db.relationship('Charity', back_populates='beneficiaries')
 
 class Inventory(db.Model):
     __tablename__ = 'inventory'
