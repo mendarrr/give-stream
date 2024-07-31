@@ -53,7 +53,7 @@ class Donation(db.Model):
     is_recurring = db.Column(db.Boolean, default=False)
     recurring_frequency = db.Column(db.String(20))
 
-    def serialize(self):
+    def serialize_donation(self):
         return {
             'id': self.id,
             'donor_id': self.donor_id,
@@ -64,7 +64,6 @@ class Donation(db.Model):
             'is_recurring': self.is_recurring,
             'recurring_frequency': self.recurring_frequency
         }
-
 
 class Story(db.Model):
     __tablename__ = 'stories'

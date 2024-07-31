@@ -22,7 +22,6 @@ class Index(Resource):
 api.add_resource(Index, '/')
 
 class DonationResource(Resource):
-    # Method used to get all donation records from the databasedef get(self, donor_id=None, charity_id=None)
     def get(self, donor_id=None, charity_id=None):
         if donor_id is not None:
             return self.get_donation_by_donor_id(donor_id)
@@ -30,14 +29,13 @@ class DonationResource(Resource):
             return self.get_donation_by_charity_id(charity_id)
         else:
             all_donations = Donation.query.all()
-            donations_json = [donation.serialize() for donation in all_donations]
+            donations_json = [donation.serialize_donation() for donation in all_donations]
             return jsonify(donations_json)
 
-    # Method to retrieve sum of all donations of a particular donor   
     def get_donation_by_donor_id(self, donor_id):
         donor_donations = Donation.query.filter_by(donor_id=donor_id).all()
         if donor_donations:
-            donations_json = [donation.serialize() for donation in donor_donations]
+            donations_json = [donation.serialize_donation() for donation in donor_donations]
             total_amount = sum(donation.amount for donation in donor_donations)
             return jsonify({
                 'donations': donations_json,
@@ -46,11 +44,10 @@ class DonationResource(Resource):
         else:
             return jsonify({'message': 'No donations found for this donor'}), 404
         
-    # Method to retrieve sum of all donations of a particular charity id
     def get_donation_by_charity_id(self, charity_id):
         charity_donations = Donation.query.filter_by(charity_id=charity_id).all()
         if charity_donations:
-            donations_json = [donation.serialize() for donation in charity_donations]
+            donations_json = [donation.serialize_donation() for donation in charity_donations]
             total_amount = sum(donation.amount for donation in charity_donations)
             return jsonify({
                 'donations': donations_json,
@@ -59,7 +56,28 @@ class DonationResource(Resource):
         else:
             return jsonify({'message': 'No donations found for this charity'}), 404
     
-    # Method used to add a new donation record to the database
+    def get_anonymous_donations_for_charity_id(self, charity_id):
+        anonymous_donations = Donation.query.filter(
+            (Donation.charity_id == charity_id) & (Donation.is_anonymous == True)
+        ).all()
+        donations_json = [donation.serialize_donation() for donation in anonymous_donations]
+        total_sum = sum(donation.amount for donation in anonymous_donations)
+        return jsonify({
+            'donations': donations_json,
+            'total_sum': total_sum
+        })
+
+    def get_non_anonymous_donations_by_charity(self, charity_id):
+        non_anonymous_donations = Donation.query.filter(
+            (Donation.charity_id == charity_id) & (Donation.is_anonymous == False)
+        ).all()
+        donations_json = [donation.serialize_donation() for donation in non_anonymous_donations]
+        total_amount = sum(donation.amount for donation in non_anonymous_donations)
+        return jsonify({
+            'donations': donations_json,
+            'total_amount': total_amount
+        })
+
     def post(self):
         data = request.get_json()
         date = datetime.strptime(data['date'], '%Y-%m-%d')
@@ -74,9 +92,8 @@ class DonationResource(Resource):
         )
         db.session.add(new_donation)
         db.session.commit()
-        return jsonify(new_donation.serialize())
+        return jsonify(new_donation.serialize_donation())
     
-    # Method to update existing donation records by id
     def put(self, id):
         data = request.get_json()
         donation = Donation.query.get(id)
@@ -89,11 +106,11 @@ class DonationResource(Resource):
             donation.is_recurring = data['is_recurring']
             donation.recurring_frequency = data['recurring_frequency']
             db.session.commit()
-            return jsonify(donation.serialize())
+            return jsonify(donation.serialize_donation())
         else:
             return jsonify({'message': 'Donation not found'}), 404
 
-api.add_resource(DonationResource, '/donations','/donations/<int:id>', '/donations/donor/<int:donor_id>', '/donations/charity/<int:charity_id>')
+api.add_resource(DonationResource, '/donations','/donations/<int:id>', '/donations/donor/<int:donor_id>', '/donations/charity/<int:charity_id>','/donations/charity/<int:charity_id>/anonymous','/donations/charity/<int:charity_id>/non-anonymous')
 
 if __name__ == '__main__':
     app.run(debug=True)
