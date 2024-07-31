@@ -7,7 +7,7 @@ import bcrypt
 from datetime import datetime, timedelta
 
 from config import app,db,api
-from models import db, Admin, Donor, Donation,Charity,CharityApplication,Beneficiary,Inventory,Story
+from models import db, Admin, Donor,Charity
 
 
 # Views go here!
@@ -78,15 +78,15 @@ from datetime import timedelta
 class Login(Resource):
     def post(self):
         data = request.get_json()
-        email = data.get('email')
+        username = data.get('username')
         password = data.get('password')
 
-        if not email or not password:
+        if not username or not password:
             return {'message': 'Username and password are required'}, 400
 
-        donor = Donor.query.filter_by(email=email).first()
-        charity = Charity.query.filter_by(email=email).first()
-        admin = Admin.query.filter_by(email=email).first()
+        donor = Donor.query.filter_by(username=username).first()
+        charity = Charity.query.filter_by(username=username).first()
+        admin = Admin.query.filter_by(username=username).first()
 
         if donor:
             if donor.authenticate(password):
@@ -101,13 +101,13 @@ class Login(Resource):
         elif charity:
             if charity.authenticate(password):
                 access_token = create_access_token(
-                    identity={'id': charity.id, 'role': 'donor'},
+                    identity={'id': charity.id, 'role': 'charity'},
                     expires_delta=timedelta(days=4)
                 )
                 session['id'] = charity.id
                 return {'access_token': access_token}, 200
             else:
-                return {'message': 'Invalid password for donor'}, 401    
+                return {'message': 'Invalid password for charity'}, 401    
         elif admin:
             if admin._password_hash is None:
                 return {'message': 'Admin password not set'}, 500
@@ -121,6 +121,10 @@ class Login(Resource):
                 return {'message': 'Invalid password for admin'}, 401
         else:
             return {'message': 'User not found'}, 404
+        
+
+# Routes
+api.add_resource(Login, '/login');        
         
 
    
