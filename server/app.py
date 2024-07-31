@@ -158,7 +158,23 @@ class Donations(Resource):
             'donations': donations_json,
             'total_sum': total_sum
         }
-
+    
+    # Create a new donation
+    def post(self):
+        data = request.get_json()
+        date = datetime.strptime(data['date'], '%Y-%m-%d')
+        new_donation = Donation(
+            donor_id=data['donor_id'],
+            charity_id=data['charity_id'],
+            amount=data['amount'],
+            date=date,
+            is_anonymous=data['is_anonymous'],
+            is_recurring=data['is_recurring'],
+            recurring_frequency=data['recurring_frequency']
+        )
+        db.session.add(new_donation)
+        db.session.commit()
+        return new_donation.to_dict()
 
 # Routes
 api.add_resource(Login, '/login');    
