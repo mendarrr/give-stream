@@ -139,13 +139,15 @@ class CharityApplication(db.Model):
 
     admin = db.relationship('Admin', backref='reviewed_applications')
 
-class Donation(db.Model):
+class Donation(db.Model, SerializerMixin):
     __tablename__ = 'donations'
+    serialize_rules = ('-donor', '-charity')
+
     id = db.Column(db.Integer, primary_key=True)
     donor_id = db.Column(db.Integer, db.ForeignKey('donors.id'), nullable=False)
     charity_id = db.Column(db.Integer, db.ForeignKey('charities.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False)
-    date = db.Column(db.DateTime, default=datetime.utcnow)
+    date = db.Column(db.DateTime, default=datetime.now)
     is_anonymous = db.Column(db.Boolean, default=False)
     is_recurring = db.Column(db.Boolean, default=False)
     recurring_frequency = db.Column(db.String(20)) 
