@@ -196,7 +196,7 @@ class Donations(Resource):
     
 # Routes
 api.add_resource(Login, '/login');    
-api.add_resource(Donations, '/donations','/donations/donor/<int:donor_id>', '/donations/charity/<int:charity_id>')
+api.add_resource(Donations, '/donations','/donations/<int:id>', '/donations/donor/<int:donor_id>', '/donations/charity/<int:charity_id>')
         
 
 if __name__ == '__main__':
