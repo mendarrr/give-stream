@@ -148,16 +148,17 @@ class Donations(Resource):
             return {'message': 'No donations found for this donor'}, 404
         
     # Retrieve donations by charity id and the sum
-    def get_anonymous_donations_for_charity_id(self, charity_id):
-        anonymous_donations = Donation.query.filter(
-            (Donation.charity_id == charity_id) & (Donation.is_anonymous == True)
-        ).all()
-        donations_json = [donation.to_dict() for donation in anonymous_donations]
-        total_sum = sum(donation.amount for donation in anonymous_donations)
-        return {
-            'donations': donations_json,
-            'total_sum': total_sum
-        }
+    def get_donation_by_charity_id(self, charity_id):
+        charity_donations = Donation.query.filter_by(charity_id=charity_id).all()
+        if charity_donations:
+            donations_json = [donation.to_dict() for donation in charity_donations]
+            total_amount = sum(donation.amount for donation in charity_donations)
+            return {
+                'donations': donations_json,
+                'total_amount': total_amount
+            }
+        else:
+            return {'message': 'No donations found for this charity'}, 404
     
     # Create a new donation
     def post(self):
