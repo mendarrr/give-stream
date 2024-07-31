@@ -182,6 +182,25 @@ class CharityApplications(Resource):
 
         db.session.commit()
         return application.to_dict(), 200
+    
+
+ 
+class AdminDashboard(Resource):
+    @admin_required()
+    def get(self):
+        total_donations = db.session.query(db.func.sum(Donation.amount)).scalar() or 0
+        charity_count = Charity.query.count()
+        donor_count = Donor.query.count()
+        recent_donations = Donation.query.order_by(Donation.date.desc()).limit(10).all()
+        pending_applications = CharityApplication.query.filter_by(status='pending').count()
+
+        return {
+            'total_donations': total_donations,
+            'charity_count': charity_count,
+            'donor_count': donor_count,
+            'recent_donations': [donation.to_dict() for donation in recent_donations],
+            'pending_applications': pending_applications
+        }   
 
 
 class Donations(Resource):
@@ -261,6 +280,8 @@ api.add_resource(Login, '/login');
 api.add_resource(Donations, '/donations','/donations/<int:id>', '/donations/donor/<int:donor_id>', '/donations/charity/<int:charity_id>')
 api.add_resource(Charities, '/charities')  
 api.add_resource(CharityApplications, '/charity-applications', '/charity-applications/<int:id>')   
+api.add_resource(AdminDashboard, '/admin-dashboard')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
