@@ -1,14 +1,57 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy_serializer import SerializerMixin
+from sqlalchemy.orm import validates
+from config import db, bcrypt
 from datetime import datetime
+import re
 
-db = SQLAlchemy()
+
+#db = SQLAlchemy()
 
 class Donor(db.Model):
     __tablename__ = 'donors'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
+    _password_hash = db.Column(db.String)
     donations = db.relationship('Donation', backref='donor', lazy='dynamic')
+
+    @hybrid_property
+    def password_hash(self):
+        raise AttributeError('Password hashes may not be viewed.')
+
+    @password_hash.setter
+    def password_hash(self, password):
+        password_hash = bcrypt.generate_password_hash(
+            password.encode('utf-8'))
+        self._password_hash = password_hash.decode('utf-8')
+
+    def authenticate(self, password):
+    # Ensure _password_hash is a bytes object (if retrieved from database)
+        if isinstance(self._password_hash, str):
+            self._password_hash = self._password_hash.encode('utf-8')
+        return bcrypt.check_password_hash(self._password_hash, password.encode('utf-8'))
+
+    @validates('username')
+    def validate_name(self, key, value):
+        if not value or not value.strip():
+            raise ValueError(f"{key} cannot be empty")
+        return value.strip()
+
+    @validates('email')
+    def validate_email(self, key, value):
+        if value:
+            pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+            if not re.match(pattern, value):
+                raise ValueError("Invalid email format")
+        return value
+
+
+    def __repr__(self):
+        return f"<Donor {self.id}: {self.username}>"
+
 
 class Charity(db.Model):
     __tablename__ = 'charities'
@@ -16,6 +59,7 @@ class Charity(db.Model):
     username = db.Column(db.String(64), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     name = db.Column(db.String(128), unique=True, nullable=False)
+    _password_hash = db.Column(db.String)
     description = db.Column(db.Text)
     needed_donation = db.Column(db.Float)
     donations = db.relationship('Donation', backref='charity', lazy='dynamic')
@@ -23,11 +67,64 @@ class Charity(db.Model):
     beneficiaries = db.relationship('Beneficiary', backref='charity', lazy='dynamic')
     inventories = db.relationship('Inventory', backref='charity', lazy='dynamic')
 
+    @hybrid_property
+    def password_hash(self):
+        raise AttributeError('Password hashes may not be viewed.')
+
+    @password_hash.setter
+    def password_hash(self, password):
+        password_hash = bcrypt.generate_password_hash(
+            password.encode('utf-8'))
+        self._password_hash = password_hash.decode('utf-8')
+
+    def authenticate(self, password):
+    # Ensure _password_hash is a bytes object (if retrieved from database)
+        if isinstance(self._password_hash, str):
+            self._password_hash = self._password_hash.encode('utf-8')
+        return bcrypt.check_password_hash(self._password_hash, password.encode('utf-8'))
+
+    @validates('username')
+    def validate_name(self, key, value):
+        if not value or not value.strip():
+            raise ValueError(f"{key} cannot be empty")
+        return value.strip()
+
+    @validates('email')
+    def validate_email(self, key, value):
+        if value:
+            pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+            if not re.match(pattern, value):
+                raise ValueError("Invalid email format")
+        return value
+
+
+    def __repr__(self):
+        return f"<Charity {self.id}: {self.username}>"
+
 class Admin(db.Model):
     __tablename__ = 'admins'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), unique=True, nullable=False)
+    username = db.Column(db.String(64), unique=True, nullable=False, default='admingivestream')
     email = db.Column(db.String(120), unique=True, nullable=False)
+    _password_hash = db.Column(db.String, default='admingivestream')
+
+    @hybrid_property
+    def password_hash(self):
+        raise AttributeError('Password hashes may not be viewed.')
+
+    @password_hash.setter
+    def password_hash(self, password):
+        password_hash = bcrypt.generate_password_hash(
+            password.encode('utf-8'))
+        self._password_hash = password_hash.decode('utf-8')
+
+    def authenticate(self, password):
+        if self._password_hash is None:
+            return False
+        return bcrypt.check_password_hash(self._password_hash, password.encode('utf-8'))
+
+    def __repr__(self):
+        return f"<Admin {self.id}: {self.username}>"
 
 class CharityApplication(db.Model):
     __tablename__ = 'charity_applications'
@@ -36,7 +133,7 @@ class CharityApplication(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     description = db.Column(db.Text, nullable=False)
     status = db.Column(db.String(20), default='pending') 
-    submission_date = db.Column(db.DateTime, default=datetime.now)
+    submission_date = db.Column(db.DateTime, default=datetime.utcnow)
     reviewed_by = db.Column(db.Integer, db.ForeignKey('admins.id'))
     review_date = db.Column(db.DateTime)
 
@@ -48,22 +145,11 @@ class Donation(db.Model):
     donor_id = db.Column(db.Integer, db.ForeignKey('donors.id'), nullable=False)
     charity_id = db.Column(db.Integer, db.ForeignKey('charities.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False)
-    date = db.Column(db.DateTime, default=datetime.now)
+    date = db.Column(db.DateTime, default=datetime.utcnow)
     is_anonymous = db.Column(db.Boolean, default=False)
     is_recurring = db.Column(db.Boolean, default=False)
-    recurring_frequency = db.Column(db.String(20))
-
-    def serialize_donation(self):
-        return {
-            'id': self.id,
-            'donor_id': self.donor_id,
-            'charity_id': self.charity_id,
-            'amount': self.amount,
-            'date': self.date.isoformat(),
-            'is_anonymous': self.is_anonymous,
-            'is_recurring': self.is_recurring,
-            'recurring_frequency': self.recurring_frequency
-        }
+    recurring_frequency = db.Column(db.String(20)) 
+    next_donation_date = db.Column(db.DateTime)
 
 class Story(db.Model):
     __tablename__ = 'stories'
@@ -71,7 +157,7 @@ class Story(db.Model):
     charity_id = db.Column(db.Integer, db.ForeignKey('charities.id'), nullable=False)
     title = db.Column(db.String(128), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    date_posted = db.Column(db.DateTime, default=datetime.now)
+    date_posted = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Beneficiary(db.Model):
     __tablename__ = 'beneficiaries'

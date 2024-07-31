@@ -1,87 +1,122 @@
-from models import db, Donor, Charity, Admin, CharityApplication, Donation, Story, Beneficiary, Inventory
-from datetime import datetime, timedelta
-from random import randint, choice, uniform
 from app import app 
+from models import db, Donor, Charity, Admin, CharityApplication, Donation, Story, Beneficiary, Inventory
 
 def seed_data():
-    db.drop_all()
-    db.create_all()
+    with app.app_context():
+        # Drop all tables and create them again
+        db.drop_all()
+        db.create_all()
 
-    #Donors
-    donors = [
-        Donor(username=f"donor{i}", email=f"donor{i}@example.com")
-        for i in range(1, 6)
-    ]
-    db.session.add_all(donors)
+        # Create sample admins
+        admin1 = Admin(username='admin1', email='admin1@example.com')
+        admin2 = Admin(username='admin2', email='admin2@example.com')
+        db.session.add(admin1)
+        db.session.add(admin2)
+        
+        # Create sample donors
+        donor1 = Donor(username='donor1', email='donor1@example.com')
+        donor2 = Donor(username='donor2', email='donor2@example.com')
+        db.session.add(donor1)
+        db.session.add(donor2)
+        
+        # Create sample charities
+        charity1 = Charity(
+            username='charity1',
+            email='contact@charity1.org',
+            name='Charity One',
+            description='Charity One description.',
+            needed_donation=10000.00
+        )
+        charity2 = Charity(
+            username='charity2',
+            email='contact@charity2.org',
+            name='Charity Two',
+            description='Charity Two description.',
+            needed_donation=15000.00
+        )
+        db.session.add(charity1)
+        db.session.add(charity2)
+        
+        # Create sample charity applications
+        application1 = CharityApplication(
+            name='Future Charity',
+            email='future@charity.org',
+            description='First donation division Tanzania',
+            status='pending'
+        )
+        application2 = CharityApplication(
+            name='Helping Hands',
+            email='hands@help.org',
+            description='First charity division Kenya.',
+            status='pending'
+        )
+        db.session.add(application1)
+        db.session.add(application2)
+        
+        # Commit to get the IDs assigned
+        db.session.commit()
 
-    #Charities
-    charities = [
-        Charity(username=f"charity{i}", email=f"charity{i}@example.com", name=f"Charity {i}", 
-                description=f"Description for Charity {i}", needed_donation=randint(1000, 10000))
-        for i in range(1, 4)
-    ]
-    db.session.add_all(charities)
-    db.session.commit() 
+        # Create sample donations
+        donation1 = Donation(
+            donor_id=donor1.id,
+            charity_id=charity2.id,
+            amount=1000.00,
+            is_anonymous=False
+        )
+        donation2 = Donation(
+            donor_id=donor2.id,
+            charity_id=charity1.id,
+            amount=2000.00,
+            is_anonymous=True
+        )
+        db.session.add(donation1)
+        db.session.add(donation2)
 
-    #Admins
-    admins = [
-        Admin(username="abby", email="abby@example.com"),
-        Admin(username="maurine", email="maurine@example.com"),
-        Admin(username="kevin", email="kevin@example.com"),
-        Admin(username="erustus", email="erustus@example.com"),
-        Admin(username="mark", email="mark@example.com"),
-        Admin(username="samuel", email="samuel@example.com")
-    ]
-    db.session.add_all(admins)
+        # Create sample stories
+        story1 = Story(
+            charity_id=charity1.id,
+            title='Impact Story 1',
+            content='Donation from Donor 1 to Charity One.'
+        )
+        story2 = Story(
+            charity_id=charity2.id,
+            title='Impact Story 2',
+            content='Donation from Donor 2 to Charity Two.'
+        )
+        db.session.add(story1)
+        db.session.add(story2)
+        
+        # Create sample beneficiaries
+        beneficiary1 = Beneficiary(
+            charity_id=charity1.id,
+            name='Beneficiary One',
+            description='Beneficiary description.'
+        )
+        beneficiary2 = Beneficiary(
+            charity_id=charity2.id,
+            name='Beneficiary Two',
+            description='Beneficiary description.'
+        )
+        db.session.add(beneficiary1)
+        db.session.add(beneficiary2)
+        
+        # Create sample inventory items
+        inventory_item1 = Inventory(
+            charity_id=charity1.id,
+            item_name='T-shirt',
+            quantity=1000
+        )
+        inventory_item2 = Inventory(
+            charity_id=charity2.id,
+            item_name='Shoes',
+            quantity=500
+        )
+        db.session.add(inventory_item1)
+        db.session.add(inventory_item2)
 
-    #CharityApplications
-    applications = [
-        CharityApplication(name=f"New Charity {i}", email=f"newcharity{i}@example.com", 
-                           description=f"Application for New Charity {i}", 
-                           status=choice(['pending', 'approved', 'rejected']),
-                           submission_date=datetime.now() - timedelta(days=randint(1, 30)),
-                           reviewed_by=choice(admins).id if randint(0, 1) else None)
-        for i in range(1, 5)
-    ]
-    db.session.add_all(applications)
-
-    #Donations
-    donations = [
-        Donation(donor_id=choice(donors).id, charity_id=choice(charities).id,
-                 amount=uniform(10, 1000), date=datetime.now() - timedelta(days=randint(1, 365)),
-                 is_anonymous=choice([True, False]), is_recurring=choice([True, False]),
-                 recurring_frequency=choice(['weekly', 'monthly', 'yearly']) if choice([True, False]) else None,
-                 next_donation_date=datetime.now() + timedelta(days=randint(1, 30)) if choice([True, False]) else None)
-        for _ in range(20)
-    ]
-    db.session.add_all(donations)
-
-    #Stories
-    stories = [
-        Story(charity_id=choice(charities).id, title=f"Story {i}", 
-              content=f"Content for Story {i}", date_posted=datetime.now() - timedelta(days=randint(1, 180)))
-        for i in range(1, 11)
-    ]
-    db.session.add_all(stories)
-
-    #Beneficiaries
-    beneficiaries = [
-        Beneficiary(charity_id=choice(charities).id, name=f"Beneficiary {i}", 
-                    description=f"Description for Beneficiary {i}")
-        for i in range(1, 16)
-    ]
-    db.session.add_all(beneficiaries)
-
-    #Inventory
-    inventory_items = [
-        Inventory(charity_id=choice(charities).id, item_name=f"Item {i}", 
-                  quantity=randint(1, 100), date_updated=datetime.now() - timedelta(days=randint(1, 30)))
-        for i in range(1, 21)
-    ]
-    db.session.add_all(inventory_items)
-
-    db.session.commit()
+        # Commit all changes
+        db.session.commit()
+        print('Seed data successfully added.')
 
 if __name__ == '__main__':
-    with app.app_context():
-        seed_data()
+    seed_data()
