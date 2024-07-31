@@ -142,6 +142,7 @@ class CharityApplication(db.Model):
 class Donation(db.Model, SerializerMixin):
     __tablename__ = 'donations'
     serialize_rules = ('-donor', '-charity')
+    serialize_only = ('id', 'donor_id', 'charity_id', 'amount', 'date', 'is_anonymous', 'is_recurring', 'recurring_frequency', 'next_donation_date')
 
     id = db.Column(db.Integer, primary_key=True)
     donor_id = db.Column(db.Integer, db.ForeignKey('donors.id'), nullable=False)

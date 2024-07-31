@@ -121,10 +121,21 @@ class Login(Resource):
                 return {'message': 'Invalid password for admin'}, 401
         else:
             return {'message': 'User not found'}, 404
-        
+
+class Donations(Resource):
+    def get(self, donor_id=None, charity_id=None):
+        if donor_id is not None:
+            return self.get_donation_by_donor_id(donor_id)
+        elif charity_id is not None:
+            return self.get_donation_by_charity_id(charity_id)
+        else:
+            all_donations = Donation.query.all()
+            donations_json = [donation.to_dict() for donation in all_donations]
+            return donations_json
 
 # Routes
-api.add_resource(Login, '/login');        
+api.add_resource(Login, '/login');    
+api.add_resource(Donations, '/donations')
         
 
 if __name__ == '__main__':
