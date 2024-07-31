@@ -215,7 +215,16 @@ class Beneficiaries(Resource):
         db.session.add(new_beneficiary)
         db.session.commit()
         return new_beneficiary.to_dict(), 201
-
+    
+    # Update a beneficiary
+    def put(self, beneficiary_id):
+        beneficiary = Beneficiary.query.get_or_404(beneficiary_id)
+        data = request.get_json()
+        beneficiary.charity_id = data.get('charity_id', beneficiary.charity_id)
+        beneficiary.name = data.get('name', beneficiary.name)
+        beneficiary.description = data.get('description', beneficiary.description)
+        db.session.commit()
+        return beneficiary.to_dict()
 
 # Routes
 api.add_resource(Login, '/login');    
