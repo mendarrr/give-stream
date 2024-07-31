@@ -158,7 +158,7 @@ class Donations(Resource):
                 'total_amount': total_amount
             }
         else:
-            return {'message': 'No donations found for this charity'}, 404
+            return {'message': 'No donations found for this charity'}, 404.
     
     # Create a new donation
     def post(self):
