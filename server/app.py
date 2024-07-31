@@ -175,7 +175,24 @@ class Donations(Resource):
         db.session.add(new_donation)
         db.session.commit()
         return new_donation.to_dict()
-
+    
+    # Updating a donation
+    def put(self, id):
+        data = request.get_json()
+        donation = Donation.query.get(id)
+        if donation:
+            donation.donor_id = data['donor_id']
+            donation.charity_id = data['charity_id']
+            donation.amount = data['amount']
+            donation.date = datetime.strptime(data['date'], '%Y-%m-%d')
+            donation.is_anonymous = data['is_anonymous']
+            donation.is_recurring = data['is_recurring']
+            donation.recurring_frequency = data['recurring_frequency']
+            db.session.commit()
+            return donation.to_dict()
+        else:
+            return {'message': 'Donation not found'}, 404
+    
 # Routes
 api.add_resource(Login, '/login');    
 api.add_resource(Donations, '/donations','/donations/donor/<int:donor_id>', '/donations/charity/<int:charity_id>')
