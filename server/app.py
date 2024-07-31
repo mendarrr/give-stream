@@ -142,6 +142,46 @@ class Charities(Resource):
         db.session.add(new_charity)
         db.session.commit()
         return new_charity.to_dict(), 201
+    
+
+
+class CharityApplications(Resource):
+    @admin_required()
+    def get(self):
+        applications = CharityApplication.query.all()
+        return jsonify([app.to_dict() for app in applications])
+
+    @jwt_required()
+    def post(self):
+        data = request.get_json()
+        new_application = CharityApplication(
+            name=data['name'],
+            email=data['email'],
+            description=data['description']
+        )
+        db.session.add(new_application)
+        db.session.commit()
+        return new_application.to_dict(), 201
+
+    @admin_required()
+    def put(self, id):
+        application = CharityApplication.query.get_or_404(id)
+        data = request.get_json()
+        application.status = data['status']
+        application.reviewed_by = get_jwt_identity()['id']
+        application.review_date = datetime.utcnow()
+
+        if data['status'] == 'approved':
+            new_charity = Charity(
+                username=application.name.lower().replace(' ', '_'),
+                email=application.email,
+                name=application.name,
+                description=application.description
+            )
+            db.session.add(new_charity)
+
+        db.session.commit()
+        return application.to_dict(), 200
 
 
 class Donations(Resource):
@@ -219,7 +259,8 @@ class Donations(Resource):
 # Routes
 api.add_resource(Login, '/login');    
 api.add_resource(Donations, '/donations','/donations/<int:id>', '/donations/donor/<int:donor_id>', '/donations/charity/<int:charity_id>')
-api.add_resource(Charities, '/charities')       
+api.add_resource(Charities, '/charities')  
+api.add_resource(CharityApplications, '/charity-applications', '/charity-applications/<int:id>')   
 
 if __name__ == '__main__':
     app.run(debug=True)
