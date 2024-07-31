@@ -123,6 +123,7 @@ class Login(Resource):
             return {'message': 'User not found'}, 404
 
 class Donations(Resource):
+    # Retrieve all donations
     def get(self, donor_id=None, charity_id=None):
         if donor_id is not None:
             return self.get_donation_by_donor_id(donor_id)
@@ -133,9 +134,25 @@ class Donations(Resource):
             donations_json = [donation.to_dict() for donation in all_donations]
             return donations_json
 
+    # Retrieve donations by donor id and the sum
+    def get_donation_by_donor_id(self, donor_id):
+        donor_donations = Donation.query.filter_by(donor_id=donor_id).all()
+        if donor_donations:
+            donations_json = [donation.to_dict() for donation in donor_donations]
+            total_amount = sum(donation.amount for donation in donor_donations)
+            return {
+                'donations': donations_json,
+                'total_amount': total_amount
+            }
+        else:
+            return {'message': 'No donations found for this donor'}, 404
+        
+    # Retrieve donations by charity id and the sum
+
+
 # Routes
 api.add_resource(Login, '/login');    
-api.add_resource(Donations, '/donations')
+api.add_resource(Donations, '/donations','/donations/donor/<int:donor_id>')
         
 
 if __name__ == '__main__':
