@@ -193,10 +193,82 @@ class Donations(Resource):
             return donation.to_dict()
         else:
             return {'message': 'Donation not found'}, 404
-    
-# Routes
+        
+
+        # inventory
+
+
+
+class InventoryResource(Resource):
+    # Retrieve all inventory items
+    def get(self, id=None):
+        if id:
+            inventory_item = Inventory.query.get(id)
+            if inventory_item:
+                return jsonify(inventory_item.to_dict())
+            return {'message': 'Inventory item not found'}, 404
+        else:
+            inventory_list = Inventory.query.all()
+            return jsonify([item.to_dict() for item in inventory_list])
+
+    # Create a new inventory item
+    def post(self):
+        data = request.get_json()
+        try:
+            new_item = Inventory(
+                charity_id=data['charity_id'],
+                item_name=data['item_name'],
+                quantity=data['quantity'],
+                date_updated=datetime.now()  # Set current date and time
+            )
+            db.session.add(new_item)
+            db.session.commit()
+            return new_item.to_dict(), 201
+        except Exception as e:
+            db.session.rollback()
+            return {'message': 'Failed to create item', 'error': str(e)}, 400
+
+    # Update an existing inventory item
+    def put(self, id):
+        data = request.get_json()
+        inventory_item = Inventory.query.get(id)
+        if inventory_item:
+            try:
+                inventory_item.charity_id = data['charity_id']
+                inventory_item.item_name = data['item_name']
+                inventory_item.quantity = data['quantity']
+                inventory_item.date_updated = datetime.now()  # Update timestamp
+                db.session.commit()
+                return inventory_item.to_dict()
+            except Exception as e:
+                db.session.rollback()
+                return {'message': 'Failed to update item', 'error': str(e)}, 400
+        else:
+            return {'message': 'Inventory item not found'}, 404
+
+    # Delete an inventory item
+    def delete(self, id):
+        inventory_item = Inventory.query.get(id)
+        if inventory_item:
+            try:
+                db.session.delete(inventory_item)
+                db.session.commit()
+                return {'message': 'Item deleted successfully'}, 200
+            except Exception as e:
+                db.session.rollback()
+                return {'message': 'Failed to delete item', 'error': str(e)}, 400
+        else:
+            return {'message': 'Inventory item not found'}, 404
+
+# Add the InventoryResource to the API
+# api.add_resource(InventoryResource, '/inventory', '/inventory/<int:id>')
+
+# if __name__ == '__main__':
+#     app.run(debug=True)
+# # Routes
 api.add_resource(Login, '/login');    
 api.add_resource(Donations, '/donations','/donations/<int:id>', '/donations/donor/<int:donor_id>', '/donations/charity/<int:charity_id>')
+api.add_resource(InventoryResource, '/inventory', '/inventory/<int:id>')
         
 
 if __name__ == '__main__':
