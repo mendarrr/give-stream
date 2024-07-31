@@ -3,7 +3,6 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.orm import validates
-
 from config import db, bcrypt
 from datetime import datetime
 import re
@@ -140,13 +139,16 @@ class CharityApplication(db.Model):
 
     admin = db.relationship('Admin', backref='reviewed_applications')
 
-class Donation(db.Model):
+class Donation(db.Model, SerializerMixin):
     __tablename__ = 'donations'
+    serialize_rules = ('-donor', '-charity')
+    serialize_only = ('id', 'donor_id', 'charity_id', 'amount', 'date', 'is_anonymous', 'is_recurring', 'recurring_frequency', 'next_donation_date')
+
     id = db.Column(db.Integer, primary_key=True)
     donor_id = db.Column(db.Integer, db.ForeignKey('donors.id'), nullable=False)
     charity_id = db.Column(db.Integer, db.ForeignKey('charities.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False)
-    date = db.Column(db.DateTime, default=datetime.utcnow)
+    date = db.Column(db.DateTime, default=datetime.now)
     is_anonymous = db.Column(db.Boolean, default=False)
     is_recurring = db.Column(db.Boolean, default=False)
     recurring_frequency = db.Column(db.String(20)) 
@@ -173,4 +175,4 @@ class Inventory(db.Model):
     charity_id = db.Column(db.Integer, db.ForeignKey('charities.id'), nullable=False)
     item_name = db.Column(db.String(128), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
-    date_updated = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    date_updated = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)

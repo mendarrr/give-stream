@@ -121,16 +121,83 @@ class Login(Resource):
                 return {'message': 'Invalid password for admin'}, 401
         else:
             return {'message': 'User not found'}, 404
-        
 
+class Donations(Resource):
+    # Retrieve all donations
+    def get(self, donor_id=None, charity_id=None):
+        if donor_id is not None:
+            return self.get_donation_by_donor_id(donor_id)
+        elif charity_id is not None:
+            return self.get_donation_by_charity_id(charity_id)
+        else:
+            all_donations = Donation.query.all()
+            donations_json = [donation.to_dict() for donation in all_donations]
+            return donations_json
+
+    # Retrieve donations by donor id and the sum
+    def get_donation_by_donor_id(self, donor_id):
+        donor_donations = Donation.query.filter_by(donor_id=donor_id).all()
+        if donor_donations:
+            donations_json = [donation.to_dict() for donation in donor_donations]
+            total_amount = sum(donation.amount for donation in donor_donations)
+            return {
+                'donations': donations_json,
+                'total_amount': total_amount
+            }
+        else:
+            return {'message': 'No donations found for this donor'}, 404
+        
+    # Retrieve donations by charity id and the sum
+    def get_donation_by_charity_id(self, charity_id):
+        charity_donations = Donation.query.filter_by(charity_id=charity_id).all()
+        if charity_donations:
+            donations_json = [donation.to_dict() for donation in charity_donations]
+            total_amount = sum(donation.amount for donation in charity_donations)
+            return {
+                'donations': donations_json,
+                'total_amount': total_amount
+            }
+        else:
+            return {'message': 'No donations found for this charity'}, 404.
+    
+    # Create a new donation
+    def post(self):
+        data = request.get_json()
+        date = datetime.strptime(data['date'], '%Y-%m-%d')
+        new_donation = Donation(
+            donor_id=data['donor_id'],
+            charity_id=data['charity_id'],
+            amount=data['amount'],
+            date=date,
+            is_anonymous=data['is_anonymous'],
+            is_recurring=data['is_recurring'],
+            recurring_frequency=data['recurring_frequency']
+        )
+        db.session.add(new_donation)
+        db.session.commit()
+        return new_donation.to_dict()
+    
+    # Updating a donation
+    def put(self, id):
+        data = request.get_json()
+        donation = Donation.query.get(id)
+        if donation:
+            donation.donor_id = data['donor_id']
+            donation.charity_id = data['charity_id']
+            donation.amount = data['amount']
+            donation.date = datetime.strptime(data['date'], '%Y-%m-%d')
+            donation.is_anonymous = data['is_anonymous']
+            donation.is_recurring = data['is_recurring']
+            donation.recurring_frequency = data['recurring_frequency']
+            db.session.commit()
+            return donation.to_dict()
+        else:
+            return {'message': 'Donation not found'}, 404
+    
 # Routes
-api.add_resource(Login, '/login');        
+api.add_resource(Login, '/login');    
+api.add_resource(Donations, '/donations','/donations/<int:id>', '/donations/donor/<int:donor_id>', '/donations/charity/<int:charity_id>')
         
-
-   
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
-
