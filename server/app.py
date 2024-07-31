@@ -225,6 +225,13 @@ class Beneficiaries(Resource):
         beneficiary.description = data.get('description', beneficiary.description)
         db.session.commit()
         return beneficiary.to_dict()
+    
+    # Delete a beneficiary
+    def delete(self, beneficiary_id):
+        beneficiary = Beneficiary.query.get_or_404(beneficiary_id)
+        db.session.delete(beneficiary)
+        db.session.commit()
+        return '', 204
 
 # Routes
 api.add_resource(Login, '/login');    
