@@ -121,6 +121,28 @@ class Login(Resource):
                 return {'message': 'Invalid password for admin'}, 401
         else:
             return {'message': 'User not found'}, 404
+        
+class Charities(Resource):
+    @jwt_required()
+    def get(self):
+        charities = Charity.query.all()
+        return jsonify([charity.to_dict() for charity in charities])
+
+    @jwt_required()
+    def post(self):
+        data = request.get_json()
+        new_charity = Charity(
+            username=data['username'],
+            email=data['email'],
+            name=data['name'],
+            description=data.get('description'),
+            needed_donation=data.get('needed_donation')
+        )
+        new_charity.password_hash = data['password']
+        db.session.add(new_charity)
+        db.session.commit()
+        return new_charity.to_dict(), 201
+
 
 class Donations(Resource):
     # Retrieve all donations
@@ -197,7 +219,7 @@ class Donations(Resource):
 # Routes
 api.add_resource(Login, '/login');    
 api.add_resource(Donations, '/donations','/donations/<int:id>', '/donations/donor/<int:donor_id>', '/donations/charity/<int:charity_id>')
-        
+api.add_resource(Charities, '/charities')       
 
 if __name__ == '__main__':
     app.run(debug=True)
