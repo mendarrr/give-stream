@@ -203,6 +203,18 @@ class Beneficiaries(Resource):
         else:
             beneficiaries = Beneficiary.query.all()
             return [beneficiary.to_dict() for beneficiary in beneficiaries]
+        
+    # Create a beneficiary
+    def post(self):
+        data = request.get_json()
+        new_beneficiary = Beneficiary(
+            charity_id=data['charity_id'],
+            name=data['name'],
+            description=data.get('description')
+        )
+        db.session.add(new_beneficiary)
+        db.session.commit()
+        return new_beneficiary.to_dict(), 201
 
 
 # Routes
