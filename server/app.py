@@ -193,47 +193,48 @@ class Donations(Resource):
             return donation.to_dict()
         else:
             return {'message': 'Donation not found'}, 404
-        
-class Beneficiaries(Resource):
-    # Retrieve all beneficiaries
-    def get(self, beneficiary_id=None):
-        if beneficiary_id:
-            beneficiary = Beneficiary.query.get_or_404(beneficiary_id)
-            return beneficiary.to_dict()
+    
+class DonorResource(Resource):
+    # get all donors 
+    def get(self, donor_type=None):
+        if donor_type == 'anonymous':
+            donors = Donor.query.filter_by(is_anonymous=True).all()
+        elif donor_type == 'non-anonymous':
+            donors = Donor.query.filter_by(is_anonymous=False).all()
         else:
-            beneficiaries = Beneficiary.query.all()
-            return [beneficiary.to_dict() for beneficiary in beneficiaries]
-        
-    # Create a beneficiary
+            donors = Donor.query.all()
+        return jsonify([donor.to_dict() for donor in donors])
+
     def post(self):
         data = request.get_json()
-        new_beneficiary = Beneficiary(
-            charity_id=data['charity_id'],
-            name=data['name'],
-            description=data.get('description')
-        )
-        db.session.add(new_beneficiary)
-        db.session.commit()
-        return new_beneficiary.to_dict(), 201
-    
-    # Update a beneficiary
-    def put(self, beneficiary_id):
-        beneficiary = Beneficiary.query.get_or_404(beneficiary_id)
-        data = request.get_json()
-        beneficiary.charity_id = data.get('charity_id', beneficiary.charity_id)
-        beneficiary.name = data.get('name', beneficiary.name)
-        beneficiary.description = data.get('description', beneficiary.description)
-        db.session.commit()
-        return beneficiary.to_dict()
-    
-    # Delete a beneficiary
-    def delete(self, beneficiary_id):
-        beneficiary = Beneficiary.query.get_or_404(beneficiary_id)
-        db.session.delete(beneficiary)
-        db.session.commit()
-        return '', 204
+        username = data.get('username')
+        email = data.get('email')
+        password = data.get('password')
+        # Default to False if not provided
+        is_anonymous = data.get('is_anonymous', False) 
 
-        
+        if Donor.query.filter_by(username=username).first():
+            return {'message': 'Username already exists'}, 400
+        if Donor.query.filter_by(email=email).first():
+            return {'message': 'Email already exists'}, 400
+
+        new_donor = Donor(
+            username=username,
+            email=email,
+            _password_hash=password,
+            is_anonymous=is_anonymous
+        )
+
+        db.session.add(new_donor)
+        db.session.commit()
+
+        return {
+            'id': new_donor.id,
+            'username': new_donor.username,
+            'email': new_donor.email,
+            'is_anonymous': new_donor.is_anonymous
+        }, 201
+    
         
 class StoryResource(Resource):
     def get(self, id=None):
@@ -316,12 +317,51 @@ class StoryResource(Resource):
             return make_response(jsonify({"error": "An error occurred during DELETE"}), 500)
 
 
+class Beneficiaries(Resource):
+    # Retrieve all beneficiaries
+    def get(self, beneficiary_id=None):
+        if beneficiary_id:
+            beneficiary = Beneficiary.query.get_or_404(beneficiary_id)
+            return beneficiary.to_dict()
+        else:
+            beneficiaries = Beneficiary.query.all()
+            return [beneficiary.to_dict() for beneficiary in beneficiaries]
+        
+    # Create a beneficiary
+    def post(self):
+        data = request.get_json()
+        new_beneficiary = Beneficiary(
+            charity_id=data['charity_id'],
+            name=data['name'],
+            description=data.get('description')
+        )
+        db.session.add(new_beneficiary)
+        db.session.commit()
+        return new_beneficiary.to_dict(), 201
     
+    # Update a beneficiary
+    def put(self, beneficiary_id):
+        beneficiary = Beneficiary.query.get_or_404(beneficiary_id)
+        data = request.get_json()
+        beneficiary.charity_id = data.get('charity_id', beneficiary.charity_id)
+        beneficiary.name = data.get('name', beneficiary.name)
+        beneficiary.description = data.get('description', beneficiary.description)
+        db.session.commit()
+        return beneficiary.to_dict()
+    
+    # Delete a beneficiary
+    def delete(self, beneficiary_id):
+        beneficiary = Beneficiary.query.get_or_404(beneficiary_id)
+        db.session.delete(beneficiary)
+        db.session.commit()
+        return '', 204
+
 # Routes
 api.add_resource(Login, '/login');    
 api.add_resource(Donations, '/donations','/donations/<int:id>', '/donations/donor/<int:donor_id>', '/donations/charity/<int:charity_id>')
 api.add_resource(StoryResource, '/stories', '/stories/<int:id>')     
 api.add_resource(Beneficiaries, '/beneficiaries', '/beneficiaries/<int:beneficiary_id>')
+api.add_resource(DonorResource, '/donors', '/donors/<string:donor_type>', '/donors/<int:id>')
         
 
 if __name__ == '__main__':

@@ -10,12 +10,15 @@ import re
 
 #db = SQLAlchemy()
 
-class Donor(db.Model):
+class Donor(db.Model, SerializerMixin):
     __tablename__ = 'donors'
+    serialize_rules = ('-donations.donor', '-_password_hash')
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     _password_hash = db.Column(db.String)
+    is_anonymous = db.Column(db.Boolean, default=False)
     donations = db.relationship('Donation', backref='donor', lazy='dynamic')
 
     @hybrid_property
