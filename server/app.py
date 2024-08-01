@@ -123,12 +123,12 @@ class Login(Resource):
             return {'message': 'User not found'}, 404
         
 class Charities(Resource):
-    @jwt_required()
+    # @jwt_required()  
     def get(self):
         charities = Charity.query.all()
         return jsonify([charity.to_dict() for charity in charities])
 
-    @jwt_required()
+    # @admin_required() 
     def post(self):
         data = request.get_json()
         new_charity = Charity(
@@ -142,16 +142,13 @@ class Charities(Resource):
         db.session.add(new_charity)
         db.session.commit()
         return new_charity.to_dict(), 201
-    
-
 
 class CharityApplications(Resource):
-    @admin_required()
+    # @admin_required()  
     def get(self):
         applications = CharityApplication.query.all()
         return jsonify([app.to_dict() for app in applications])
 
-    @jwt_required()
     def post(self):
         data = request.get_json()
         new_application = CharityApplication(
@@ -163,13 +160,12 @@ class CharityApplications(Resource):
         db.session.commit()
         return new_application.to_dict(), 201
 
-    @admin_required()
+    # @admin_required() 
     def put(self, id):
         application = CharityApplication.query.get_or_404(id)
         data = request.get_json()
         application.status = data['status']
-        application.reviewed_by = get_jwt_identity()['id']
-        application.review_date = datetime.utcnow()
+        # application.reviewed_by = get_jwt_identity()['id']  # Comment out this line
 
         if data['status'] == 'approved':
             new_charity = Charity(
@@ -182,11 +178,9 @@ class CharityApplications(Resource):
 
         db.session.commit()
         return application.to_dict(), 200
-    
 
- 
 class AdminDashboard(Resource):
-    @admin_required()
+    # @admin_required() 
     def get(self):
         total_donations = db.session.query(db.func.sum(Donation.amount)).scalar() or 0
         charity_count = Charity.query.count()
@@ -200,7 +194,7 @@ class AdminDashboard(Resource):
             'donor_count': donor_count,
             'recent_donations': [donation.to_dict() for donation in recent_donations],
             'pending_applications': pending_applications
-        }   
+        }  
 
 
 class Donations(Resource):
@@ -510,12 +504,15 @@ class InventoryResource(Resource):
 #     app.run(debug=True)
 # # Routes
 api.add_resource(Login, '/login');    
+
 api.add_resource(Donations, '/donations','/donations/<int:id>', '/donations/donor/<int:donor_id>', '/donations/charity/<int:charity_id>')
 api.add_resource(StoryResource, '/stories', '/stories/<int:id>')     
 api.add_resource(Beneficiaries, '/beneficiaries', '/beneficiaries/<int:beneficiary_id>')
 api.add_resource(DonorResource, '/donors', '/donors/<string:donor_type>', '/donors/<int:id>')
 api.add_resource(InventoryResource, '/inventory', '/inventory/<int:id>')
-        
+api.add_resource(Charities, '/charities')
+api.add_resource(CharityApplications, '/charity-applications', '/charity-applications/<int:id>')
+api.add_resource(AdminDashboard, '/admin-dashboard')       
 
 if __name__ == '__main__':
     app.run(debug=True)
