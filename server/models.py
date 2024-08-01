@@ -129,8 +129,10 @@ class Admin(db.Model):
     def __repr__(self):
         return f"<Admin {self.id}: {self.username}>"
 
-class CharityApplication(db.Model):
+class CharityApplication(db.Model, SerializerMixin):
     __tablename__ = 'charity_applications'
+    serialize_rules = ('-admin',)
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -142,6 +144,7 @@ class CharityApplication(db.Model):
 
     admin = db.relationship('Admin', backref='reviewed_applications')
 
+    
 class Donation(db.Model, SerializerMixin):
     __tablename__ = 'donations'
     serialize_rules = ('-donor', '-charity')
