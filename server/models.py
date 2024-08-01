@@ -7,8 +7,7 @@ from config import db, bcrypt
 from datetime import datetime
 import re
 
-
-#db = SQLAlchemy()
+# Model Definitions
 
 class Donor(db.Model, SerializerMixin):
     __tablename__ = 'donors'
@@ -27,12 +26,10 @@ class Donor(db.Model, SerializerMixin):
 
     @password_hash.setter
     def password_hash(self, password):
-        password_hash = bcrypt.generate_password_hash(
-            password.encode('utf-8'))
+        password_hash = bcrypt.generate_password_hash(password.encode('utf-8'))
         self._password_hash = password_hash.decode('utf-8')
 
     def authenticate(self, password):
-    # Ensure _password_hash is a bytes object (if retrieved from database)
         if isinstance(self._password_hash, str):
             self._password_hash = self._password_hash.encode('utf-8')
         return bcrypt.check_password_hash(self._password_hash, password.encode('utf-8'))
@@ -51,6 +48,13 @@ class Donor(db.Model, SerializerMixin):
                 raise ValueError("Invalid email format")
         return value
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'email': self.email,
+            'is_anonymous': self.is_anonymous
+        }
 
     def __repr__(self):
         return f"<Donor {self.id}: {self.username}>"
@@ -76,12 +80,10 @@ class Charity(db.Model, SerializerMixin):
 
     @password_hash.setter
     def password_hash(self, password):
-        password_hash = bcrypt.generate_password_hash(
-            password.encode('utf-8'))
+        password_hash = bcrypt.generate_password_hash(password.encode('utf-8'))
         self._password_hash = password_hash.decode('utf-8')
 
     def authenticate(self, password):
-    # Ensure _password_hash is a bytes object (if retrieved from database)
         if isinstance(self._password_hash, str):
             self._password_hash = self._password_hash.encode('utf-8')
         return bcrypt.check_password_hash(self._password_hash, password.encode('utf-8'))
@@ -100,6 +102,15 @@ class Charity(db.Model, SerializerMixin):
                 raise ValueError("Invalid email format")
         return value
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'email': self.email,
+            'name': self.name,
+            'description': self.description,
+            'needed_donation': self.needed_donation
+        }
 
     def __repr__(self):
         return f"<Charity {self.id}: {self.username}>"
@@ -117,14 +128,20 @@ class Admin(db.Model):
 
     @password_hash.setter
     def password_hash(self, password):
-        password_hash = bcrypt.generate_password_hash(
-            password.encode('utf-8'))
+        password_hash = bcrypt.generate_password_hash(password.encode('utf-8'))
         self._password_hash = password_hash.decode('utf-8')
 
     def authenticate(self, password):
         if self._password_hash is None:
             return False
         return bcrypt.check_password_hash(self._password_hash, password.encode('utf-8'))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'email': self.email
+        }
 
     def __repr__(self):
         return f"<Admin {self.id}: {self.username}>"
@@ -137,14 +154,25 @@ class CharityApplication(db.Model, SerializerMixin):
     name = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     description = db.Column(db.Text, nullable=False)
-    status = db.Column(db.String(20), default='pending') 
+    status = db.Column(db.String(20), default='pending')
     submission_date = db.Column(db.DateTime, default=datetime.utcnow)
     reviewed_by = db.Column(db.Integer, db.ForeignKey('admins.id'))
     review_date = db.Column(db.DateTime)
 
     admin = db.relationship('Admin', backref='reviewed_applications')
 
-    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'email': self.email,
+            'description': self.description,
+            'status': self.status,
+            'submission_date': self.submission_date,
+            'reviewed_by': self.reviewed_by,
+            'review_date': self.review_date
+        }
+
 class Donation(db.Model, SerializerMixin):
     __tablename__ = 'donations'
     serialize_rules = ('-donor', '-charity')
@@ -157,8 +185,21 @@ class Donation(db.Model, SerializerMixin):
     date = db.Column(db.DateTime, default=datetime.now)
     is_anonymous = db.Column(db.Boolean, default=False)
     is_recurring = db.Column(db.Boolean, default=False)
-    recurring_frequency = db.Column(db.String(20)) 
+    recurring_frequency = db.Column(db.String(20))
     next_donation_date = db.Column(db.DateTime)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'donor_id': self.donor_id,
+            'charity_id': self.charity_id,
+            'amount': self.amount,
+            'date': self.date,
+            'is_anonymous': self.is_anonymous,
+            'is_recurring': self.is_recurring,
+            'recurring_frequency': self.recurring_frequency,
+            'next_donation_date': self.next_donation_date
+        }
 
 class Story(db.Model):
     __tablename__ = 'stories'
@@ -167,6 +208,15 @@ class Story(db.Model):
     title = db.Column(db.String(128), nullable=False)
     content = db.Column(db.Text, nullable=False)
     date_posted = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'charity_id': self.charity_id,
+            'title': self.title,
+            'content': self.content,
+            'date_posted': self.date_posted
+        }
 
 class Beneficiary(db.Model, SerializerMixin):
     __tablename__ = 'beneficiaries'
@@ -177,13 +227,30 @@ class Beneficiary(db.Model, SerializerMixin):
     charity_id = db.Column(db.Integer, db.ForeignKey('charities.id'), nullable=False)
     name = db.Column(db.String(128), nullable=False)
     description = db.Column(db.Text)
-    
+
     charity = db.relationship('Charity', back_populates='beneficiaries')
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'charity_id': self.charity_id,
+            'name': self.name,
+            'description': self.description
+        }
+
 class Inventory(db.Model):
-    __tablename__ = 'inventory'
+    __tablename__ = 'inventories'
     id = db.Column(db.Integer, primary_key=True)
     charity_id = db.Column(db.Integer, db.ForeignKey('charities.id'), nullable=False)
     item_name = db.Column(db.String(128), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
-    date_updated = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+    last_updated = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'charity_id': self.charity_id,
+            'item_name': self.item_name,
+            'quantity': self.quantity,
+            'last_updated': self.last_updated
+        }
