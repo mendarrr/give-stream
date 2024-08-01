@@ -274,14 +274,248 @@ class Donations(Resource):
             return donation.to_dict()
         else:
             return {'message': 'Donation not found'}, 404
+        
+class DonorResource(Resource):
+    # get all donors 
+    def get(self, donor_type=None):
+        if donor_type == 'anonymous':
+            donors = Donor.query.filter_by(is_anonymous=True).all()
+        elif donor_type == 'non-anonymous':
+            donors = Donor.query.filter_by(is_anonymous=False).all()
+        else:
+            donors = Donor.query.all()
+        return jsonify([donor.to_dict() for donor in donors])
+
+    def post(self):
+        data = request.get_json()
+        username = data.get('username')
+        email = data.get('email')
+        password = data.get('password')
+        # Default to False if not provided
+        is_anonymous = data.get('is_anonymous', False) 
+
+        if Donor.query.filter_by(username=username).first():
+            return {'message': 'Username already exists'}, 400
+        if Donor.query.filter_by(email=email).first():
+            return {'message': 'Email already exists'}, 400
+
+        new_donor = Donor(
+            username=username,
+            email=email,
+            _password_hash=password,
+            is_anonymous=is_anonymous
+        )
+
+        db.session.add(new_donor)
+        db.session.commit()
+
+        return {
+            'id': new_donor.id,
+            'username': new_donor.username,
+            'email': new_donor.email,
+            'is_anonymous': new_donor.is_anonymous
+        }, 201
     
-# Routes
+        
+class StoryResource(Resource):
+    def get(self, id=None):
+        try:
+            if id is None:
+                stories = Story.query.all()
+                return make_response(jsonify([story.to_dict() for story in stories]), 200)
+            else:
+                story = Story.query.get(id)
+                if story:
+                    return make_response(story.to_dict(), 200)
+                return make_response(jsonify({"error": "Story not found"}), 404)
+        except Exception as e:
+            print(f"Error during GET: {e}")
+            return make_response(jsonify({"error": "An error occurred during GET"}), 500)
+
+    def post(self):
+        try:
+            data = request.get_json()
+            # Parse the date_posted string to a datetime object
+            date_posted_str = data.get('date_posted')
+            if date_posted_str:
+                date_posted = datetime.strptime(date_posted_str, "%a, %d %b %Y %H:%M:%S GMT")
+            else:
+                date_posted = datetime.utcnow()  # default to current time if not provided
+
+            new_story = Story(
+                title=data['title'],
+                content=data['content'],
+                charity_id=data['charity_id'],
+                date_posted=date_posted
+            )
+            db.session.add(new_story)
+            db.session.commit()
+            return make_response(new_story.to_dict(), 201)
+        except Exception as e:
+            print(f"Error during POST: {e}")
+            return make_response(jsonify({"error": "An error occurred during POST"}), 500)
+
+    def put(self, id):
+        try:
+            data = request.get_json()
+            story = Story.query.get(id)
+            if story:
+                story.title = data['title']
+                story.content = data['content']
+                db.session.commit()
+                return make_response(story.to_dict(), 200)
+            return make_response(jsonify({"error": "Story not found"}), 404)
+        except Exception as e:
+            print(f"Error during PUT: {e}")
+            return make_response(jsonify({"error": "An error occurred during PUT"}), 500)
+
+    def patch(self, id):
+        try:
+            data = request.get_json()
+            story = Story.query.get(id)
+            if story:
+                if 'title' in data:
+                    story.title = data['title']
+                if 'content' in data:
+                    story.content = data['content']
+                db.session.commit()
+                return make_response(story.to_dict(), 200)
+            return make_response(jsonify({"error": "Story not found"}), 404)
+        except Exception as e:
+            print(f"Error during PATCH: {e}")
+            return make_response(jsonify({"error": "An error occurred during PATCH"}), 500)
+
+    def delete(self, id):
+        try:
+            story = Story.query.get(id)
+            if story:
+                db.session.delete(story)
+                db.session.commit()
+                return make_response('', 204)
+            return make_response(jsonify({"error": "Story not found"}), 404)
+        except Exception as e:
+            print(f"Error during DELETE: {e}")
+            return make_response(jsonify({"error": "An error occurred during DELETE"}), 500)
+
+
+class Beneficiaries(Resource):
+    # Retrieve all beneficiaries
+    def get(self, beneficiary_id=None):
+        if beneficiary_id:
+            beneficiary = Beneficiary.query.get_or_404(beneficiary_id)
+            return beneficiary.to_dict()
+        else:
+            beneficiaries = Beneficiary.query.all()
+            return [beneficiary.to_dict() for beneficiary in beneficiaries]
+        
+    # Create a beneficiary
+    def post(self):
+        data = request.get_json()
+        new_beneficiary = Beneficiary(
+            charity_id=data['charity_id'],
+            name=data['name'],
+            description=data.get('description')
+        )
+        db.session.add(new_beneficiary)
+        db.session.commit()
+        return new_beneficiary.to_dict(), 201
+    
+    # Update a beneficiary
+    def put(self, beneficiary_id):
+        beneficiary = Beneficiary.query.get_or_404(beneficiary_id)
+        data = request.get_json()
+        beneficiary.charity_id = data.get('charity_id', beneficiary.charity_id)
+        beneficiary.name = data.get('name', beneficiary.name)
+        beneficiary.description = data.get('description', beneficiary.description)
+        db.session.commit()
+        return beneficiary.to_dict()
+    
+    # Delete a beneficiary
+    def delete(self, beneficiary_id):
+        beneficiary = Beneficiary.query.get_or_404(beneficiary_id)
+        db.session.delete(beneficiary)
+        db.session.commit()
+        return '', 204
+
+
+        # inventory
+
+
+
+class InventoryResource(Resource):
+    # Retrieve all inventory items
+    def get(self, id=None):
+        if id:
+            inventory_item = Inventory.query.get(id)
+            if inventory_item:
+                return jsonify(inventory_item.to_dict())
+            return {'message': 'Inventory item not found'}, 404
+        else:
+            inventory_list = Inventory.query.all()
+            return jsonify([item.to_dict() for item in inventory_list])
+
+    # Create a new inventory item
+    def post(self):
+        data = request.get_json()
+        try:
+            new_item = Inventory(
+                charity_id=data['charity_id'],
+                item_name=data['item_name'],
+                quantity=data['quantity'],
+                date_updated=datetime.now()  # Set current date and time
+            )
+            db.session.add(new_item)
+            db.session.commit()
+            return new_item.to_dict(), 201
+        except Exception as e:
+            db.session.rollback()
+            return {'message': 'Failed to create item', 'error': str(e)}, 400
+
+    # Update an existing inventory item
+    def put(self, id):
+        data = request.get_json()
+        inventory_item = Inventory.query.get(id)
+        if inventory_item:
+            try:
+                inventory_item.charity_id = data['charity_id']
+                inventory_item.item_name = data['item_name']
+                inventory_item.quantity = data['quantity']
+                inventory_item.date_updated = datetime.now()  # Update timestamp
+                db.session.commit()
+                return inventory_item.to_dict()
+            except Exception as e:
+                db.session.rollback()
+                return {'message': 'Failed to update item', 'error': str(e)}, 400
+        else:
+            return {'message': 'Inventory item not found'}, 404
+
+    # Delete an inventory item
+    def delete(self, id):
+        inventory_item = Inventory.query.get(id)
+        if inventory_item:
+            try:
+                db.session.delete(inventory_item)
+                db.session.commit()
+                return {'message': 'Item deleted successfully'}, 200
+            except Exception as e:
+                db.session.rollback()
+                return {'message': 'Failed to delete item', 'error': str(e)}, 400
+        else:
+            return {'message': 'Inventory item not found'}, 404
+
+# Add the InventoryResource to the API
+# api.add_resource(InventoryResource, '/inventory', '/inventory/<int:id>')
+
+# if __name__ == '__main__':
+#     app.run(debug=True)
+# # Routes
 api.add_resource(Login, '/login');    
 api.add_resource(Donations, '/donations','/donations/<int:id>', '/donations/donor/<int:donor_id>', '/donations/charity/<int:charity_id>')
-api.add_resource(Charities, '/charities')  
-api.add_resource(CharityApplications, '/charity-applications', '/charity-applications/<int:id>')   
-api.add_resource(AdminDashboard, '/admin-dashboard')
-
+api.add_resource(StoryResource, '/stories', '/stories/<int:id>')     
+api.add_resource(Beneficiaries, '/beneficiaries', '/beneficiaries/<int:beneficiary_id>')
+api.add_resource(DonorResource, '/donors', '/donors/<string:donor_type>', '/donors/<int:id>')
+api.add_resource(InventoryResource, '/inventory', '/inventory/<int:id>')
+        
 
 if __name__ == '__main__':
     app.run(debug=True)
