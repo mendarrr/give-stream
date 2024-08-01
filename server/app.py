@@ -276,11 +276,51 @@ class StoryResource(Resource):
             return make_response(jsonify({"error": "An error occurred during DELETE"}), 500)
 
 
+class Beneficiaries(Resource):
+    # Retrieve all beneficiaries
+    def get(self, beneficiary_id=None):
+        if beneficiary_id:
+            beneficiary = Beneficiary.query.get_or_404(beneficiary_id)
+            return beneficiary.to_dict()
+        else:
+            beneficiaries = Beneficiary.query.all()
+            return [beneficiary.to_dict() for beneficiary in beneficiaries]
+        
+    # Create a beneficiary
+    def post(self):
+        data = request.get_json()
+        new_beneficiary = Beneficiary(
+            charity_id=data['charity_id'],
+            name=data['name'],
+            description=data.get('description')
+        )
+        db.session.add(new_beneficiary)
+        db.session.commit()
+        return new_beneficiary.to_dict(), 201
     
+    # Update a beneficiary
+    def put(self, beneficiary_id):
+        beneficiary = Beneficiary.query.get_or_404(beneficiary_id)
+        data = request.get_json()
+        beneficiary.charity_id = data.get('charity_id', beneficiary.charity_id)
+        beneficiary.name = data.get('name', beneficiary.name)
+        beneficiary.description = data.get('description', beneficiary.description)
+        db.session.commit()
+        return beneficiary.to_dict()
+    
+    # Delete a beneficiary
+    def delete(self, beneficiary_id):
+        beneficiary = Beneficiary.query.get_or_404(beneficiary_id)
+        db.session.delete(beneficiary)
+        db.session.commit()
+        return '', 204
+
 # Routes
 api.add_resource(Login, '/login');    
 api.add_resource(Donations, '/donations','/donations/<int:id>', '/donations/donor/<int:donor_id>', '/donations/charity/<int:charity_id>')
 api.add_resource(StoryResource, '/stories', '/stories/<int:id>')     
+api.add_resource(Beneficiaries, '/beneficiaries', '/beneficiaries/<int:beneficiary_id>')
+        
 
 if __name__ == '__main__':
     app.run(debug=True)
