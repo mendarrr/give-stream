@@ -356,11 +356,6 @@ class Beneficiaries(Resource):
         db.session.commit()
         return '', 204
 
-
-        # inventory
-
-
-
 class InventoryResource(Resource):
     # Retrieve all inventory items
     def get(self, id=None):
@@ -422,11 +417,8 @@ class InventoryResource(Resource):
         else:
             return {'message': 'Inventory item not found'}, 404
 
-# Add the InventoryResource to the API
-# api.add_resource(InventoryResource, '/inventory', '/inventory/<int:id>')
 
-# if __name__ == '__main__':
-#     app.run(debug=True)
+
 # # Routes
 api.add_resource(Login, '/login');    
 api.add_resource(Donations, '/donations','/donations/<int:id>', '/donations/donor/<int:donor_id>', '/donations/charity/<int:charity_id>')
