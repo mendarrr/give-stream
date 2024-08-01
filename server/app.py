@@ -5,9 +5,20 @@ from flask import Flask, make_response,jsonify,session,request, current_app, jso
 from flask_restful import Resource, Api
 import bcrypt
 from datetime import datetime, timedelta
+from flask_apscheduler import APScheduler
+from notification_service import run_notification_service
 
 from config import app,db,api
 from models import db, Admin, Donor,Charity
+
+
+scheduler = APScheduler()
+scheduler.init_app(app)
+scheduler.start()
+
+@scheduler.task('cron', id='notify_subscriptions', hour=0)
+def scheduled_notification_service():
+    run_notification_service()
 
 
 # Views go here!

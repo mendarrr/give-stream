@@ -31,3 +31,8 @@ bcrypt = Bcrypt(app)
 api = Api(app)
 jwt = JWTManager(app)
 
+MAIL_SERVER = 'smtp.gmail.com'  # Or your preferred SMTP server
+MAIL_PORT = 587
+MAIL_USE_TLS = True
+MAIL_USERNAME = 'your-email@example.com'
+MAIL_PASSWORD = 'your-email-password'
