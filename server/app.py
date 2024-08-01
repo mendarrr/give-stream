@@ -193,7 +193,48 @@ class Donations(Resource):
             return donation.to_dict()
         else:
             return {'message': 'Donation not found'}, 404
-        
+    
+class DonorResource(Resource):
+    # get all donors 
+    def get(self, donor_type=None):
+        if donor_type == 'anonymous':
+            donors = Donor.query.filter_by(is_anonymous=True).all()
+        elif donor_type == 'non-anonymous':
+            donors = Donor.query.filter_by(is_anonymous=False).all()
+        else:
+            donors = Donor.query.all()
+        return jsonify([donor.to_dict() for donor in donors])
+
+    def post(self):
+        data = request.get_json()
+        username = data.get('username')
+        email = data.get('email')
+        password = data.get('password')
+        # Default to False if not provided
+        is_anonymous = data.get('is_anonymous', False) 
+
+        if Donor.query.filter_by(username=username).first():
+            return {'message': 'Username already exists'}, 400
+        if Donor.query.filter_by(email=email).first():
+            return {'message': 'Email already exists'}, 400
+
+        new_donor = Donor(
+            username=username,
+            email=email,
+            _password_hash=password,
+            is_anonymous=is_anonymous
+        )
+
+        db.session.add(new_donor)
+        db.session.commit()
+
+        return {
+            'id': new_donor.id,
+            'username': new_donor.username,
+            'email': new_donor.email,
+            'is_anonymous': new_donor.is_anonymous
+        }, 201
+    
         
 class StoryResource(Resource):
     def get(self, id=None):
@@ -320,6 +361,7 @@ api.add_resource(Login, '/login');
 api.add_resource(Donations, '/donations','/donations/<int:id>', '/donations/donor/<int:donor_id>', '/donations/charity/<int:charity_id>')
 api.add_resource(StoryResource, '/stories', '/stories/<int:id>')     
 api.add_resource(Beneficiaries, '/beneficiaries', '/beneficiaries/<int:beneficiary_id>')
+api.add_resource(DonorResource, '/donors', '/donors/<string:donor_type>', '/donors/<int:id>')
         
 
 if __name__ == '__main__':
