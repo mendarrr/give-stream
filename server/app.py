@@ -277,6 +277,28 @@ class CharityDashboard(Resource):
             all_charity_data.update(specific_charity_data)
         
         return all_charity_data
+    
+class DonorDashboard(Resource):
+    @jwt_required()
+    def get(self):
+        claims = get_jwt_identity()
+        donor_id = claims.get('id')
+        
+        all_donor_data = {
+            'total_donors': Donor.query.count(),
+            'total_donations': db.session.query(db.func.sum(Donation.amount)).scalar() or 0,
+            'average_donation': db.session.query(db.func.avg(Donation.amount)).scalar() or 0
+        }
+        
+        if donor_id:
+            specific_donor_data = {
+                'donor_total_donated': db.session.query(db.func.sum(Donation.amount)).filter(Donation.donor_id == donor_id).scalar() or 0,
+                'donor_donation_count': Donation.query.filter_by(donor_id=donor_id).count(),
+                'donor_charities_supported': db.session.query(Charity.id).join(Donation).filter(Donation.donor_id == donor_id).distinct().count()
+            }
+            all_donor_data.update(specific_donor_data)
+        
+        return all_donor_data
 
 class Donations(Resource):
     # Retrieve all donations
