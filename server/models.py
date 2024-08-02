@@ -254,3 +254,16 @@ class Inventory(db.Model):
             'quantity': self.quantity,
             'last_updated': self.last_updated
         }
+
+class Payment(db.Model):
+    __tablename__ = 'payments'
+    payment_id = db.Column(db.Integer, primary_key=True)
+    donor_id = db.Column(db.Integer, db.ForeignKey('donors.donor_id'), nullable=False)
+    donation_id = db.Column(db.Integer, db.ForeignKey('donations.donation_id'), nullable=False)
+    amount = db.Column(db.Numeric(10, 2), nullable=False)
+    payment_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    payment_method = db.Column(db.Enum('credit_card', 'bank_transfer', 'paypal', 'cash'), nullable=False)
+    transaction_id = db.Column(db.String(50))
+
+    donor = db.relationship('Donor', backref=db.backref('payments', lazy=True))
+    donation = db.relationship('Donation', backref=db.backref('payments', lazy=True))
