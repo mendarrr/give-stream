@@ -208,7 +208,7 @@ class CharityApplications(Resource):
         db.session.commit()
         return application.to_dict(), 200
 
-class Dashboard(Resource):
+class AdminDashboard(Resource):
     #@admin_required()
     def get(self):
         total_donations = db.session.query(db.func.sum(Donation.amount)).scalar() or 0
@@ -603,7 +603,7 @@ api.add_resource(InventoryResource, '/inventory', '/inventory/<int:id>')
 api.add_resource(Charities, '/charities', '/charities/<int:id>')
 api.add_resource(CharityApplications, '/charity-applications', '/charity-applications/<int:id>')
 api.add_resource(PaymentMethods, '/payment-methods', '/payment-methods/<int:id>')
-api.add_resource(Dashboard, '/dashboard')       
+api.add_resource(AdminDashboard, '/admin-dashboard')       
 
 if __name__ == '__main__':
     app.run(debug=True)
