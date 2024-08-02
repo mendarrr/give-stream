@@ -135,9 +135,13 @@ class Login(Resource):
         
 class Charities(Resource):
     # @jwt_required()  
-    def get(self):
-        charities = Charity.query.all()
-        return jsonify([charity.to_dict() for charity in charities])
+    def get(self, id=None):
+        if id:
+            charity = Charity.query.get_or_404(id)
+            return charity.to_dict()
+        else:
+            charities = Charity.query.all()
+            return jsonify([charity.to_dict() for charity in charities])
 
     # @admin_required() 
     def post(self):
@@ -153,6 +157,20 @@ class Charities(Resource):
         db.session.add(new_charity)
         db.session.commit()
         return new_charity.to_dict(), 201
+    
+    def put(self, id):
+        charity = Charity.query.get_or_404(id)
+        data = request.get_json()
+        for key, value in data.items():
+            setattr(charity, key, value)
+        db.session.commit()
+        return charity.to_dict()
+    
+    def delete(self, id):
+        charity = Charity.query.get_or_404(id)
+        db.session.delete(charity)
+        db.session.commit()
+        return '', 204
 
 class CharityApplications(Resource):
     # @admin_required()  
@@ -555,7 +573,7 @@ api.add_resource(StoryResource, '/stories', '/stories/<int:id>')
 api.add_resource(Beneficiaries, '/beneficiaries', '/beneficiaries/<int:beneficiary_id>')
 api.add_resource(DonorResource, '/donors', '/donors/<string:donor_type>', '/donors/<int:id>')
 api.add_resource(InventoryResource, '/inventory', '/inventory/<int:id>')
-api.add_resource(Charities, '/charities')
+api.add_resource(Charities, '/charities', '/charities/<int:id>')
 api.add_resource(CharityApplications, '/charity-applications', '/charity-applications/<int:id>')
 api.add_resource(Dashboard, '/dashboard')       
 
