@@ -5,9 +5,20 @@ from flask import Flask, make_response,jsonify,session,request, current_app, jso
 from flask_restful import Resource, Api
 import bcrypt
 from datetime import datetime, timedelta
+from flask_apscheduler import APScheduler
+from notification_service import run_notification_service
 
 from config import app,db,api
 from models import db, Admin, Donor,Charity
+
+
+scheduler = APScheduler()
+scheduler.init_app(app)
+scheduler.start()
+
+@scheduler.task('cron', id='notify_subscriptions', hour=0)
+def scheduled_notification_service():
+    run_notification_service()
 
 
 # Views go here!
@@ -121,6 +132,81 @@ class Login(Resource):
                 return {'message': 'Invalid password for admin'}, 401
         else:
             return {'message': 'User not found'}, 404
+        
+class Charities(Resource):
+    # @jwt_required()  
+    def get(self):
+        charities = Charity.query.all()
+        return jsonify([charity.to_dict() for charity in charities])
+
+    # @admin_required() 
+    def post(self):
+        data = request.get_json()
+        new_charity = Charity(
+            username=data['username'],
+            email=data['email'],
+            name=data['name'],
+            description=data.get('description'),
+            needed_donation=data.get('needed_donation')
+        )
+        new_charity.password_hash = data['password']
+        db.session.add(new_charity)
+        db.session.commit()
+        return new_charity.to_dict(), 201
+
+class CharityApplications(Resource):
+    # @admin_required()  
+    def get(self):
+        applications = CharityApplication.query.all()
+        return jsonify([app.to_dict() for app in applications])
+
+    def post(self):
+        data = request.get_json()
+        new_application = CharityApplication(
+            name=data['name'],
+            email=data['email'],
+            description=data['description']
+        )
+        db.session.add(new_application)
+        db.session.commit()
+        return new_application.to_dict(), 201
+
+    # @admin_required() 
+    def put(self, id):
+        application = CharityApplication.query.get_or_404(id)
+        data = request.get_json()
+        application.status = data['status']
+        # application.reviewed_by = get_jwt_identity()['id']  # Comment out this line
+
+        if data['status'] == 'approved':
+            new_charity = Charity(
+                username=application.name.lower().replace(' ', '_'),
+                email=application.email,
+                name=application.name,
+                description=application.description
+            )
+            db.session.add(new_charity)
+
+        db.session.commit()
+        return application.to_dict(), 200
+
+class AdminDashboard(Resource):
+    # @admin_required() 
+    def get(self):
+        total_donations = db.session.query(db.func.sum(Donation.amount)).scalar() or 0
+        charity_count = Charity.query.count()
+        donor_count = Donor.query.count()
+        recent_donations = Donation.query.order_by(Donation.date.desc()).limit(10).all()
+        pending_applications = CharityApplication.query.filter_by(status='pending').count()
+
+        return {
+            'total_donations': total_donations,
+            'charity_count': charity_count,
+            'donor_count': donor_count,
+            'recent_donations': [donation.to_dict() for donation in recent_donations],
+            'pending_applications': pending_applications
+        }  
+
 
 class Donations(Resource):
     # Retrieve all donations
@@ -193,7 +279,7 @@ class Donations(Resource):
             return donation.to_dict()
         else:
             return {'message': 'Donation not found'}, 404
-    
+        
 class DonorResource(Resource):
     # get all donors 
     def get(self, donor_type=None):
@@ -356,13 +442,80 @@ class Beneficiaries(Resource):
         db.session.commit()
         return '', 204
 
-# Routes
+class InventoryResource(Resource):
+    # Retrieve all inventory items
+    def get(self, id=None):
+        if id:
+            inventory_item = Inventory.query.get(id)
+            if inventory_item:
+                return jsonify(inventory_item.to_dict())
+            return {'message': 'Inventory item not found'}, 404
+        else:
+            inventory_list = Inventory.query.all()
+            return jsonify([item.to_dict() for item in inventory_list])
+
+    # Create a new inventory item
+    def post(self):
+        data = request.get_json()
+        try:
+            new_item = Inventory(
+                charity_id=data['charity_id'],
+                item_name=data['item_name'],
+                quantity=data['quantity'],
+                date_updated=datetime.now()  # Set current date and time
+            )
+            db.session.add(new_item)
+            db.session.commit()
+            return new_item.to_dict(), 201
+        except Exception as e:
+            db.session.rollback()
+            return {'message': 'Failed to create item', 'error': str(e)}, 400
+
+    # Update an existing inventory item
+    def put(self, id):
+        data = request.get_json()
+        inventory_item = Inventory.query.get(id)
+        if inventory_item:
+            try:
+                inventory_item.charity_id = data['charity_id']
+                inventory_item.item_name = data['item_name']
+                inventory_item.quantity = data['quantity']
+                inventory_item.date_updated = datetime.now()  # Update timestamp
+                db.session.commit()
+                return inventory_item.to_dict()
+            except Exception as e:
+                db.session.rollback()
+                return {'message': 'Failed to update item', 'error': str(e)}, 400
+        else:
+            return {'message': 'Inventory item not found'}, 404
+
+    # Delete an inventory item
+    def delete(self, id):
+        inventory_item = Inventory.query.get(id)
+        if inventory_item:
+            try:
+                db.session.delete(inventory_item)
+                db.session.commit()
+                return {'message': 'Item deleted successfully'}, 200
+            except Exception as e:
+                db.session.rollback()
+                return {'message': 'Failed to delete item', 'error': str(e)}, 400
+        else:
+            return {'message': 'Inventory item not found'}, 404
+
+
+
+# # Routes
 api.add_resource(Login, '/login');    
+
 api.add_resource(Donations, '/donations','/donations/<int:id>', '/donations/donor/<int:donor_id>', '/donations/charity/<int:charity_id>')
 api.add_resource(StoryResource, '/stories', '/stories/<int:id>')     
 api.add_resource(Beneficiaries, '/beneficiaries', '/beneficiaries/<int:beneficiary_id>')
 api.add_resource(DonorResource, '/donors', '/donors/<string:donor_type>', '/donors/<int:id>')
-        
+api.add_resource(InventoryResource, '/inventory', '/inventory/<int:id>')
+api.add_resource(Charities, '/charities')
+api.add_resource(CharityApplications, '/charity-applications', '/charity-applications/<int:id>')
+api.add_resource(AdminDashboard, '/admin-dashboard')       
 
 if __name__ == '__main__':
     app.run(debug=True)
