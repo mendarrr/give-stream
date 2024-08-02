@@ -11,13 +11,14 @@ import re
 
 class Donor(db.Model, SerializerMixin):
     __tablename__ = 'donors'
-    serialize_rules = ('-donations.donor', '-_password_hash')
+    serialize_rules = ('-donations.donor', '-_password_hash', '-payment_method.donors')
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     _password_hash = db.Column(db.String)
     is_anonymous = db.Column(db.Boolean, default=False)
+    payment_method_id = db.Column(db.Integer, db.ForeignKey('payment_methods.id'))
     donations = db.relationship('Donation', backref='donor', lazy='dynamic')
 
     @hybrid_property
@@ -175,12 +176,13 @@ class CharityApplication(db.Model, SerializerMixin):
 
 class Donation(db.Model, SerializerMixin):
     __tablename__ = 'donations'
-    serialize_rules = ('-donor', '-charity')
+    serialize_rules = ('-donor', '-charity', '-payment_method.donations')
     serialize_only = ('id', 'donor_id', 'charity_id', 'amount', 'date', 'is_anonymous', 'is_recurring', 'recurring_frequency', 'next_donation_date')
 
     id = db.Column(db.Integer, primary_key=True)
     donor_id = db.Column(db.Integer, db.ForeignKey('donors.id'), nullable=False)
     charity_id = db.Column(db.Integer, db.ForeignKey('charities.id'), nullable=False)
+    payment_method_id = db.Column(db.Integer, db.ForeignKey('payment_methods.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False)
     date = db.Column(db.DateTime, default=datetime.now)
     is_anonymous = db.Column(db.Boolean, default=False)
@@ -255,15 +257,13 @@ class Inventory(db.Model):
             'last_updated': self.last_updated
         }
 
-class Payment(db.Model):
-    __tablename__ = 'payments'
-    payment_id = db.Column(db.Integer, primary_key=True)
-    donor_id = db.Column(db.Integer, db.ForeignKey('donors.donor_id'), nullable=False)
-    donation_id = db.Column(db.Integer, db.ForeignKey('donations.donation_id'), nullable=False)
-    amount = db.Column(db.Numeric(10, 2), nullable=False)
-    payment_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    payment_method = db.Column(db.Enum('credit_card', 'bank_transfer', 'paypal', 'cash'), nullable=False)
-    transaction_id = db.Column(db.String(50))
+class PaymentMethod(db.Model, SerializerMixin):
+    __tablename__ = 'payment_methods'
+    serialize_rules = ('-donors', '-donations')
 
-    donor = db.relationship('Donor', backref=db.backref('payments', lazy=True))
-    donation = db.relationship('Donation', backref=db.backref('payments', lazy=True))
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.String(255))
+
+    donors = db.relationship('Donor', backref='payment_method', lazy=True)
+    donations = db.relationship('Donation', backref='payment_method', lazy=True)

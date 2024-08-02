@@ -1,5 +1,5 @@
 from app import app 
-from models import db, Donor, Charity, Admin, CharityApplication, Donation, Story, Beneficiary, Inventory
+from models import db, Donor, Charity, Admin, CharityApplication, Donation, Story, Beneficiary, Inventory, PaymentMethod
 
 def seed_data():
     with app.app_context():
@@ -56,16 +56,28 @@ def seed_data():
         # Commit to get the IDs assigned
         db.session.commit()
 
+        # Create sample payment methods
+        payment_methods = [
+            PaymentMethod(name='Credit Card', description='Payment via credit card'),
+            PaymentMethod(name='PayPal', description='Payment via PayPal account'),
+            PaymentMethod(name='Bank Transfer', description='Direct bank transfer payment'),
+            PaymentMethod(name='Cash', description='Cash payment')
+        ]
+        db.session.add_all(payment_methods)
+        db.session.commit()
+
         # Create sample donations
         donation1 = Donation(
             donor_id=donor1.id,
             charity_id=charity2.id,
+            payment_method_id=payment_methods[0].id,
             amount=1000.00,
             is_anonymous=False
         )
         donation2 = Donation(
             donor_id=donor2.id,
             charity_id=charity1.id,
+            payment_method_id=payment_methods[1].id,
             amount=2000.00,
             is_anonymous=True
         )
