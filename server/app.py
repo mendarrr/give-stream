@@ -190,22 +190,40 @@ class CharityApplications(Resource):
         db.session.commit()
         return application.to_dict(), 200
 
-class AdminDashboard(Resource):
-    # @admin_required() 
+class Dashboard(Resource):
+    #@admin_required()
     def get(self):
         total_donations = db.session.query(db.func.sum(Donation.amount)).scalar() or 0
         charity_count = Charity.query.count()
         donor_count = Donor.query.count()
         recent_donations = Donation.query.order_by(Donation.date.desc()).limit(10).all()
         pending_applications = CharityApplication.query.filter_by(status='pending').count()
+        total_donation_amount = db.session.query(db.func.sum(Donation.amount)).scalar() or 0
+        active_donors = db.session.query(Donor.id).join(Donation).distinct().count()
+        story_count = Story.query.count()
+        beneficiary_count = Beneficiary.query.count()
+        total_inventory_items = db.session.query(db.func.sum(Inventory.quantity)).scalar() or 0
+        charity_application_count = CharityApplication.query.count()
+        total_users = (
+            Donor.query.count() +
+            Charity.query.count() +
+            Admin.query.count()
+        )
 
         return {
+            'total_users': total_users,
             'total_donations': total_donations,
             'charity_count': charity_count,
             'donor_count': donor_count,
             'recent_donations': [donation.to_dict() for donation in recent_donations],
-            'pending_applications': pending_applications
-        }  
+            'pending_applications': pending_applications,
+            'total_donation_amount': float(total_donation_amount),
+            'active_donors': active_donors,
+            'story_count': story_count,
+            'beneficiary_count': beneficiary_count,
+            'total_inventory_items': total_inventory_items,
+            'charity_application_count': charity_application_count
+        }
 
 
 class Donations(Resource):
@@ -539,7 +557,7 @@ api.add_resource(DonorResource, '/donors', '/donors/<string:donor_type>', '/dono
 api.add_resource(InventoryResource, '/inventory', '/inventory/<int:id>')
 api.add_resource(Charities, '/charities')
 api.add_resource(CharityApplications, '/charity-applications', '/charity-applications/<int:id>')
-api.add_resource(AdminDashboard, '/admin-dashboard')       
+api.add_resource(Dashboard, '/dashboard')       
 
 if __name__ == '__main__':
     app.run(debug=True)
