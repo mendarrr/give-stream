@@ -176,8 +176,8 @@ class CharityApplication(db.Model, SerializerMixin):
 
 class Donation(db.Model, SerializerMixin):
     __tablename__ = 'donations'
-    serialize_rules = ('-donor', '-charity', '-payment_method.donations')
-    serialize_only = ('id', 'donor_id', 'charity_id', 'amount', 'date', 'is_anonymous', 'is_recurring', 'recurring_frequency', 'next_donation_date')
+    serialize_rules = ('-donor', '-charity', '-payment_method')
+    serialize_only = ('id', 'donor_id', 'charity_id', 'payment_method_id', 'amount', 'date', 'is_anonymous', 'is_recurring', 'recurring_frequency', 'next_donation_date')
 
     id = db.Column(db.Integer, primary_key=True)
     donor_id = db.Column(db.Integer, db.ForeignKey('donors.id'), nullable=False)
@@ -190,18 +190,22 @@ class Donation(db.Model, SerializerMixin):
     recurring_frequency = db.Column(db.String(20))
     next_donation_date = db.Column(db.DateTime)
 
+    payment_method = db.relationship('PaymentMethod', back_populates='donations')
+
     def to_dict(self):
         return {
             'id': self.id,
             'donor_id': self.donor_id,
             'charity_id': self.charity_id,
+            'payment_method_id': self.payment_method_id,
             'amount': self.amount,
-            'date': self.date,
+            'date': self.date.isoformat() if self.date else None,
             'is_anonymous': self.is_anonymous,
             'is_recurring': self.is_recurring,
             'recurring_frequency': self.recurring_frequency,
-            'next_donation_date': self.next_donation_date
+            'next_donation_date': self.next_donation_date.isoformat() if self.next_donation_date else None
         }
+
 
 class Story(db.Model):
     __tablename__ = 'stories'
@@ -266,4 +270,4 @@ class PaymentMethod(db.Model, SerializerMixin):
     description = db.Column(db.String(255))
 
     donors = db.relationship('Donor', backref='payment_method', lazy=True)
-    donations = db.relationship('Donation', backref='payment_method', lazy=True)
+    donations = db.relationship('Donation', back_populates='payment_method')

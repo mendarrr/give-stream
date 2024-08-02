@@ -281,9 +281,13 @@ class Donations(Resource):
             return {'message': 'Donation not found'}, 404
         
 class DonorResource(Resource):
-    # get all donors 
-    def get(self, donor_type=None):
-        if donor_type == 'anonymous':
+    def get(self, donor_type=None, id=None):
+        if id:
+            donor = Donor.query.get(id)
+            if donor:
+                return donor.to_dict()
+            return {'message': 'Donor not found'}, 404
+        elif donor_type == 'anonymous':
             donors = Donor.query.filter_by(is_anonymous=True).all()
         elif donor_type == 'non-anonymous':
             donors = Donor.query.filter_by(is_anonymous=False).all()
@@ -296,8 +300,7 @@ class DonorResource(Resource):
         username = data.get('username')
         email = data.get('email')
         password = data.get('password')
-        # Default to False if not provided
-        is_anonymous = data.get('is_anonymous', False) 
+        is_anonymous = data.get('is_anonymous', False)
 
         if Donor.query.filter_by(username=username).first():
             return {'message': 'Username already exists'}, 400
@@ -307,20 +310,40 @@ class DonorResource(Resource):
         new_donor = Donor(
             username=username,
             email=email,
-            _password_hash=password,
             is_anonymous=is_anonymous
         )
+        new_donor.password_hash = password
 
         db.session.add(new_donor)
         db.session.commit()
 
-        return {
-            'id': new_donor.id,
-            'username': new_donor.username,
-            'email': new_donor.email,
-            'is_anonymous': new_donor.is_anonymous
-        }, 201
-    
+        return new_donor.to_dict(), 201
+
+    def put(self, id):
+        donor = Donor.query.get(id)
+        if not donor:
+            return {'message': 'Donor not found'}, 404
+
+        data = request.get_json()
+        donor.username = data.get('username', donor.username)
+        donor.email = data.get('email', donor.email)
+        donor.is_anonymous = data.get('is_anonymous', donor.is_anonymous)
+
+        if 'password' in data:
+            donor.password_hash = data['password']
+
+        db.session.commit()
+        return donor.to_dict(), 200
+
+    def delete(self, id):
+        donor = Donor.query.get(id)
+        if not donor:
+            return {'message': 'Donor not found'}, 404
+
+        db.session.delete(donor)
+        db.session.commit()
+        return {'message': 'Donor deleted successfully'}, 200
+
         
 class StoryResource(Resource):
     def get(self, id=None):
@@ -502,6 +525,7 @@ class InventoryResource(Resource):
                 return {'message': 'Failed to delete item', 'error': str(e)}, 400
         else:
             return {'message': 'Inventory item not found'}, 404
+            
 
 
 
