@@ -252,6 +252,31 @@ class AdminDashboard(Resource):
             'total_inventory_items': total_inventory_items,
             'charity_application_count': charity_application_count
         }
+    
+class CharityDashboard(Resource):
+    @jwt_required()
+    def get(self):
+        claims = get_jwt_identity()
+        charity_id = claims.get('id')
+        
+        all_charity_data = {
+            'total_charities': Charity.query.count(),
+            'total_donations_all_charities': db.session.query(db.func.sum(Donation.amount)).scalar() or 0,
+            'total_beneficiaries': Beneficiary.query.count(),
+            'total_stories': Story.query.count()
+        }
+        
+        if charity_id:
+            specific_charity_data = {
+                'charity_donations': db.session.query(db.func.sum(Donation.amount)).filter(Donation.charity_id == charity_id).scalar() or 0,
+                'charity_donors': db.session.query(Donor.id).join(Donation).filter(Donation.charity_id == charity_id).distinct().count(),
+                'charity_stories': Story.query.filter_by(charity_id=charity_id).count(),
+                'charity_beneficiaries': Beneficiary.query.filter_by(charity_id=charity_id).count(),
+                'charity_inventory': db.session.query(db.func.sum(Inventory.quantity)).filter(Inventory.charity_id == charity_id).scalar() or 0
+            }
+            all_charity_data.update(specific_charity_data)
+        
+        return all_charity_data
 
 class Donations(Resource):
     # Retrieve all donations
@@ -613,7 +638,9 @@ api.add_resource(Charities, '/charities', '/charities/<int:id>')
 api.add_resource(CharityApplications, '/charity-applications', '/charity-applications/<int:id>')
 api.add_resource(PaymentMethods, '/payment-methods', '/payment-methods/<int:id>')
 api.add_resource(CommonDashboard, '/dashboard/common')
-api.add_resource(AdminDashboard, '/dashboard/admin')       
+api.add_resource(AdminDashboard, '/dashboard/admin')
+api.add_resource(CharityDashboard, '/dashboard/charity')
+api.add_resource(DonorDashboard, '/dashboard/donor')       
 
 if __name__ == '__main__':
     app.run(debug=True)
