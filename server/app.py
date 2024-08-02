@@ -9,7 +9,7 @@ from flask_apscheduler import APScheduler
 from notification_service import run_notification_service
 
 from config import app,db,api
-from models import db, Admin, Donor,Charity
+from models import db, Admin, Donor,Charity, PaymentMethod
 
 
 scheduler = APScheduler()
@@ -562,12 +562,39 @@ class InventoryResource(Resource):
         else:
             return {'message': 'Inventory item not found'}, 404
             
+class PaymentMethods(Resource):
+    def get(self, id=None):
+        if id:
+            payment_method = PaymentMethod.query.get_or_404(id)
+            return payment_method.to_dict()
+        else:
+            payment_methods = PaymentMethod.query.all()
+            return [pm.to_dict() for pm in payment_methods]
 
+    def post(self):
+        data = request.get_json()
+        new_payment_method = PaymentMethod(name=data['name'], description=data.get('description'))
+        db.session.add(new_payment_method)
+        db.session.commit()
+        return new_payment_method.to_dict(), 201
+
+    def put(self, id):
+        payment_method = PaymentMethod.query.get_or_404(id)
+        data = request.get_json()
+        payment_method.name = data.get('name', payment_method.name)
+        payment_method.description = data.get('description', payment_method.description)
+        db.session.commit()
+        return payment_method.to_dict()
+
+    def delete(self, id):
+        payment_method = PaymentMethod.query.get_or_404(id)
+        db.session.delete(payment_method)
+        db.session.commit()
+        return '', 204
 
 
 # # Routes
 api.add_resource(Login, '/login');    
-
 api.add_resource(Donations, '/donations','/donations/<int:id>', '/donations/donor/<int:donor_id>', '/donations/charity/<int:charity_id>')
 api.add_resource(StoryResource, '/stories', '/stories/<int:id>')     
 api.add_resource(Beneficiaries, '/beneficiaries', '/beneficiaries/<int:beneficiary_id>')
@@ -575,6 +602,7 @@ api.add_resource(DonorResource, '/donors', '/donors/<string:donor_type>', '/dono
 api.add_resource(InventoryResource, '/inventory', '/inventory/<int:id>')
 api.add_resource(Charities, '/charities', '/charities/<int:id>')
 api.add_resource(CharityApplications, '/charity-applications', '/charity-applications/<int:id>')
+api.add_resource(PaymentMethods, '/payment-methods', '/payment-methods/<int:id>')
 api.add_resource(Dashboard, '/dashboard')       
 
 if __name__ == '__main__':
