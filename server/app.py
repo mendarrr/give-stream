@@ -20,6 +20,10 @@ scheduler.start()
 def scheduled_notification_service():
     run_notification_service()
 
+# Home page
+class Index(Resource):
+    def get(self):
+        return jsonify({"Message": "Welcome to GiveStream API"})
 
 # Views go here!
 class checkSession(Resource):
@@ -650,6 +654,7 @@ class PaymentMethods(Resource):
 
 
 # # Routes
+api.add_resource(Index, '/')
 api.add_resource(Login, '/login');    
 api.add_resource(Donations, '/donations','/donations/<int:id>', '/donations/donor/<int:donor_id>', '/donations/charity/<int:charity_id>')
 api.add_resource(StoryResource, '/stories', '/stories/<int:id>')     
