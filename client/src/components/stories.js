@@ -2,11 +2,28 @@ import React, { useState, useEffect } from 'react';
 
 const apiUrl = '/stories';
 
+// Assume that the current user's charity_id is available globally or through context
+const currentUserCharityId = 'current-charity-id'; // Replace with actual logic to get the current charity's ID
+
+const formatStoryContent = (text) => {
+    const wordsPerLine = 7;
+    const words = text.split(' ');
+    const lines = [];
+
+    for (let i = 0; i < words.length; i += wordsPerLine) {
+        lines.push(words.slice(i, i + wordsPerLine).join(' '));
+    }
+
+    return lines.join('<br>');
+};
+
 const Stories = () => {
     const [stories, setStories] = useState([]);
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [updateId, setUpdateId] = useState('');
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isUpdating, setIsUpdating] = useState(false);
 
     // Fetch all stories
     const fetchStories = async () => {
@@ -15,26 +32,11 @@ const Stories = () => {
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             setStories(data);
+            if (data.length > 0) {
+                setCurrentIndex(0); // Start at the first story
+            }
         } catch (error) {
             console.error('Error fetching stories:', error);
-        }
-    };
-
-    // Add a new story
-    const addStory = async () => {
-        try {
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title, content })
-            });
-            if (!response.ok) throw new Error('Network response was not ok');
-            const newStory = await response.json();
-            setStories([...stories, newStory]);
-            setTitle('');
-            setContent('');
-        } catch (error) {
-            console.error('Error creating story:', error);
         }
     };
 
@@ -52,6 +54,7 @@ const Stories = () => {
             setTitle('');
             setContent('');
             setUpdateId('');
+            setIsUpdating(false); // Hide the update form after successful update
         } catch (error) {
             console.error('Error updating story:', error);
         }
@@ -63,66 +66,105 @@ const Stories = () => {
             const response = await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
             if (!response.ok) throw new Error('Network response was not ok');
             setStories(stories.filter(story => story.id !== id));
+            if (currentIndex >= stories.length - 1) {
+                setCurrentIndex(stories.length - 2); // Adjust index if needed
+            }
         } catch (error) {
             console.error('Error deleting story:', error);
         }
+    };
+
+    // Navigate to the next or previous story
+    const handleNavigation = (direction) => {
+        if (direction === 'next') {
+            setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, stories.length - 1));
+        } else if (direction === 'prev') {
+            setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+        }
+    };
+
+    // Handle form submission
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        updateStory();
     };
 
     useEffect(() => {
         fetchStories();
     }, []);
 
+    // Handle story selection for editing
+    const handleEdit = (story) => {
+        setTitle(story.title);
+        setContent(story.content);
+        setUpdateId(story.id);
+        setIsUpdating(true); // Show the update form
+    };
+
     return (
-        <div>
-            <h1>Stories</h1> {/* Updated title */}
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    if (updateId) {
-                        updateStory();
-                    } else {
-                        addStory();
-                    }
-                }}
-            >
-                <input
-                    type="hidden"
-                    value={updateId}
-                    onChange={(e) => setUpdateId(e.target.value)}
-                />
-                <label>
-                    Title:
+        <div className="story-container">
+            <h1>Stories</h1>
+            {isUpdating && (
+                <form onSubmit={handleSubmit} className="update-form">
                     <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        required
+                        type="hidden"
+                        value={updateId}
+                        onChange={(e) => setUpdateId(e.target.value)}
                     />
-                </label>
-                <label>
-                    Content:
-                    <textarea
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        required
-                    />
-                </label>
-                <button type="submit">{updateId ? 'Update' : 'Add'} Story</button>
-            </form>
-            <ul>
-                {stories.map(story => (
-                    <li key={story.id}>
-                        <strong>{story.title}</strong>
-                        <p>{story.content}</p>
-                        <button onClick={() => {
-                            setTitle(story.title);
-                            setContent(story.content);
-                            setUpdateId(story.id);
-                        }}>Edit</button>
-                        <button onClick={() => deleteStory(story.id)}>Delete</button>
-                    </li>
-                ))}
-            </ul>
+                    <label>
+                        Title:
+                        <input
+                            type="text"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            required
+                        />
+                    </label>
+                    <label>
+                        Content:
+                        <textarea
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                            required
+                        />
+                    </label>
+                    <button type="submit">Update Story</button>
+                </form>
+            )}
+            <div className="story-display">
+                {stories.length > 0 && (
+                    <div className="story-item">
+                        <strong>{stories[currentIndex].title}</strong>
+                        <p dangerouslySetInnerHTML={{ __html: formatStoryContent(stories[currentIndex].content) }} />
+                        {stories[currentIndex].charity_id === currentUserCharityId && (
+                            <>
+                                <button onClick={() => handleEdit(stories[currentIndex])} className="update-button">
+                                    Update
+                                </button>
+                                <button onClick={() => deleteStory(stories[currentIndex].id)} className="delete-button">
+                                    Delete
+                                </button>
+                            </>
+                        )}
+                    </div>
+                )}
+                <div className="navigation-symbols">
+                    <span
+                        className="symbol prev-symbol"
+                        onClick={() => handleNavigation('prev')}
+                        style={{ visibility: currentIndex === 0 ? 'hidden' : 'visible' }}
+                    >
+                        &lt;
+                    </span>
+                    <span
+                        className="symbol next-symbol"
+                        onClick={() => handleNavigation('next')}
+                        style={{ visibility: currentIndex === stories.length - 1 ? 'hidden' : 'visible' }}
+                    >
+                        &gt;
+                    </span>
+                </div>
+            </div>
         </div>
     );
 };
