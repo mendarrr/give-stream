@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import CharityList from "./CharityList";
+import CompletedCharitiesList from "./CompletedCharitiesList";
 import "./HomePage.css";
 
 const HomePage = () => {
@@ -106,7 +107,20 @@ const HomePage = () => {
                 <CharityList searchTerm={searchTerm} />
             </div>
         </section>
-        <section className="completed-fundraisers"></section>
+        <section className="completed-fundraisers">
+            <div className="completed-list">
+                <CompletedCharitiesList searchTerm={searchTerm} />
+            </div>
+            <div className="completed-fundraisers-text">
+                <h2>Fundraisers initiated and run by Give Stream</h2>
+                <p>At Give Stream, We are commited to driving meaningful change across Africa and the world at large. Our Platform not only
+                   connects generous donors with deserving courses but also initiates it's own impactful fundraisers. Each of our projects is designed
+                   to address critical needs and uplift communities focusing on areas such as education healthcare and economic empowerment. By Spearheading
+                   these Initiatives, we ensure that every contribution makes a tangible business ensurin. Fostering a brighter future for all. Join us in
+                   in our mission to create lasting change, one fundraiser at a time.
+                </p>
+            </div>
+        </section>
         <section className="how-givestream-works"></section>
         <section className="fundraise"></section>
       </div>

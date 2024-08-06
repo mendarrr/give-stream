@@ -3,7 +3,17 @@
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 60px;
-    margin-top: 20px;
+    margin-top: -20px;
+}
+
+.charity-list-container h4{
+    font-size: 35px;
+    font-weight: 700;
+    color: white;
+    margin-top: 0px;
+    text-align: center;
+    letter-spacing: 1px;
+    font-family: 'Times New Roman', Times, serif;
 }
 
 .search-bar{
@@ -73,7 +83,7 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: #E66E4E;
+    background: #318E8D;
     color: white;
     border: none;
     padding: 10px 15px;

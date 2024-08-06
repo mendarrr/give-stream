@@ -129,5 +129,42 @@
 }
 
 
+/* Completed Fundraisers */
+.completed-fundraisers {
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(#df5644e8, #e35a48ea), url('../assets/CompletedFundraisersBack.png') no-repeat center center / cover;
+}
+
+.completed-fundraisers-text{
+    padding: 10px;
+    width: 1270px;
+    margin-left: 150px;
+}
+
+.completed-fundraisers-text h2{
+    font-size: 35px;
+    color: white;
+    margin-top: 0px;
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.completed-fundraisers-text p{
+    font-size: 23px;
+    color: white;
+    margin-top: -10px;
+    text-align: left;
+    font-weight: 500;
+    line-height: 1.2;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+
+
+
+
 
 

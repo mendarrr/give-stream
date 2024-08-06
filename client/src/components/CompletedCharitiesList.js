@@ -34,7 +34,7 @@ const CompletedCharitiesList = ({ searchTerm }) => {
 
     return (
         <div className="charity-list-container">
-            <h2>Completed Charities</h2>
+            <h4>.</h4>
             <button className="nav-button left" onClick={moveLeft} disabled={currentIndex === 0}>&lt;</button>
             <div className="charity-list">
                 {visibleCharities.map(charity => (
