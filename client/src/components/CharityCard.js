@@ -3,6 +3,8 @@ import './CharityCard.css';
 import defaultProfile from '../assets/defaultProfile.png'
 
 const CharityCard = ({ charity }) => {
+    const progressPercentage = (charity.total_raised / charity.needed_donation) * 100;
+
     return (
         <div>
             <div className='charity-profile'>
@@ -19,7 +21,7 @@ const CharityCard = ({ charity }) => {
                 <div className="progress-bar">
                     <div 
                         className="progress" 
-                        style={{width: `${charity.percentage_raised}%`}}
+                        style={{width: `${progressPercentage}%`}}
                     ></div>
                 </div>
                 <p className='goal'><span className='money'>KES {charity.total_raised}</span> funds raised of <span className='money'>KES {charity.needed_donation}</span> goal</p>

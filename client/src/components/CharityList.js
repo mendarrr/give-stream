@@ -9,8 +9,13 @@ const CharityList = ({ searchTerm }) => {
     useEffect(() => {
         fetch('/charities')
             .then(response => response.json())
-            .then(data => setCharities(data));
-    }, []);
+            .then(data => {
+                const activeCharities = data.filter(charity => 
+                    (charity.total_raised / charity.needed_donation) * 100 < 100
+                );
+                setCharities(activeCharities);
+            });
+    }, []);    
 
     const filteredCharities = charities.filter(charity =>
         charity.name.toLowerCase().includes(searchTerm.toLowerCase())
