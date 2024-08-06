@@ -1,67 +1,130 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const apiUrl = 'http://127.0.0.1:5000/stories';
+import React, { useState, useEffect } from 'react';
 
-    // Function to fetch all stories
+const apiUrl = 'http://127.0.0.1:5000/stories';
+
+const Stories = () => {
+    const [stories, setStories] = useState([]);
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
+    const [updateId, setUpdateId] = useState('');
+
+    // Fetch all stories
     const fetchStories = async () => {
         try {
             const response = await fetch(apiUrl);
             if (!response.ok) throw new Error('Network response was not ok');
-            const stories = await response.json();
-            console.log('Fetched stories:', stories);
-            // Update the story list or UI here
+            const data = await response.json();
+            setStories(data);
         } catch (error) {
             console.error('Error fetching stories:', error);
         }
     };
 
-    // Function to add a new story
-    const addStory = async (title, content) => {
-        const story = { title, content };
+    // Add a new story
+    const addStory = async () => {
         try {
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(story)
+                body: JSON.stringify({ title, content })
             });
             if (!response.ok) throw new Error('Network response was not ok');
             const newStory = await response.json();
-            console.log('Story created:', newStory);
-            // Update the story list or UI here
+            setStories([...stories, newStory]);
+            setTitle('');
+            setContent('');
         } catch (error) {
             console.error('Error creating story:', error);
         }
     };
 
-    // Function to update an existing story
-    const updateStory = async (id, title, content) => {
-        const story = { title, content };
+    // Update an existing story
+    const updateStory = async () => {
         try {
-            const response = await fetch(`${apiUrl}/${id}`, {
+            const response = await fetch(`${apiUrl}/${updateId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(story)
+                body: JSON.stringify({ title, content })
             });
             if (!response.ok) throw new Error('Network response was not ok');
             const updatedStory = await response.json();
-            console.log('Story updated:', updatedStory);
-            // Update the story list or UI here
+            setStories(stories.map(story => story.id === updateId ? updatedStory : story));
+            setTitle('');
+            setContent('');
+            setUpdateId('');
         } catch (error) {
             console.error('Error updating story:', error);
         }
     };
 
-    // Function to delete a story
+    // Delete a story
     const deleteStory = async (id) => {
         try {
             const response = await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
             if (!response.ok) throw new Error('Network response was not ok');
-            console.log('Story deleted:', id);
-            // Update the story list or UI here
+            setStories(stories.filter(story => story.id !== id));
         } catch (error) {
             console.error('Error deleting story:', error);
         }
     };
 
-    // Initial fetch
-    fetchStories();
-});
+    useEffect(() => {
+        fetchStories();
+    }, []);
+
+    return (
+        <div>
+            <h1>Stories</h1> {/* Updated title */}
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    if (updateId) {
+                        updateStory();
+                    } else {
+                        addStory();
+                    }
+                }}
+            >
+                <input
+                    type="hidden"
+                    value={updateId}
+                    onChange={(e) => setUpdateId(e.target.value)}
+                />
+                <label>
+                    Title:
+                    <input
+                        type="text"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        required
+                    />
+                </label>
+                <label>
+                    Content:
+                    <textarea
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        required
+                    />
+                </label>
+                <button type="submit">{updateId ? 'Update' : 'Add'} Story</button>
+            </form>
+            <ul>
+                {stories.map(story => (
+                    <li key={story.id}>
+                        <strong>{story.title}</strong>
+                        <p>{story.content}</p>
+                        <button onClick={() => {
+                            setTitle(story.title);
+                            setContent(story.content);
+                            setUpdateId(story.id);
+                        }}>Edit</button>
+                        <button onClick={() => deleteStory(story.id)}>Delete</button>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+};
+
+export default Stories;
