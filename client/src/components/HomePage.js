@@ -44,7 +44,7 @@ const HomePage = () => {
   }, []);  
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/dashboard/common")
+    fetch("/dashboard/common")
       .then((response) => response.json())
       .then((data) => {
         setDashboardData(data);

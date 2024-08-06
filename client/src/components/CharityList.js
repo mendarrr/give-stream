@@ -7,7 +7,7 @@ const CharityList = ({ searchTerm }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:5000/charities')
+        fetch('/charities')
             .then(response => response.json())
             .then(data => setCharities(data));
     }, []);
