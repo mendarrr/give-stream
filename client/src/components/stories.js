@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 const apiUrl = '/stories';
 
 const formatStoryContent = (text) => {
-    const wordsPerLine = 7;
+    const wordsPerLine = 9;
     const words = text.split(' ');
     const lines = [];
 
@@ -86,6 +86,14 @@ const Stories = () => {
         updateStory();
     };
 
+    // Handle canceling the update
+    const handleCancel = () => {
+        setTitle('');
+        setContent('');
+        setUpdateId('');
+        setIsUpdating(false); // Hide the update form
+    };
+
     useEffect(() => {
         fetchStories();
     }, []);
@@ -126,6 +134,9 @@ const Stories = () => {
                         />
                     </label>
                     <button type="submit">Update Story</button>
+                    <button type="button" onClick={handleCancel} className="cancel-button">
+                        Cancel Update
+                    </button>
                 </form>
             )}
             <div className="story-display">

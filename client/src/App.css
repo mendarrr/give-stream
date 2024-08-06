@@ -11,7 +11,7 @@ h1 {
   color: #318E8D; /* Teal color for heading */
 }
 
-form {
+form, .update-form {
   background-color: #f9f9f9; /* Slightly off-white to differentiate the form */
   border: 1px solid #318E8D; /* Teal border */
   border-radius: 8px;
@@ -21,14 +21,14 @@ form {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-form label {
+form label, .update-form label {
   display: block;
   margin-bottom: 10px;
   font-weight: bold;
 }
 
-form input[type="text"],
-form textarea {
+form input[type="text"], form textarea, 
+.update-form input[type="text"], .update-form textarea {
   width: calc(100% - 22px); /* Adjust for padding */
   padding: 10px;
   margin-bottom: 20px;
@@ -37,13 +37,13 @@ form textarea {
   box-sizing: border-box;
 }
 
-form input[type="text"]:focus,
-form textarea:focus {
+form input[type="text"]:focus, form textarea:focus,
+.update-form input[type="text"]:focus, .update-form textarea:focus {
   border-color: #90ee90; /* Light green */
   outline: none;
 }
 
-form button {
+form button, .update-form button {
   background-color: #318E8D; /* Teal button */
   color: #ffffff; /* White text */
   border: none;
@@ -54,8 +54,12 @@ form button {
   transition: background-color 0.3s ease;
 }
 
-form button:hover {
+form button:hover, .update-form button:hover {
   background-color: #2a756e; /* Darker teal on hover */
+}
+
+form button + button, .update-form button + button {
+  margin-left: 10px; /* Add spacing between buttons */
 }
 
 .story-container {
@@ -111,44 +115,4 @@ form button:hover {
   justify-content: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for better visibility */
   font-weight: bold; /* Make symbols bold */
-}
-
-.update-form {
-  margin: 20px auto;
-  max-width: 600px;
-  padding: 20px;
-  border: 1px solid #318E8D; /* Teal border */
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.update-form label {
-  display: block;
-  margin-bottom: 10px;
-  font-weight: bold;
-}
-
-.update-form input[type="text"],
-.update-form textarea {
-  width: calc(100% - 22px); /* Adjust for padding */
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-.update-form button {
-  background-color: #318E8D; /* Teal button */
-  color: #ffffff; /* White text */
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-}
-
-.update-form button:hover {
-  background-color: #2a756e; /* Darker teal on hover */
 }
