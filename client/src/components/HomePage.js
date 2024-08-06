@@ -4,6 +4,7 @@ import CharityList from "./CharityList";
 import "./HomePage.css";
 
 const HomePage = () => {
+  const [isSticky, setIsSticky] = useState(false);
   const [dashboardData, setDashboardData] = useState({});
   const [animatedData, setAnimatedData] = useState({
     total_donations: 0,
@@ -25,6 +26,23 @@ const HomePage = () => {
   };
 
   useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      if (offset > 100) {
+        setIsSticky(true);
+      } else {
+        setIsSticky(false);
+      }
+    };
+  
+    window.addEventListener('scroll', handleScroll);
+  
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);  
+
+  useEffect(() => {
     fetch("http://127.0.0.1:5000/dashboard/common")
       .then((response) => response.json())
       .then((data) => {
@@ -44,7 +62,7 @@ const HomePage = () => {
   return (
     <div className="main-home-container">
       <div className="home-navbar">
-        <Navbar />
+      <Navbar isSticky={isSticky} />
       </div>
       <div className="home-content">
         <section className="counter-container">

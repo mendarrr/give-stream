@@ -1,13 +1,13 @@
 import React from 'react'
 import './Navbar.css'
 
-function Navbar() {
+function Navbar({ isSticky }) {
   return (
-    <div className='navbar-container'>
-        <div className='navbar-logo'>
+    <div className={`navbar-container ${isSticky ? 'sticky' : ''}`}>
+        <div className={`navbar-logo ${isSticky ? 'hidden' : ''}`}>
         <img src={`${process.env.PUBLIC_URL}/GiveStreamLogo.png`} alt="logo" />
         </div>
-        <div className='nav-links'>
+        <div className={`nav-links ${isSticky ? 'sticky' : ''}`}>
             <ul>
                 <li>Set up a Donation Campaign</li>
                 <li>About Us</li>
