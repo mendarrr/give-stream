@@ -66,10 +66,11 @@ const HomePage = () => {
             </div>
           </div>
           <div className="counter-text2">
-            <h1>Meet your Charity and Donation Goals with Give Stream</h1>
+            <h1>Meet your Charity and Donation Goals with <span className="givestream">GIVE STREAM</span></h1>
           </div>
+            <a href="#charities-section" id="counter-button" className="counter-button">Donate Now</a>
         </section>
-        <section className="charities-list"></section>
+        <section id="charities-list" className="charities-list"></section>
         <section className="completed-fundraisers"></section>
         <section className="how-givestream-works"></section>
         <section className="fundraise"></section>

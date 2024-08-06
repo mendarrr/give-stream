@@ -6,6 +6,7 @@
     background-color: whitesmoke;
 }
 
+/* Home Content */
 .home-content{
     width: 100%;
     height: auto;
@@ -20,9 +21,15 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
 }
+
+/* Counter Section */
+.counter-container {
+    background: url('../assets/counterback.png') no-repeat center center / cover;
+    background-color: rgba(0, 0, 0, 0.85);
+    background-blend-mode: multiply;
+}
+
 
 .counter-text{
     align-items: center;
@@ -39,37 +46,71 @@
     letter-spacing: 2px;
     text-align: center;
     font-size: 30px;
-    color: #318E8D;
+    color: white;
 }
 
 .counter-numbers{
     display: flex;
     align-items: center;
-    border: 1px solid black;
-    padding: 10px;
+    border: 1px solid white;
+    background: rgb(245, 245, 245);
     width: 800px;
     border-radius: 20px 0px;
 }
 
 .counter-numbers .insight{
-    margin-left: 100px;
-    margin-right: 40px;
+    margin-left: 70px;
+    margin-right: 50px;
 }
 
 .counter-numbers .insight h2{
-    font-size: 30px;
+    font-size: 50px;
     color: #318E8D;
     text-align: center;
+    margin-top: 10px;
 }
 
 .counter-numbers .insight p{
     font-size: 20px;
-    color: #E66E4E;
+    color: black;
     text-align: center;
+    margin-top: -40px;
 }
 
 .counter-text2{
     margin-top: -10px;
     font-size: 30px;
     font-weight: 700;
+    color: white;
 }
+
+.counter-text2 span{
+    color: #E66E4E;
+    font-size: 50px;
+    font-weight: 700;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.counter-button{
+    text-decoration: none;
+    color: white;
+    font-size: 25px;
+    font-weight: 700;
+    border-bottom: 1px solid #318E8D;
+    border-left: 1px solid #318E8D;
+    margin-bottom: 10px;
+    background-color:#E66E4E;
+    border-radius: 20px;
+    padding: 15px 20px;
+    transition: all ease-in-out 1s;
+}
+
+.counter-button:hover{
+    transform: scale(1.09);
+    background-color: #318E8D;
+    color: white;
+    border-top: 1px solid #E66E4E;
+    border-right: 1px solid #E66E4E;
+    box-shadow: #E66E4E;
+}
+
