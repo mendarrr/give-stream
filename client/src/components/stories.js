@@ -50,6 +50,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Function to delete a story
+    const deleteStory = async (id) => {
+        try {
+            const response = await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
+            if (!response.ok) throw new Error('Network response was not ok');
+            console.log('Story deleted:', id);
+            // Update the story list or UI here
+        } catch (error) {
+            console.error('Error deleting story:', error);
+        }
+    };
+
     // Initial fetch
     fetchStories();
 });
