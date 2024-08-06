@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './NewDonor.css';
 
+
 const NewDonorForm = () => {
   const [formData, setFormData] = useState({
     username: '',
@@ -82,66 +83,83 @@ const NewDonorForm = () => {
   };
 
   return (
-    <form className="form-container" onSubmit={handleSubmit}>
-      <div className="form-group">
-        <h2>WELCOME TO GIVE STREAM. CONNECT WITH CHARITIES AND HELP THE WORLD.</h2>
-        <p>We would like to know the donors who have visited our page and keep their records before making a donation. 
-          Kindly fill the form below with the required details and choose whether you want to make your donations anonymously or not by ticking the checkbox.
-        </p>
-        <label className="form-label" htmlFor="username">Username</label>
-        <input
-          className={`form-input ${formErrors.username ? 'error' : ''}`}
-          type="text"
-          id="username"
-          name="username"
-          value={formData.username}
-          onChange={handleChange}
-          required
-        />
-        {formErrors.username && <span className="error-message">{formErrors.username}</span>}
+    <div className='newDonor'>
+    <div className="form-page">
+      <div className="form-left">
+        <img src="./Screenshot_from_2024-08-06_07-21-51-removebg-preview.png" alt="GiveStream Logo" className="logo" />
       </div>
-      <div className="form-group">
-        <label className="form-label" htmlFor="email">Email</label>
-        <input
-          className={`form-input ${formErrors.email ? 'error' : ''}`}
-          type="email"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        {formErrors.email && <span className="error-message">{formErrors.email}</span>}
+      <div className="form-right" style={{
+          backgroundImage: `url('/photo.jpg')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          backgroundBlendMode: 'overlay',}}>
+        <form className="form-container" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <h2>WELCOME TO GIVE STREAM</h2>
+            <p>Connect with charities and help the world.</p>
+            <p>We would like to know the donors who have visited our page and keep their records before making a donation.</p>
+            <p>Kindly fill the form with the required details and choose whether you want to make your donations anonymously or not by ticking the checkbox.</p>
+            <label className="form-label" htmlFor="username">Username</label>
+            <input
+              className={`form-input ${formErrors.username ? 'error' : ''}`}
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
+            {formErrors.username && <span className="error-message">{formErrors.username}</span>}
+          </div>
+          <div className="form-group">
+            <label className="form-label" htmlFor="email">Email</label>
+            <input
+              className={`form-input ${formErrors.email ? 'error' : ''}`}
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+            {formErrors.email && <span className="error-message">{formErrors.email}</span>}
+          </div>
+          <div className="form-group">
+            <label className="form-label" htmlFor="password">Password</label>
+            <input
+              className={`form-input ${formErrors.password ? 'error' : ''}`}
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+            {formErrors.password && <span className="error-message">{formErrors.password}</span>}
+          </div>
+          <div className="form-group checkbox-container">
+            <input
+              className="form-checkbox"
+              type="checkbox"
+              id="is_anonymous"
+              name="is_anonymous"
+              checked={formData.is_anonymous}
+              onChange={handleChange}
+            />
+            <label className="form-label" htmlFor="is_anonymous">Anonymous</label>
+          </div>
+          <p>Already have an account?Signin</p>
+          <button className="submit-button" type="submit" disabled={isLoading}>
+            {isLoading ? 'Submitting...' : 'Submit'}
+          </button>
+          {error && <p className="error-message">{error}</p>}
+        </form>
       </div>
-      <div className="form-group">
-        <label className="form-label" htmlFor="password">Password</label>
-        <input
-          className={`form-input ${formErrors.password ? 'error' : ''}`}
-          type="password"
-          id="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        {formErrors.password && <span className="error-message">{formErrors.password}</span>}
-      </div>
-      <div className="form-group checkbox-container">
-        <input
-          className="form-checkbox"
-          type="checkbox"
-          id="is_anonymous"
-          name="is_anonymous"
-          checked={formData.is_anonymous}
-          onChange={handleChange}
-        />
-        <label className="form-label" htmlFor="is_anonymous">Anonymous</label>
-      </div>
-      <button className="submit-button" type="submit" disabled={isLoading}>
-        {isLoading ? 'Submitting...' : 'Submit'}
-      </button>
-      {error && <p className="error-message">{error}</p>}
-    </form>
+    </div>
+  </div>
+  
   );
 };
 
