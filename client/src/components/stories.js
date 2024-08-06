@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const apiUrl = 'http://127.0.0.1:5000/stories';
+const apiUrl = '/stories';
 
 const Stories = () => {
     const [stories, setStories] = useState([]);
