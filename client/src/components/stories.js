@@ -32,6 +32,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Function to update an existing story
+    const updateStory = async (id, title, content) => {
+        const story = { title, content };
+        try {
+            const response = await fetch(`${apiUrl}/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(story)
+            });
+            if (!response.ok) throw new Error('Network response was not ok');
+            const updatedStory = await response.json();
+            console.log('Story updated:', updatedStory);
+            // Update the story list or UI here
+        } catch (error) {
+            console.error('Error updating story:', error);
+        }
+    };
+
     // Initial fetch
     fetchStories();
 });
