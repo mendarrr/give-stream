@@ -1,6 +1,30 @@
 .navbar-container{
     height: 12vh;
-    background-color: whitesmoke;
+    background-color: white;
     display: flex;
     padding: 5px;
+    border-radius: 0px 0px 20px 20px;
+}
+
+.navbar-logo{
+    width: 20%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 140px;
+}
+
+.nav-links ul{
+    list-style-type: none;
+    display: flex;
+    margin-left: 600px;
+    margin-top: 70px;
+    font-size: 20px;
+}
+.nav-links ul li{
+    margin-left: 30px;
+    font-weight: 500;
+    cursor: pointer;
+    color: #E66E4E;
 }

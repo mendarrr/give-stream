@@ -1,0 +1,75 @@
+.main-home-container{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    background-color: whitesmoke;
+}
+
+.home-content{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.home-content section{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.counter-text{
+    align-items: center;
+    justify-content: center;
+}
+
+.counter-text h2{
+    font-size: 35px;
+    color: #E66E4E;
+}
+
+.counter-text h3{
+    margin-top: -20px;
+    letter-spacing: 2px;
+    text-align: center;
+    font-size: 30px;
+    color: #318E8D;
+}
+
+.counter-numbers{
+    display: flex;
+    align-items: center;
+    border: 1px solid black;
+    padding: 10px;
+    width: 800px;
+    border-radius: 20px 0px;
+}
+
+.counter-numbers .insight{
+    margin-left: 100px;
+    margin-right: 40px;
+}
+
+.counter-numbers .insight h2{
+    font-size: 30px;
+    color: #318E8D;
+    text-align: center;
+}
+
+.counter-numbers .insight p{
+    font-size: 20px;
+    color: #E66E4E;
+    text-align: center;
+}
+
+.counter-text2{
+    margin-top: -10px;
+    font-size: 30px;
+    font-weight: 700;
+}
