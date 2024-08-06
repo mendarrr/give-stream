@@ -4,6 +4,7 @@ import CharityList from "./CharityList";
 import "./HomePage.css";
 
 const HomePage = () => {
+  const [searchTerm, setSearchTerm] = useState('');
   const [isSticky, setIsSticky] = useState(false);
   const [dashboardData, setDashboardData] = useState({});
   const [animatedData, setAnimatedData] = useState({
@@ -89,8 +90,21 @@ const HomePage = () => {
           </div>
             <a href="#charities-section" id="counter-button" className="counter-button">Donate Now</a>
         </section>
-        <section id="charities-list" className="charities-list">
-            <CharityList />
+        <section id="charities-section" className="charities-list">
+            <div className="charities-section-text">
+                <h3>Discover fundraisrs and Charity Initiatives you might care about</h3>
+            </div>
+            <div className="search-bar">
+                <input 
+                    type="text" 
+                    placeholder="Search for a charity" 
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+            </div>
+            <div className="list-of-charities">
+                <CharityList searchTerm={searchTerm} />
+            </div>
         </section>
         <section className="completed-fundraisers"></section>
         <section className="how-givestream-works"></section>

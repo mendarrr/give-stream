@@ -7,7 +7,7 @@ const CharityCard = ({ charity }) => {
             <div className='charity-profile'></div>
             <div className="charity-card">
                 <h2>{charity.name}</h2>
-                <p>Amount Raised: ${charity.total_raised}</p>
+                <p>Amount Raised: Ksh{charity.total_raised}</p>
                 <p>Number of Donations: {charity.donation_count}</p>
                 <div className="progress-bar">
                     <div 
