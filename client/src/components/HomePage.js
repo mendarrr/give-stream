@@ -73,8 +73,8 @@ const HomePage = () => {
           </div>
           <div className="counter-numbers">
             <div className="insight">
-              <h2>Ksh {animatedData.total_donations}</h2>
-              <p>Total Donations</p>
+              <h2>{animatedData.total_donations}</h2>
+              <p>Total Donations (KES) </p>
             </div>
             <div className="insight">
               <h2>{animatedData.charity_count}</h2>

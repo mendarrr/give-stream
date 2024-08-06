@@ -113,7 +113,17 @@
 }
 
 /* Charity List Section*/
-#charities-section{
+#charities-section {
     height: 100vh;
+    background: url('../assets/CharityHomeBack.png') no-repeat center center / 120%; /* Zoom in to 120% */
+    background-color: rgba(245, 245, 245, 0.9); /* Increase opacity for more white */
+    background-blend-mode: saturation; /* This will reduce color saturation */
 }
+
+.charities-section-text{
+    margin-top: 60px;
+}
+
+
+
 
