@@ -92,7 +92,7 @@ const HomePage = () => {
         </section>
         <section id="charities-section" className="charities-list">
             <div className="charities-section-text">
-                <h3>Discover fundraisrs and Charity Initiatives you might care about</h3>
+                <h3>Discover fundraisers and Charity Initiatives you might care about</h3>
             </div>
             <div className="search-bar">
                 <input 

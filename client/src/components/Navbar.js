@@ -4,7 +4,7 @@ import './Navbar.css'
 function Navbar({ isSticky }) {
   return (
     <div className={`navbar-container ${isSticky ? 'sticky' : ''}`}>
-        <div className={`navbar-logo ${isSticky ? 'hidden' : ''}`}>
+        <div className={`navbar-logo ${isSticky ? 'sticky' : ''}`}>
         <img src={`${process.env.PUBLIC_URL}/GiveStreamLogo.png`} alt="logo" />
         </div>
         <div className={`nav-links ${isSticky ? 'sticky' : ''}`}>

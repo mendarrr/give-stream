@@ -1,10 +1,17 @@
 import React from 'react';
 import './CharityCard.css';
+import defaultProfile from '../assets/defaultProfile.png'
 
 const CharityCard = ({ charity }) => {
     return (
         <div>
-            <div className='charity-profile'></div>
+            <div className='charity-profile'>
+                <img 
+                    src={charity.profilePicture || defaultProfile} 
+                    alt={charity.name} 
+                    className="charity-logo"
+                />
+            </div>
             <div className="charity-card">
                 <h2>{charity.name}</h2>
                 <p className='amount-raised'>RAISED: KES {charity.total_raised}</p>
