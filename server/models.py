@@ -112,6 +112,22 @@ class Charity(db.Model, SerializerMixin):
             'description': self.description,
             'needed_donation': self.needed_donation
         }
+    
+    def to_dict_with_stats(self):
+        donations = Donation.query.filter_by(charity_id=self.id).all()
+        total_raised = sum(donation.amount for donation in donations)
+        donation_count = len(donations)
+        percentage_raised = (total_raised / self.needed_donation) * 100 if self.needed_donation else 0
+
+        return {
+            'id': self.id,
+            'name': self.name,
+            'total_raised': total_raised,
+            'donation_count': donation_count,
+            'percentage_raised': percentage_raised,
+            'needed_donation': self.needed_donation
+    }
+
 
     def __repr__(self):
         return f"<Charity {self.id}: {self.username}>"

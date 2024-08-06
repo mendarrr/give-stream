@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
+import CharityList from "./CharityList";
 import "./HomePage.css";
 
 const HomePage = () => {
@@ -70,7 +71,9 @@ const HomePage = () => {
           </div>
             <a href="#charities-section" id="counter-button" className="counter-button">Donate Now</a>
         </section>
-        <section id="charities-list" className="charities-list"></section>
+        <section id="charities-list" className="charities-list">
+            <CharityList />
+        </section>
         <section className="completed-fundraisers"></section>
         <section className="how-givestream-works"></section>
         <section className="fundraise"></section>
