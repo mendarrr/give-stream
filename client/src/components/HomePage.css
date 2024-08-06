@@ -25,8 +25,8 @@
 
 /* Counter Section */
 .counter-container {
-    background: url('../assets/counterback.png') no-repeat center center / cover;
-    background-color: rgba(0, 0, 0, 0.85);
+    background: url('../assets/CounterBack.png') no-repeat center center / cover;
+    background-color: rgba(0, 0, 0, 0.8);
     background-blend-mode: multiply;
 }
 
