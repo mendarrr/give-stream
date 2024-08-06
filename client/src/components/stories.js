@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) throw new Error('Network response was not ok');
             const stories = await response.json();
             console.log('Fetched stories:', stories);
-            // Process stories here
+            // Update the story list or UI here
         } catch (error) {
             console.error('Error fetching stories:', error);
         }
