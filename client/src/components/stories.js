@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react';
 
 const apiUrl = '/stories';
 
-// Assume that the current user's charity_id is available globally or through context
-const currentUserCharityId = 'current-charity-id'; // Replace with actual logic to get the current charity's ID
-
 const formatStoryContent = (text) => {
     const wordsPerLine = 7;
     const words = text.split(' ');
@@ -136,16 +133,12 @@ const Stories = () => {
                     <div className="story-item">
                         <strong>{stories[currentIndex].title}</strong>
                         <p dangerouslySetInnerHTML={{ __html: formatStoryContent(stories[currentIndex].content) }} />
-                        {stories[currentIndex].charity_id === currentUserCharityId && (
-                            <>
-                                <button onClick={() => handleEdit(stories[currentIndex])} className="update-button">
-                                    Update
-                                </button>
-                                <button onClick={() => deleteStory(stories[currentIndex].id)} className="delete-button">
-                                    Delete
-                                </button>
-                            </>
-                        )}
+                        <button onClick={() => handleEdit(stories[currentIndex])} className="update-button">
+                            Update
+                        </button>
+                        <button onClick={() => deleteStory(stories[currentIndex].id)} className="delete-button">
+                            Delete
+                        </button>
                     </div>
                 )}
                 <div className="navigation-symbols">
