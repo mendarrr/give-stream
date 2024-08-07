@@ -6,6 +6,7 @@ import "./App.css";
 import HomePage from "./components/Homepage";
 import CharityList from "./components/CharityList";
 import CharityDetails from "./components/CharityDetails";
+import CharityProfile from "./components/CharityProfile";
 import Footer from "./components/Footer";
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/charities" element={<CharityList />} />
           <Route path="/charity/:id" element={<CharityDetails />} />
+          <Route path="/charity-profile/:id" element={<CharityProfile />} />
         </Routes>
         <Footer />
       </div>
