@@ -9,7 +9,7 @@ from flask_apscheduler import APScheduler
 from notification_service import run_notification_service
 
 from config import app,db,api
-from models import db, Admin, Donor,Charity, PaymentMethod
+from models import db, Donor,Charity, PaymentMethod,Admin
 
 
 scheduler = APScheduler()
@@ -136,18 +136,35 @@ class Login(Resource):
                 return {'message': 'Invalid password for admin'}, 401
         else:
             return {'message': 'User not found'}, 404
-        
+from flask_restful import Resource
+from flask import request, jsonify
+from models import db, Charity, Donation
+from datetime import datetime, timedelta
+
 class Charities(Resource):
-    # @jwt_required()  
     def get(self, id=None):
         if id:
             charity = Charity.query.get_or_404(id)
-            return charity.to_dict()
+            charity_dict = charity.to_dict()
+            
+            # Add recent donors
+            recent_donors = Donation.query.filter_by(charity_id=id).order_by(Donation.date.desc()).limit(3).all()
+            charity_dict['recentDonors'] = [
+                {
+                    'name': donor.donor.username if not donor.is_anonymous else 'Anonymous',
+                    'amount': donor.amount,
+                    'type': 'Recent donation'
+                } for donor in recent_donors
+            ]
+            
+            # Add recent donation count
+            charity_dict['recentDonationCount'] = Donation.query.filter_by(charity_id=id).filter(Donation.date >= datetime.utcnow() - timedelta(hours=24)).count()
+            
+            return charity_dict
         else:
             charities = Charity.query.all()
             return jsonify([charity.to_dict() for charity in charities])
 
-    # @admin_required() 
     def post(self):
         data = request.get_json()
         new_charity = Charity(
@@ -155,13 +172,16 @@ class Charities(Resource):
             email=data['email'],
             name=data['name'],
             description=data.get('description'),
-            needed_donation=data.get('needed_donation')
+            needed_donation=data.get('needed_donation'),
+            goal_amount=data.get('goal_amount'),
+            image_url=data.get('image_url'),
+            organizer=data.get('organizer')
         )
         new_charity.password_hash = data['password']
         db.session.add(new_charity)
         db.session.commit()
         return new_charity.to_dict(), 201
-    
+
     def put(self, id):
         charity = Charity.query.get_or_404(id)
         data = request.get_json()
@@ -169,12 +189,13 @@ class Charities(Resource):
             setattr(charity, key, value)
         db.session.commit()
         return charity.to_dict()
-    
+
     def delete(self, id):
         charity = Charity.query.get_or_404(id)
         db.session.delete(charity)
         db.session.commit()
         return '', 204
+    
 
 class CharityApplications(Resource):
     # @admin_required()  

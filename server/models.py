@@ -60,7 +60,6 @@ class Donor(db.Model, SerializerMixin):
     def __repr__(self):
         return f"<Donor {self.id}: {self.username}>"
 
-
 class Charity(db.Model, SerializerMixin):
     __tablename__ = 'charities'
     id = db.Column(db.Integer, primary_key=True)
@@ -70,6 +69,11 @@ class Charity(db.Model, SerializerMixin):
     _password_hash = db.Column(db.String)
     description = db.Column(db.Text)
     needed_donation = db.Column(db.Float)
+    raised_amount = db.Column(db.Float, default=0.0)
+    goal_amount = db.Column(db.Float)
+    donation_count = db.Column(db.Integer, default=0)
+    image_url = db.Column(db.String(255))
+    organizer = db.Column(db.String(128))
     donations = db.relationship('Donation', backref='charity', lazy='dynamic')
     stories = db.relationship('Story', backref='charity', lazy='dynamic')
     beneficiaries = db.relationship('Beneficiary', back_populates='charity', cascade='all, delete-orphan')
@@ -90,7 +94,7 @@ class Charity(db.Model, SerializerMixin):
         return bcrypt.check_password_hash(self._password_hash, password.encode('utf-8'))
 
     @validates('username')
-    def validate_name(self, key, value):
+    def validate_username(self, key, value):
         if not value or not value.strip():
             raise ValueError(f"{key} cannot be empty")
         return value.strip()
@@ -110,11 +114,44 @@ class Charity(db.Model, SerializerMixin):
             'email': self.email,
             'name': self.name,
             'description': self.description,
-            'needed_donation': self.needed_donation
+            'neededDonation': self.needed_donation,
+            'raisedAmount': self.raised_amount,
+            'goalAmount': self.goal_amount,
+            'donationCount': self.donation_count,
+            'imageUrl': self.image_url,
+            'organizer': self.organizer
         }
 
     def __repr__(self):
         return f"<Charity {self.id}: {self.username}>"
+
+class CharityApplication(db.Model, SerializerMixin):
+    __tablename__ = 'charity_applications'
+    serialize_rules = ('-admin',)
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    status = db.Column(db.String(20), default='pending')
+    submission_date = db.Column(db.DateTime, default=datetime.utcnow)
+    reviewed_by = db.Column(db.Integer, db.ForeignKey('admins.id'))
+    review_date = db.Column(db.DateTime)
+
+    admin = db.relationship('Admin', backref='reviewed_applications')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'email': self.email,
+            'description': self.description,
+            'status': self.status,
+            'submission_date': self.submission_date,
+            'reviewed_by': self.reviewed_by,
+            'review_date': self.review_date
+        }
+    
 
 class Admin(db.Model):
     __tablename__ = 'admins'
@@ -147,32 +184,6 @@ class Admin(db.Model):
     def __repr__(self):
         return f"<Admin {self.id}: {self.username}>"
 
-class CharityApplication(db.Model, SerializerMixin):
-    __tablename__ = 'charity_applications'
-    serialize_rules = ('-admin',)
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(128), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    status = db.Column(db.String(20), default='pending')
-    submission_date = db.Column(db.DateTime, default=datetime.utcnow)
-    reviewed_by = db.Column(db.Integer, db.ForeignKey('admins.id'))
-    review_date = db.Column(db.DateTime)
-
-    admin = db.relationship('Admin', backref='reviewed_applications')
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'email': self.email,
-            'description': self.description,
-            'status': self.status,
-            'submission_date': self.submission_date,
-            'reviewed_by': self.reviewed_by,
-            'review_date': self.review_date
-        }
 
 class Donation(db.Model, SerializerMixin):
     __tablename__ = 'donations'
