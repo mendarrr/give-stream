@@ -159,7 +159,7 @@ const HomePage = () => {
             <h4>How Give Stream Works</h4>
           </div>
           <div className="tutorial-btn">
-            <button>
+            <button play-btn>
               <i class="fa-solid fa-play"></i> Play 1 min Video
             </button>
           </div>
