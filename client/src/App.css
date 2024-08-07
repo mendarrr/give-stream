@@ -81,7 +81,7 @@ form button + button, .update-form button + button {
 
 .story-item {
   flex: 0 0 auto; /* Do not grow or shrink */
-  background-color: #fff8e7; /* Light orange background */
+  background-color: #ffffff; /* White background */
   border: 4px solid #f57f42; /* Bold orange border */
   border-radius: 12px; /* More pronounced rounded corners */
   padding: 30px; /* Increased padding for more content space */
