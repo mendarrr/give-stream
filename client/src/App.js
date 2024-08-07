@@ -6,8 +6,8 @@ import DonorList from './components/AllDonors';
 
 function App() {
   return (
-    <DonorList/>
-    //
+    <div>
+    </div>
   )
 }
 

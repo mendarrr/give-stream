@@ -101,7 +101,7 @@ const NewDonorForm = () => {
             <p>Connect with charities and help the world.</p>
             <p>We would like to know the donors who have visited our page and keep their records before making a donation.</p>
             <p>Kindly fill the form with the required details and choose whether you want to make your donations anonymously or not by ticking the checkbox.</p>
-            <label className="form-label" htmlFor="username">Username</label>
+            <label className="form-label" htmlFor="username">Username:</label>
             <input
               className={`form-input ${formErrors.username ? 'error' : ''}`}
               type="text"
@@ -114,7 +114,7 @@ const NewDonorForm = () => {
             {formErrors.username && <span className="error-message">{formErrors.username}</span>}
           </div>
           <div className="form-group">
-            <label className="form-label" htmlFor="email">Email</label>
+            <label className="form-label" htmlFor="email">Email:</label>
             <input
               className={`form-input ${formErrors.email ? 'error' : ''}`}
               type="email"
@@ -127,7 +127,7 @@ const NewDonorForm = () => {
             {formErrors.email && <span className="error-message">{formErrors.email}</span>}
           </div>
           <div className="form-group">
-            <label className="form-label" htmlFor="password">Password</label>
+            <label className="form-label" htmlFor="password">Password:</label>
             <input
               className={`form-input ${formErrors.password ? 'error' : ''}`}
               type="password"
@@ -140,6 +140,7 @@ const NewDonorForm = () => {
             {formErrors.password && <span className="error-message">{formErrors.password}</span>}
           </div>
           <div className="form-group checkbox-container">
+          <label className="form-label" htmlFor="is_anonymous">Anonymous:</label>
             <input
               className="form-checkbox"
               type="checkbox"
@@ -148,9 +149,9 @@ const NewDonorForm = () => {
               checked={formData.is_anonymous}
               onChange={handleChange}
             />
-            <label className="form-label" htmlFor="is_anonymous">Anonymous</label>
           </div>
           <p>Already have an account?Signin</p>
+          <p>By clicking the submit button below, you agree to the GiveStream Terms of Service and acknowledge the Privacy of notice.</p>
           <button className="submit-button" type="submit" disabled={isLoading}>
             {isLoading ? 'Submitting...' : 'Submit'}
           </button>

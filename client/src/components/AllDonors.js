@@ -137,7 +137,7 @@ const DonorList = () => {
       {editingDonor && (
         <div className="edit-form">
           <h2>Edit Donor</h2>
-          <form onSubmit={handleEditSubmit}>
+          <form className="edit-form" onSubmit={handleEditSubmit}>
             <div>
               <label htmlFor="username">Username:</label>
               <input
