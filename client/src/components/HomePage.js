@@ -6,10 +6,9 @@ import CompletedCharitiesList from "./CompletedCharitiesList";
 import "./HomePage.css";
 
 const HomePage = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isSticky, setIsSticky] = useState(false);
-  const [dashboardData, setDashboardData] = useState({});
   const [animatedData, setAnimatedData] = useState({
     total_donations: 0,
     charity_count: 0,
@@ -50,7 +49,6 @@ const HomePage = () => {
     fetch("/dashboard/common")
       .then((response) => response.json())
       .then((data) => {
-        setDashboardData(data);
         animateCount(0, data.total_donations, 2000, (value) =>
           setAnimatedData((prev) => ({ ...prev, total_donations: value }))
         );
@@ -62,6 +60,7 @@ const HomePage = () => {
         );
       });
   }, []);
+  
 
   return (
     <div className="main-home-container">

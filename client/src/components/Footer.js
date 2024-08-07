@@ -22,22 +22,29 @@ function Footer() {
             many more
           </p>
           <div className="social-links">
-            <a href="#">
+            <a href="https://www.facebook.com/givestream" aria-label="Facebook">
               <i className="fab fa-facebook-f"></i>
             </a>
-            <a href="#">
+            <a href="https://www.twitter.com/givestream" aria-label="Twitter">
               <i className="fab fa-twitter"></i>
             </a>
-            <a href="#">
+            <a
+              href="https://www.instagram.com/givestream"
+              aria-label="Instagram"
+            >
               <i className="fab fa-instagram"></i>
             </a>
-            <a href="#">
+            <a href="https://www.youtube.com/givestream" aria-label="YouTube">
               <i className="fab fa-youtube"></i>
             </a>
-            <a href="#">
+            <a
+              href="https://www.linkedin.com/company/givestream"
+              aria-label="LinkedIn"
+            >
               <i className="fab fa-linkedin-in"></i>
             </a>
           </div>
+
           {/* <p>Get the app:</p>
           <div className="app-links">
             <a href="#">App Store</a>
