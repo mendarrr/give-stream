@@ -235,4 +235,48 @@
     background-color: transparent;
 }
 
+@media screen and (max-width: 1200px) {
+    .charity-list-container { padding: 0 5%; }
+    .search-bar { width: 90%; margin-left: 5%; }
+    .charity-list { justify-content: center; }
+  }
+  
+  @media screen and (max-width: 768px) {
+    .charity-card { width: 80%; max-width: 340px; margin: 20px auto auto -2px; }
+    .charity-profile img { margin-left: 30%; }
+    .donate-btn button { margin-left: 0; width: 100%; }
+  }
 
+  @media screen and (max-width: 768px) {
+    .charity-card{
+        margin-top: -70px;
+        height: 390px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .charity-list-container {
+      padding: 0 20px;
+    }
+
+    .completed{
+        margin-top: -30px;
+    }
+
+    .completed h4{
+        display: none;
+    }
+
+    .charity-card{
+        margin-bottom: 10px;
+    }
+  
+    .nav-button.right {
+      right: 50px;
+    }
+
+    .nav-button.left {
+      left: 10px;
+    }
+  }
+  

@@ -5,6 +5,15 @@ import './CharityCard.css';
 const CompletedCharitiesList = ({ searchTerm }) => {
     const [completedCharities, setCompletedCharities] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    useEffect(() => {
+        const handleResize = () => {
+          setIsMobile(window.innerWidth <= 768);
+        };
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+      }, []);
 
     useEffect(() => {
         fetch('/charities')
@@ -27,13 +36,17 @@ const CompletedCharitiesList = ({ searchTerm }) => {
     };
 
     const moveRight = () => {
-        setCurrentIndex(prev => Math.min(prev + 1, filteredCharities.length - 3));
-    };
-
-    const visibleCharities = filteredCharities.slice(currentIndex, currentIndex + 3);
+        setCurrentIndex((prev) =>
+          Math.min(prev + 1, filteredCharities.length - (isMobile ? 1 : 3))
+        );
+      };
+    
+      const visibleCharities = isMobile
+      ? filteredCharities.slice(currentIndex, currentIndex + 1)
+      : filteredCharities.slice(currentIndex, currentIndex + 3);
 
     return (
-        <div className="charity-list-container">
+        <div className="charity-list-container completed">
             <h4>.</h4>
             <button className="nav-button left" onClick={moveLeft} disabled={currentIndex === 0}>&lt;</button>
             <div className="charity-list">

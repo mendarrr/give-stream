@@ -248,6 +248,24 @@
     font-weight: 600;
 }
 
+@media screen and (max-width: 1200px) {
+    .main-home-container { overflow-x: hidden; }
+    .counter-numbers { width: 90%; }
+    .charities-section-text, .completed-fundraisers-text, .how-givestream-works-text { width: 90%; margin-left: 5%; }
+    .tutorial-btn { width: 80%; margin-left: 10%; }
+  }
+  
+  @media screen and (max-width: 768px) {
+    .counter-numbers { flex-direction: column; align-items: center; }
+    .counter-numbers .insight { margin: 20px 0; }
+    #charities-section, .completed-fundraisers, .how-givestream-works { height: auto; padding: 50px 0; }
+    .tutorial-btn { padding: 50px; background-size: contain; }
+  }
+  
+  
+
+
+
 
 
 
