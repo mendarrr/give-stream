@@ -124,7 +124,7 @@ class Charity(db.Model, SerializerMixin):
 
     def __repr__(self):
         return f"<Charity {self.id}: {self.username}>"
-
+    
 class CharityApplication(db.Model, SerializerMixin):
     __tablename__ = 'charity_applications'
     serialize_rules = ('-admin',)
@@ -137,7 +137,13 @@ class CharityApplication(db.Model, SerializerMixin):
     submission_date = db.Column(db.DateTime, default=datetime.utcnow)
     reviewed_by = db.Column(db.Integer, db.ForeignKey('admins.id'))
     review_date = db.Column(db.DateTime)
-
+    country = db.Column(db.String(100))
+    city = db.Column(db.String(100))
+    zipcode = db.Column(db.String(20))
+    fundraising_category = db.Column(db.String(100))
+    title = db.Column(db.String(256))
+    target_amount = db.Column(db.Float)
+    image = db.Column(db.String(255), nullable=True)
     admin = db.relationship('Admin', backref='reviewed_applications')
 
     def to_dict(self):
@@ -149,8 +155,15 @@ class CharityApplication(db.Model, SerializerMixin):
             'status': self.status,
             'submission_date': self.submission_date,
             'reviewed_by': self.reviewed_by,
-            'review_date': self.review_date
+            'review_date': self.review_date,
+            'country': self.country,
+            'city': self.city,
+            'zipcode': self.zipcode,
+            'fundraising_category': self.fundraising_category,
+            'title': self.title,
+            'target_amount': self.target_amount
         }
+
     
 
 class Admin(db.Model):

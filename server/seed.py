@@ -1,5 +1,6 @@
 from app import app
 from models import db, Donor, Charity, Admin, CharityApplication, Donation, Story, Beneficiary, Inventory, PaymentMethod
+from datetime import datetime
 
 def seed_data():
     with app.app_context():
@@ -45,7 +46,6 @@ def seed_data():
                 image_url='https://images.pexels.com/photos/6963622/pexels-photo-6963622.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
                 organizer='Jane Smith'
             ),
-            # Additional charities with real image URLs
             Charity(
                 username='global_education', 
                 email='contact@charity21.org', 
@@ -285,21 +285,33 @@ def seed_data():
                 donation_count=85,
                 image_url='https://images.pexels.com/photos/8369770/pexels-photo-8369770.jpeg?auto=compress&cs=tinysrgb&w=600',
                 organizer='Henry Lee'
-            ),
+            )
+            
         ]
         db.session.add_all(charities)
         
-        # Create sample charity applications
+        #  sample charity applications
         applications = [
-            CharityApplication(name='Future Charity', email='future@charity.org', description='First donation division Tanzania', status='pending'),
-            CharityApplication(name='Helping Hands', email='hands@help.org', description='First charity division Kenya.', status='pending')
+            CharityApplication(
+                name='Future Charity', 
+                email='future@charity.org', 
+                description='First donation division Tanzania', 
+                status='pending',
+                review_date=datetime.strptime('2024-08-15', '%Y-%m-%d'),
+                image='https://example.com/images/future_charity.jpg' 
+            ),
+            CharityApplication(
+                name='Helping Hands', 
+                email='hands@help.org', 
+                description='First charity division Kenya.', 
+                status='pending',
+                review_date=datetime.strptime('2024-08-16', '%Y-%m-%d'),
+                image='https://example.com/images/helping_hands.jpg'  
+            )
         ]
         db.session.add_all(applications)
         
-        # Commit to get the IDs assigned
-        db.session.commit()
-
-        # Create sample payment methods
+        
         payment_methods = [
             PaymentMethod(name='Credit Card', description='Payment via credit card'),
             PaymentMethod(name='PayPal', description='Payment via PayPal account'),

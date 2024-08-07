@@ -198,7 +198,6 @@ class Charities(Resource):
     
 
 class CharityApplications(Resource):
-    # @admin_required()  
     def get(self):
         applications = CharityApplication.query.all()
         return jsonify([app.to_dict() for app in applications])
@@ -208,13 +207,18 @@ class CharityApplications(Resource):
         new_application = CharityApplication(
             name=data['name'],
             email=data['email'],
-            description=data['description']
+            description=data['description'],
+            country=data.get('country'),
+            city=data.get('city'),
+            zipcode=data.get('zipcode'),
+            fundraising_category=data.get('fundraising_category'),
+            title=data.get('title'),
+            target_amount=data.get('target_amount')
         )
         db.session.add(new_application)
         db.session.commit()
         return new_application.to_dict(), 201
 
-    # @admin_required() 
     def put(self, id):
         application = CharityApplication.query.get_or_404(id)
         data = request.get_json()
@@ -229,9 +233,17 @@ class CharityApplications(Resource):
                 description=application.description
             )
             db.session.add(new_charity)
+            
+        application.country = data.get('country', application.country)
+        application.city = data.get('city', application.city)
+        application.zipcode = data.get('zipcode', application.zipcode)
+        application.fundraising_category = data.get('fundraising_category', application.fundraising_category)
+        application.title = data.get('title', application.title)
+        application.target_amount = data.get('target_amount', application.target_amount)
 
         db.session.commit()
         return application.to_dict(), 200
+
     
 class CommonDashboard(Resource):
     def get(self):

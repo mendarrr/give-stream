@@ -1,8 +1,8 @@
-"""Updated Charity model and added Donation model
+"""Initial migration
 
-Revision ID: 862eb8b9333f
-Revises: f95603890f6c
-Create Date: 2024-08-07 08:34:33.500571
+Revision ID: 8a9f3744fc6b
+Revises: 
+Create Date: 2024-08-07 19:36:15.083684
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '862eb8b9333f'
-down_revision = 'f95603890f6c'
+revision = '8a9f3744fc6b'
+down_revision = None
 branch_labels = None
 depends_on = None
 
@@ -68,6 +68,13 @@ def upgrade():
     sa.Column('submission_date', sa.DateTime(), nullable=True),
     sa.Column('reviewed_by', sa.Integer(), nullable=True),
     sa.Column('review_date', sa.DateTime(), nullable=True),
+    sa.Column('country', sa.String(length=100), nullable=True),
+    sa.Column('city', sa.String(length=100), nullable=True),
+    sa.Column('zipcode', sa.String(length=20), nullable=True),
+    sa.Column('fundraising_category', sa.String(length=100), nullable=True),
+    sa.Column('title', sa.String(length=256), nullable=True),
+    sa.Column('target_amount', sa.Float(), nullable=True),
+    sa.Column('image', sa.String(length=255), nullable=True),
     sa.ForeignKeyConstraint(['reviewed_by'], ['admins.id'], name=op.f('fk_charity_applications_reviewed_by_admins')),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email')
