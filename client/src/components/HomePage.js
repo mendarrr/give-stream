@@ -6,6 +6,7 @@ import CompletedCharitiesList from "./CompletedCharitiesList";
 import "./HomePage.css";
 
 const HomePage = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isSticky, setIsSticky] = useState(false);
   const [dashboardData, setDashboardData] = useState({});
@@ -65,7 +66,7 @@ const HomePage = () => {
   return (
     <div className="main-home-container">
       <div className="home-navbar">
-        <Navbar isSticky={isSticky} />
+        <Navbar isSticky={isSticky} isLoggedIn={isLoggedIn} />
       </div>
       <div className="home-content">
         <section className="counter-container">

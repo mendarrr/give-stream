@@ -31,11 +31,11 @@ function Footer() {
           <nav>
             <ul>
               <li><Link to="/questions">Questions</Link></li>
-              <li><Link to="/setup-campaign">Set up Donation Campaign</Link></li>
               <li><Link to="/about">About</Link></li>
               <li><Link to="/faq">FAQ</Link></li>
               <li><Link to="/communities">Communities</Link></li>
               <li><Link to="/givestream-communities">Give Stream communities</Link></li>
+              <li><Link to="/givestream-fundraisers">Give Stream Administered Fundraisers</Link></li>
             </ul>
           </nav>
         </div>
