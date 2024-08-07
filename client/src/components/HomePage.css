@@ -168,6 +168,7 @@
     align-items: center;
     height: 90vh;
     background-color: whitesmoke;
+    border-bottom: 1px solid black;
 }
 
 .how-givestream-works img{
