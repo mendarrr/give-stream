@@ -162,6 +162,91 @@
     font-family: 'Times New Roman', Times, serif;
 }
 
+/* How it Works */
+.how-givestream-works{
+    margin-top: 90px;
+    align-items: center;
+    height: 90vh;
+    background-color: whitesmoke;
+}
+
+.how-givestream-works img{
+    width: 25%;
+}
+
+.how-givestream-works-text{
+    width: 1000px;
+    padding: 10px 10px 10px 0px;
+    line-height: 1.5;
+}
+
+.how-givestream-works-text h3{
+    font-size: 30px;
+    color: black;
+    text-align: center;
+    margin-top: 0px;
+    font-weight: 600;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.how-givestream-works-text p{
+    font-size: 18px;
+    color: black;
+    text-align: left;
+    margin-top: -20px;
+    font-weight: 500;
+    line-height: 1.5;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.tutorial-btn{
+    width: 700px;
+    padding: 150px;
+    margin-top: -24px;
+    border-radius: 6px;
+    margin-right: 40px;
+    margin-left: 16px;
+    height: 150px;
+    background: url(../assets/Works.png);
+    background-size: cover;
+    transition: all 3s;
+}
+
+.tutorial-btn:hover {
+    background: url('../assets/Works.png') no-repeat center center / cover;
+    background-color: rgba(0, 0, 0, 0.8);
+    background-blend-mode: multiply;
+}
+
+.works-text h4{
+    font-size: 20px;
+    color: #318E8D;
+    text-align: left;
+    margin-left: -510px;
+    margin-top: -10px;
+    font-weight: 600;
+}
+
+.tutorial-btn button{
+    line-height: 3vh;
+    padding: 10px 20px;
+    border: none;
+    background-color: white;
+    color: black;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all ease-in-out 0.5s;
+    margin-left: 270px;
+    margin-top: 50px;
+}
+
+.tutorial-btn button:hover{
+    transform: scale(1.09);
+    background-color: #E66E4E;
+    color: white;
+    font-weight: 600;
+}
+
 
 
 

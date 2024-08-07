@@ -121,7 +121,23 @@ const HomePage = () => {
                 </p>
             </div>
         </section>
-        <section className="how-givestream-works"></section>
+        <section className="how-givestream-works">
+            <img src={`${process.env.PUBLIC_URL}/GiveStreamLogo.png`} alt="logo" />
+            <div className="how-givestream-works-text">
+                <h3>Secure Trusted Donations with Give Stream</h3>
+                <p>
+                    Give Stream is an innovative platform that connects donors with deserving organizations. Our mission is to empower individuals to
+                    make a meaningful contribution to the lives of those in need. By helping people find and support organizations that truly care, we
+                    foster a sense of belonging and empowerment.
+                </p>
+            </div>
+            <div className="works-text">
+                <h4>How Give Stream Works</h4>
+            </div>
+            <div className="tutorial-btn">
+                <button><i class="fa-solid fa-play"></i> Play 1 min Video</button>
+            </div>
+        </section>
         <section className="fundraise"></section>
       </div>
     </div>
