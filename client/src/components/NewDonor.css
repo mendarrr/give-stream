@@ -13,6 +13,7 @@
   
   .form-page {
     display: flex;
+    -ms-layout-grid-type: strict;
     width: 80%; /* Adjust based on preference */
     max-width: 1200px; /* Ensures responsiveness */
     background-color: whitesmoke;
@@ -26,7 +27,7 @@
     position: relative;
     background-color: white;
     border-radius: 10px;
-    width: 300px;
+    width: 150px;
   }
   
   .logo {
@@ -40,6 +41,7 @@
     padding: 20px;
     background-position: center;
     position: relative;
+    height: 600px;
     border-radius: 10px;
   }
   
