@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import Navbar from "./Navbar";
 import CharityList from "./CharityList";
 import CompletedCharitiesList from "./CompletedCharitiesList";

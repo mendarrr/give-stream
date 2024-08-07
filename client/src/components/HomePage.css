@@ -1,4 +1,4 @@
-.main-home-container{
+.main-home-container {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -7,14 +7,14 @@
 }
 
 /* Home Content */
-.home-content{
+.home-content {
     width: 100%;
     height: auto;
     display: flex;
     flex-direction: column;
 }
 
-.home-content section{
+.home-content section {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -29,17 +29,17 @@
     background-blend-mode: multiply;
 }
 
-.counter-text{
+.counter-text {
     align-items: center;
     justify-content: center;
 }
 
-.counter-text h2{
+.counter-text h2 {
     font-size: 35px;
     color: #E66E4E;
 }
 
-.counter-text h3{
+.counter-text h3 {
     margin-top: -20px;
     letter-spacing: 2px;
     text-align: center;
@@ -47,7 +47,7 @@
     color: white;
 }
 
-.counter-numbers{
+.counter-numbers {
     display: flex;
     align-items: center;
     border: 1px solid white;
@@ -56,40 +56,40 @@
     border-radius: 20px 0px;
 }
 
-.counter-numbers .insight{
+.counter-numbers .insight {
     margin-left: 70px;
     margin-right: 50px;
 }
 
-.counter-numbers .insight h2{
+.counter-numbers .insight h2 {
     font-size: 50px;
     color: #318E8D;
     text-align: center;
     margin-top: 10px;
 }
 
-.counter-numbers .insight p{
+.counter-numbers .insight p {
     font-size: 20px;
     color: black;
     text-align: center;
     margin-top: -40px;
 }
 
-.counter-text2{
+.counter-text2 {
     margin-top: -10px;
     font-size: 30px;
     font-weight: 700;
     color: white;
 }
 
-.counter-text2 span{
+.counter-text2 span {
     color: #E66E4E;
     font-size: 50px;
     font-weight: 700;
     font-family: 'Times New Roman', Times, serif;
 }
 
-.counter-button{
+.counter-button {
     text-decoration: none;
     color: white;
     font-size: 25px;
@@ -97,13 +97,13 @@
     border-bottom: 1px solid #318E8D;
     border-left: 1px solid #318E8D;
     margin-bottom: 10px;
-    background-color:#E66E4E;
+    background-color: #E66E4E;
     border-radius: 20px;
     padding: 15px 20px;
     transition: all ease-in-out 1s;
 }
 
-.counter-button:hover{
+.counter-button:hover {
     transform: scale(1.09);
     background-color: #318E8D;
     color: white;
@@ -115,17 +115,17 @@
 /* Charity List Section*/
 #charities-section {
     height: 100vh;
-    background: url('../assets/CharityHomeBack.png') no-repeat center center / 120%; /* Zoom in to 120% */
-    background-color: rgba(245, 245, 245, 0.9); /* Increase opacity for more white */
-    background-blend-mode: saturation; /* This will reduce color saturation */
+    background: url('../assets/CharityHomeBack.png') no-repeat center center / 120%;
+    background-color: rgba(245, 245, 245, 0.9);
+    background-blend-mode: saturation;
 }
 
-.charities-section-text{
+.charities-section-text {
     margin-top: 60px;
     letter-spacing: 1px;
     font-size: 18px;
     font-weight: 600;
-    margin-left:140px;
+    margin-left: 140px;
 }
 
 
@@ -136,13 +136,13 @@
     background: linear-gradient(#df5644e8, #e35a48ea), url('../assets/CompletedFundraisersBack.png') no-repeat center center / cover;
 }
 
-.completed-fundraisers-text{
+.completed-fundraisers-text {
     padding: 10px;
     width: 1270px;
     margin-left: 150px;
 }
 
-.completed-fundraisers-text h2{
+.completed-fundraisers-text h2 {
     font-size: 35px;
     color: white;
     margin-top: 0px;
@@ -152,7 +152,7 @@
     font-weight: 600;
 }
 
-.completed-fundraisers-text p{
+.completed-fundraisers-text p {
     font-size: 23px;
     color: white;
     margin-top: -10px;
@@ -163,7 +163,7 @@
 }
 
 /* How it Works */
-.how-givestream-works{
+.how-givestream-works {
     margin-top: 90px;
     align-items: center;
     height: 90vh;
@@ -171,17 +171,17 @@
     border-bottom: 1px solid black;
 }
 
-.how-givestream-works img{
+.how-givestream-works img {
     width: 25%;
 }
 
-.how-givestream-works-text{
+.how-givestream-works-text {
     width: 1000px;
     padding: 10px 10px 10px 0px;
     line-height: 1.5;
 }
 
-.how-givestream-works-text h3{
+.how-givestream-works-text h3 {
     font-size: 30px;
     color: black;
     text-align: center;
@@ -190,7 +190,7 @@
     font-family: 'Times New Roman', Times, serif;
 }
 
-.how-givestream-works-text p{
+.how-givestream-works-text p {
     font-size: 18px;
     color: black;
     text-align: left;
@@ -200,7 +200,7 @@
     font-family: 'Times New Roman', Times, serif;
 }
 
-.tutorial-btn{
+.tutorial-btn {
     width: 700px;
     padding: 150px;
     margin-top: -24px;
@@ -219,7 +219,7 @@
     background-blend-mode: multiply;
 }
 
-.works-text h4{
+.works-text h4 {
     font-size: 20px;
     color: #318E8D;
     text-align: left;
@@ -228,7 +228,7 @@
     font-weight: 600;
 }
 
-.tutorial-btn button{
+.tutorial-btn button {
     line-height: 3vh;
     padding: 10px 20px;
     border: none;
@@ -241,7 +241,7 @@
     margin-top: 50px;
 }
 
-.tutorial-btn button:hover{
+.tutorial-btn button:hover {
     transform: scale(1.09);
     background-color: #E66E4E;
     color: white;
@@ -249,80 +249,210 @@
 }
 
 @media screen and (max-width: 1200px) {
-    .main-home-container { overflow-x: hidden; }
-    .counter-numbers { width: 90%; }
-    .charities-section-text, .completed-fundraisers-text, .how-givestream-works-text { width: 90%; margin-left: 5%; }
-    .tutorial-btn { width: 80%; margin-left: 10%; }
-  }
-  
-  @media screen and (max-width: 768px) {
-    .counter-numbers { flex-direction: column; align-items: center; }
-    .counter-numbers .insight { margin: 20px 0; }
-    #charities-section, .completed-fundraisers, .how-givestream-works { height: auto; padding: 50px 0; }
-    .tutorial-btn { padding: 50px; background-size: contain; }
-    
-    .how-givestream-works{
+    .main-home-container {
+        overflow-x: hidden;
+    }
+
+    .counter-numbers {
+        width: 90%;
+    }
+
+    .charities-section-text,
+    .completed-fundraisers-text,
+    .how-givestream-works-text {
+        width: 90%;
+        margin-left: 5%;
+    }
+
+    .tutorial-btn {
+        width: 80%;
+        margin-left: 10%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .counter-numbers {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .counter-numbers .insight {
+        margin: 20px 0;
+    }
+
+    #charities-section,
+    .completed-fundraisers,
+    .how-givestream-works {
+        height: auto;
+        padding: 50px 0;
+    }
+
+    .tutorial-btn {
+        padding: 50px;
+        background-size: contain;
+    }
+
+    .how-givestream-works {
         margin-top: -10px;
     }
 
-    .how-givestream-works img{
+    .how-givestream-works img {
         width: 80%;
     }
-  }
+}
 
+@media screen and (max-width: 1024px) {
+    .tutorial-btn {
+        width: 80%;
+        padding: 120px;
+        margin-right: 20px;
+        margin-left: 8px;
+    }
+
+    .tutorial-btn button {
+        margin-left: 200px;
+        font-size: 18px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .tutorial-btn {
+        width: 90%;
+        padding: 100px;
+        margin-right: 10px;
+        margin-left: 4px;
+    }
+
+    .tutorial-btn button {
+        margin-left: 150px;
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .tutorial-btn {
+        width: 95%;
+        padding: 80px;
+        margin-right: 5px;
+        margin-left: 2px;
+    }
+
+    .tutorial-btn button {
+        margin-left: 100px;
+        font-size: 14px;
+    }
+}
+
+/* About Page */
+.about-page {
+    background-color: whitesmoke;
+    border-bottom: 1px solid black;
+}
+
+.about-text,
+.working,
+.why,
+.join-us {
+    padding-left: 150px;
+    padding-right: 150px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.about-text {
+    color: white;
+    padding-bottom: 20px;
+    background: url('../assets/about.png') no-repeat center center / cover;
+    background-color: rgba(0, 0, 0, 0.8);
+    background-blend-mode: multiply;
+}
+
+.about-text img {
+    width: 30%;
+    margin-left: 550px;
+    margin-top: 10px;
+}
+
+.about-text h1,
+.about-text h2 {
+    text-align: center;
+}
+
+.abouttxt {
+    background: url('../assets/CharityHomeBack.png') no-repeat center center / 120%;
+    background-color: rgba(245, 245, 245, 0.9);
+    background-blend-mode: saturation;
+
+}
+
+.working{
+    padding-bottom: 20px;
+}
+
+.working .tutorial-btn{
+    margin-top: 20px;
+    margin-left: 230px;
+}
+
+.working-text {
+    color: black;
+}
+
+.working-text h2,
+.why h2,
+.join-us h2{
+    text-align: center;
+    margin-bottom: 0px;
+    font-weight: 600;
+}
+
+.why ul{
+    line-height: 1.5;
+    margin-top: 5px;
+}
+
+.join-us p{
+    margin-top: 5px;
+}
+
+.about-page {
+    width: 100vw;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+  
   @media screen and (max-width: 1024px) {
-    .tutorial-btn {
-      width: 80%;
-      padding: 120px;
-      margin-right: 20px;
-      margin-left: 8px;
+    .about-page {
+      padding: 0;
     }
-  
-    .tutorial-btn button {
-      margin-left: 200px;
-      font-size: 18px;
+    
+    .about-text, .working, .why, .join-us {
+      width: 100%;
+      padding-left: 20px;
+      padding-right: 20px;
+      box-sizing: border-box;
     }
-  }
-  
-  @media screen and (max-width: 768px) {
-    .tutorial-btn {
-      width: 90%;
-      padding: 100px;
-      margin-right: 10px;
-      margin-left: 4px;
+    
+    .about-text img {
+      max-width: 100%;
+      height: auto;
+      margin-left: 0;
+      display: block;
+      margin: 0 auto;
     }
-  
-    .tutorial-btn button {
-      margin-left: 150px;
-      font-size: 16px;
+
+    .working .tutorial-btn{
+        margin-left: -11px;
+        width: 200px;
+        background-size: cover;
     }
-  }
-  
-  @media screen and (max-width: 480px) {
-    .tutorial-btn {
-      width: 95%;
-      padding: 80px;
-      margin-right: 5px;
-      margin-left: 2px;
-    }
-  
-    .tutorial-btn button {
-      margin-left: 100px;
-      font-size: 14px;
+
+    .working .tutorial-btn button{
+        font-size: 16px;
+        padding: 10px 20px;
+        margin-left: 15px;
     }
   }
-
   
-
-
-  
-  
-
-
-
-
-
-
-
-
-
