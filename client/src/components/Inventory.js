@@ -84,7 +84,79 @@ const Inventory = () => {
             setError('Failed to delete inventory item.');
         }
     };
-
+    return (
+        <div className="inventory-container">
+            <h2>Inventory Management</h2>
+            {error && <p className="error">{error}</p>}
+            
+            <div className="add-item-form">
+                <h3>Add New Item</h3>
+                <input 
+                    type="number" 
+                    name="charity_id" 
+                    value={newItem.charity_id} 
+                    onChange={(e) => handleInputChange(e)}
+                    placeholder="Charity ID"
+                />
+                <input 
+                    type="text" 
+                    name="item_name" 
+                    value={newItem.item_name} 
+                    onChange={(e) => handleInputChange(e)}
+                    placeholder="Item Name"
+                />
+                <input 
+                    type="number" 
+                    name="quantity" 
+                    value={newItem.quantity} 
+                    onChange={(e) => handleInputChange(e)}
+                    placeholder="Quantity"
+                />
+                <button onClick={handleAddItem}>Add Item</button>
+            </div>
+            
+            {editItem && (
+                <div className="edit-item-form">
+                    <h3>Edit Item</h3>
+                    <input 
+                        type="number" 
+                        name="charity_id" 
+                        value={editItem.charity_id} 
+                        onChange={(e) => handleInputChange(e, editItem)}
+                        placeholder="Charity ID"
+                    />
+                    <input 
+                        type="text" 
+                        name="item_name" 
+                        value={editItem.item_name} 
+                        onChange={(e) => handleInputChange(e, editItem)}
+                        placeholder="Item Name"
+                    />
+                    <input 
+                        type="number" 
+                        name="quantity" 
+                        value={editItem.quantity} 
+                        onChange={(e) => handleInputChange(e, editItem)}
+                        placeholder="Quantity"
+                    />
+                    <button onClick={handleEditItem}>Update Item</button>
+                </div>
+            )}
+            
+            <div className="inventory-list">
+                <h3>Inventory Items</h3>
+                <ul>
+                    {inventoryItems.map(item => (
+                        <li key={item.id}>
+                            <span>{item.item_name} (Qty: {item.quantity})</span>
+                            <button onClick={() => setEditItem(item)}>Edit</button>
+                            <button onClick={() => handleDeleteItem(item.id)}>Delete</button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+    );
 
 export default Inventory;
 
