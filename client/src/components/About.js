@@ -12,7 +12,7 @@ function About() {
             alt="logo"
           />
         </Link>
-        <h1>About Give Stream</h1>
+        <h4>About Give Stream</h4>
         <p>
           Welcome to Give Stream, a revolutionary platform dedicated to making a
           tangible difference in the lives of those in need. Our mission is to

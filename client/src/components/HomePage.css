@@ -369,12 +369,22 @@
 }
 
 .about-text img {
-    width: 30%;
-    margin-left: 550px;
+    width: 25%;
+    margin-left: 0px;
     margin-top: 10px;
 }
 
-.about-text h1,
+.about-text h4{
+  font-size: 35px;
+}
+
+.about-text h4,
+.about-text p{
+  margin-top: -10px;
+  line-height: 1.5;
+}
+
+.about-text h4,
 .about-text h2 {
     text-align: center;
 }
