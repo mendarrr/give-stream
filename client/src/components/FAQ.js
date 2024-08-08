@@ -80,6 +80,7 @@ const faqData = [
 ];
 
 const FAQ = () => {
+    
   const [activeIndex, setActiveIndex] = useState(null);
   const [isChatBoxOpen, setIsChatBoxOpen] = useState(false);
 
