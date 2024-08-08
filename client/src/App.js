@@ -13,7 +13,7 @@ import PrivacyNotice from './components/PrivacyNotice';
 import TermsOfUse from './components/TermsOfUse';
 import Legal from './components/Legal';
 import FAQ from './components/FAQ';
-import CompletedCharitiesList from './components/CompletedCharitiesList';
+import CommunitiesSection from './components/CommunitySection';
 
 function App() {
   return (
@@ -30,7 +30,7 @@ function App() {
       <Route path="/terms" element={<TermsOfUse />} />
       <Route path="/legal" element={<Legal />} />
       <Route path="/faq" element={<FAQ />} />
-      <Route path="/completed-charities" element={<CompletedCharitiesList />} />
+      <Route path="/communities" element={<CommunitiesSection />} />
       </Routes>
       <Footer />
       </BrowserRouter>

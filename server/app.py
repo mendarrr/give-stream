@@ -9,7 +9,7 @@ from flask_apscheduler import APScheduler
 from notification_service import run_notification_service
 
 from config import app,db,api
-from models import db, Admin, Donor,Charity, PaymentMethod, Message
+from models import db, Admin, Donor,Charity, PaymentMethod, Message, Community
 
 
 scheduler = APScheduler()
@@ -721,6 +721,49 @@ class AnswerMessage(Resource):
         message.is_answered = True
         db.session.commit()
         return message.to_dict()
+    
+class CommunityListResource(Resource):
+    def get(self):
+        search_term = request.args.get('search', '')
+        communities = Community.query.filter(Community.name.ilike(f'%{search_term}%')).all()
+        return [community.to_dict() for community in communities], 200
+
+    def post(self):
+        data = request.json
+        new_community = Community(
+            name=data['name'],
+            description=data['description'],
+            members=data['members'],
+            impact_stories=';'.join(data.get('impactStories', [])),
+            events=';'.join(data.get('events', [])),
+            banner=data['banner']
+        )
+        db.session.add(new_community)
+        db.session.commit()
+        return new_community.to_dict(), 201
+
+class CommunityResource(Resource):
+    def get(self, id):
+        community = Community.query.get_or_404(id)
+        return community.to_dict(), 200
+
+    def put(self, id):
+        community = Community.query.get_or_404(id)
+        data = request.json
+
+        if data.get('action') == 'join':
+            community.members += 1
+
+        if 'impactStories' in data:
+            new_stories = ';'.join(data['impactStories'])
+            community.impact_stories = community.impact_stories + ';' + new_stories if community.impact_stories else new_stories
+
+        if 'events' in data:
+            new_events = ';'.join(data['events'])
+            community.events = community.events + ';' + new_events if community.events else new_events
+
+        db.session.commit()
+        return community.to_dict(), 200
 
 # # Routes
 api.add_resource(Index, '/')
@@ -739,6 +782,8 @@ api.add_resource(CharityDashboard, '/dashboard/charity')
 api.add_resource(DonorDashboard, '/dashboard/donor')   
 api.add_resource(MessageResource, '/messages')
 api.add_resource(AnswerMessage, '/messages/<int:id>/answer')
+api.add_resource(CommunityListResource, '/communities')
+api.add_resource(CommunityResource, '/communities/<int:id>')
 
 if __name__ == '__main__':
     app.run(debug=True)

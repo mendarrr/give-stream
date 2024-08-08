@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import Navbar from "./Navbar";
+import CommunitiesSection from "./CommunitySection";
 import CharityList from "./CharityList";
 import CompletedCharitiesList from "./CompletedCharitiesList";
 import "./HomePage.css";
@@ -163,7 +164,7 @@ const HomePage = () => {
             </button>
           </div>
         </section>
-        <section className="fundraise"></section>
+        <section className="communities"></section>
         <section className="homepage-footer">
           <div className="footer-top">
             <nav>

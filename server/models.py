@@ -331,4 +331,24 @@ class Message(db.Model):
             'timestamp': self.timestamp.isoformat() if self.timestamp else None,
             'is_answered': self.is_answered
         }
+    
+class Community(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(255), nullable=False)
+    members = db.Column(db.Integer, nullable=False)
+    impact_stories = db.Column(db.Text, nullable=False)
+    events = db.Column(db.Text, nullable=False)
+    banner = db.Column(db.String(255), nullable=False)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "members": self.members,
+            "impactStories": self.impact_stories.split(';'),
+            "events": self.events.split(';'),
+            "banner": self.banner
+        }
 
