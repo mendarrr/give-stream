@@ -618,6 +618,169 @@
       font-size: 16px;
     }
   }
+
+  /* FAQ Page */
+  .main-faq-container{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    background-color: whitesmoke;
+  }
+
+  .faq-container{
+    padding-top: 30px;
+    padding-bottom: 30px;
+    padding-left: 570px;
+    padding-right: 500px;
+    display: flex;
+  }
+
+  .faq-header{
+    color: white;
+    border: 1px solid black;
+    padding: 130px;
+    background: url('../assets/about.png') no-repeat center center / cover;
+    background-color: rgba(0, 0, 0, 0.8);
+    background-blend-mode: multiply;
+    border-bottom-left-radius: 45px;
+    border-bottom-right-radius: 45px;
+  }
+
+  .faq-header h1{
+    font-size: 45px;
+  }
+
+  .faq-item {
+    background-color: white;
+    border-bottom-left-radius: 20px;
+    border-top-right-radius: 20px;
+    margin: 10px 0;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.5s;
+  }
+  
+  .faq-item:hover {
+    background-color: #ebebeb;
+  }
+  
+  .faq-question {
+    font-weight: bold;
+  }
+  
+  .faq-answer {
+    margin-top: 10px;
+    padding: 10px 0;
+  }
+
+  .ask-form-icon-btn{
+    margin-left: 1700px;
+  }
+
+  .ask-form-icon-btn button{
+    background: transparent;
+    border: none;
+  }
+
+  .fa-message{
+    font-size: 50px;
+    margin-bottom: 20px;
+    color: #E66E4E;
+    transition: all ease-in-out 2s;
+    cursor: pointer;
+  }
+
+  .fa-message:hover{
+    transform: scale(1.09);
+    filter: drop-shadow(0 0 5px #318E8D);
+  }
+
+@media screen and (max-width: 1700px) {
+    .main-faq-container{
+        width: 100%;
+    }
+    
+    .faq-container {
+      padding-left: 450px;
+      padding-right: 300px;
+    }
+  
+    .ask-form-icon-btn {
+      margin-left: 1200px;
+    }
+  }
+  
+  @media screen and (max-width: 992px) {
+    .faq-container {
+      padding-left: 200px;
+      padding-right: 200px;
+    }
+  
+    .ask-form-icon-btn {
+      margin-left: 900px;
+    }
+  }
+  
+  @media screen and (max-width: 890px) {
+    .main-faq-container{
+        width: 112%;
+    }
+
+    .faq-container {
+      padding-left: 100px;
+      padding-right: 100px;
+    }
+  
+    .faq-header {
+      padding: 80px;
+      width: 82.5%;
+    }
+  
+    .faq-header h1 {
+      font-size: 36px;
+    }
+  
+    .ask-form-icon-btn {
+      margin-left: 650px;
+    }
+  }
+  
+  @media screen and (max-width: 576px) {
+    .main-faq-container{
+        width: 108.5%;
+    }
+    
+    .faq-container {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .faq-item{
+        width: 88%;
+    }
+  
+    .faq-header {
+      padding: 50px;
+      width: 76%;
+    }
+  
+    .faq-header h1 {
+      font-size: 28px;
+      text-align: center;
+    }
+  
+    .ask-form-icon-btn {
+      margin-left: 280px;
+    }
+  
+    .fa-message {
+      font-size: 40px;
+    }
+  }
+  
+
+
+  
   
 
 

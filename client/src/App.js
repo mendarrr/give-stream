@@ -12,6 +12,7 @@ import CookiePolicy from './components/CookiePolicy';
 import PrivacyNotice from './components/PrivacyNotice';
 import TermsOfUse from './components/TermsOfUse';
 import Legal from './components/Legal';
+import FAQ from './components/FAQ';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
       <Route path="/privacy" element={<PrivacyNotice />} />
       <Route path="/terms" element={<TermsOfUse />} />
       <Route path="/legal" element={<Legal />} />
+      <Route path="/faq" element={<FAQ />} />
       </Routes>
       <Footer />
       </BrowserRouter>
