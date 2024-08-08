@@ -1,0 +1,121 @@
+.navbar-container {
+  height: 12vh;
+  background-color: white;
+  display: flex;
+  padding: 5px;
+  border-radius: 0px 0px 20px 20px;
+}
+
+.navbar-logo {
+  width: 20%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 140px;
+}
+
+.nav-links ul {
+  list-style-type: none;
+  display: flex;
+  margin-top: 70px;
+  font-size: 20px;
+}
+
+.nav-links{
+  margin-left: 100px;
+}
+
+.nav-links ul li {
+  margin-left: 30px;
+  font-weight: 500;
+  cursor: pointer;
+  color: #E66E4E;
+  position: relative;
+}
+
+.nav-links ul li a{
+  text-decoration: none;
+  color: inherit;
+}
+
+.navbar-container.sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+.navbar-logo.hidden {
+  display: none;
+}
+
+.nav-links.sticky {
+  margin-left: 0;
+}
+
+.menu-icon {
+  cursor: pointer;
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  margin-top: 25px;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 1001;
+  min-width: 100px;
+}
+
+.dropdown-menu ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: block;
+}
+
+.dropdown-menu ul li {
+  padding: 10px;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.dropdown-menu ul li:hover {
+  background-color: #ebdddd;
+}
+
+@media screen and (max-width: 1024px) {
+  .navbar-logo { margin-left: 5%; }
+  .nav-links ul { margin-left: 5%; font-size: 18px; }
+  .nav-links ul li { margin-left: 20px; }
+}
+
+@media screen and (max-width: 768px) {
+  .navbar-container { flex-direction: column; height: auto; }
+  .navbar-logo { width: 100%; margin-left: 0; }
+  .nav-links { margin-left: -30px; margin-top: -50px; }
+  .nav-links ul { margin-left: 0; justify-content: center; }
+  .nav-links ul li { margin: 0 10px; }
+  
+  .menu-icon { display: block; }
+  
+  .dropdown-menu {
+    width: 350px;
+    position: absolute;
+    top: 12vh;
+    right: 0;
+    background-color: white;
+    border-top: 1px solid #ccc;
+    text-align: left;
+  }
+}
+
+

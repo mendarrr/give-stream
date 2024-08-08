@@ -1,0 +1,846 @@
+.main-home-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    background-color: whitesmoke;
+}
+
+/* Home Content */
+.home-content {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.home-content section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Counter Section */
+.counter-container {
+    background: url('../assets/CounterBack.png') no-repeat center center / cover;
+    background-color: rgba(0, 0, 0, 0.8);
+    background-blend-mode: multiply;
+}
+
+.counter-text {
+    align-items: center;
+    justify-content: center;
+}
+
+.counter-text h2 {
+    font-size: 35px;
+    color: #E66E4E;
+}
+
+.counter-text h3 {
+    margin-top: -20px;
+    letter-spacing: 2px;
+    text-align: center;
+    font-size: 30px;
+    color: white;
+}
+
+.counter-numbers {
+    display: flex;
+    align-items: center;
+    border: 1px solid white;
+    background: rgb(245, 245, 245);
+    width: 800px;
+    border-radius: 20px 0px;
+}
+
+.counter-numbers .insight {
+    margin-left: 70px;
+    margin-right: 50px;
+}
+
+.counter-numbers .insight h2 {
+    font-size: 50px;
+    color: #318E8D;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.counter-numbers .insight p {
+    font-size: 20px;
+    color: black;
+    text-align: center;
+    margin-top: -40px;
+}
+
+.counter-text2 {
+    margin-top: -10px;
+    font-size: 30px;
+    font-weight: 700;
+    color: white;
+}
+
+.counter-text2 span {
+    color: #E66E4E;
+    font-size: 50px;
+    font-weight: 700;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.counter-button {
+    text-decoration: none;
+    color: white;
+    font-size: 25px;
+    font-weight: 700;
+    border-bottom: 1px solid #318E8D;
+    border-left: 1px solid #318E8D;
+    margin-bottom: 10px;
+    background-color: #E66E4E;
+    border-radius: 20px;
+    padding: 15px 20px;
+    transition: all ease-in-out 1s;
+}
+
+.counter-button:hover {
+    transform: scale(1.09);
+    background-color: #318E8D;
+    color: white;
+    border-top: 1px solid #E66E4E;
+    border-right: 1px solid #E66E4E;
+    box-shadow: #E66E4E;
+}
+
+/* Charity List Section*/
+#charities-section {
+    height: 100vh;
+    background: url('../assets/CharityHomeBack.png') no-repeat center center / 120%;
+    background-color: rgba(245, 245, 245, 0.9);
+    background-blend-mode: saturation;
+}
+
+.charities-section-text {
+    margin-top: 60px;
+    letter-spacing: 1px;
+    font-size: 18px;
+    font-weight: 600;
+    margin-left: 140px;
+}
+
+
+/* Completed Fundraisers */
+.completed-fundraisers {
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(#df5644e8, #e35a48ea), url('../assets/CompletedFundraisersBack.png') no-repeat center center / cover;
+}
+
+.completed-fundraisers-text {
+    padding: 10px;
+    width: 1270px;
+    margin-left: 150px;
+}
+
+.completed-fundraisers-text h2 {
+    font-size: 35px;
+    color: white;
+    margin-top: 0px;
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.completed-fundraisers-text p {
+    font-size: 23px;
+    color: white;
+    margin-top: -10px;
+    text-align: left;
+    font-weight: 500;
+    line-height: 1.2;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+/* How it Works */
+.how-givestream-works {
+    margin-top: 90px;
+    align-items: center;
+    height: 90vh;
+    background-color: whitesmoke;
+    border-bottom: 1px solid black;
+}
+
+.how-givestream-works img {
+    width: 25%;
+}
+
+.how-givestream-works-text {
+    width: 1000px;
+    padding: 10px 10px 10px 0px;
+    line-height: 1.5;
+}
+
+.how-givestream-works-text h3 {
+    font-size: 30px;
+    color: black;
+    text-align: center;
+    margin-top: 0px;
+    font-weight: 600;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.how-givestream-works-text p {
+    font-size: 18px;
+    color: black;
+    text-align: left;
+    margin-top: -20px;
+    font-weight: 500;
+    line-height: 1.5;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.tutorial-btn {
+    width: 700px;
+    padding: 150px;
+    margin-top: -24px;
+    border-radius: 6px;
+    margin-right: 40px;
+    margin-left: 16px;
+    height: 150px;
+    background: url(../assets/Works.png);
+    background-size: cover;
+    transition: all 3s;
+}
+
+.tutorial-btn:hover {
+    background: url('../assets/Works.png') no-repeat center center / cover;
+    background-color: rgba(0, 0, 0, 0.8);
+    background-blend-mode: multiply;
+}
+
+.works-text h4 {
+    font-size: 20px;
+    color: #318E8D;
+    text-align: left;
+    margin-left: -510px;
+    margin-top: -10px;
+    font-weight: 600;
+}
+
+.tutorial-btn button {
+    line-height: 3vh;
+    padding: 10px 20px;
+    border: none;
+    background-color: white;
+    color: black;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all ease-in-out 0.5s;
+    margin-left: 270px;
+    margin-top: 50px;
+}
+
+.tutorial-btn button:hover {
+    transform: scale(1.09);
+    background-color: #E66E4E;
+    color: white;
+    font-weight: 600;
+}
+
+@media screen and (max-width: 1200px) {
+    .main-home-container {
+        overflow-x: hidden;
+    }
+
+    .counter-numbers {
+        width: 90%;
+    }
+
+    .charities-section-text,
+    .completed-fundraisers-text,
+    .how-givestream-works-text {
+        width: 90%;
+        margin-left: 5%;
+    }
+
+    .tutorial-btn {
+        width: 80%;
+        margin-left: 10%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .counter-numbers {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .counter-numbers .insight {
+        margin: 20px 0;
+    }
+
+    #charities-section,
+    .completed-fundraisers,
+    .how-givestream-works {
+        height: auto;
+        padding: 50px 0;
+    }
+
+    .tutorial-btn {
+        padding: 50px;
+        background-size: contain;
+    }
+
+    .how-givestream-works {
+        margin-top: -10px;
+    }
+
+    .how-givestream-works img {
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .tutorial-btn {
+        width: 80%;
+        padding: 120px;
+        margin-right: 20px;
+        margin-left: 8px;
+    }
+
+    .tutorial-btn button {
+        margin-left: 200px;
+        font-size: 18px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .tutorial-btn {
+        width: 90%;
+        padding: 100px;
+        margin-right: 10px;
+        margin-left: 4px;
+    }
+
+    .tutorial-btn button {
+        margin-left: 150px;
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .tutorial-btn {
+        width: 95%;
+        padding: 80px;
+        margin-right: 5px;
+        margin-left: 2px;
+    }
+
+    .tutorial-btn button {
+        margin-left: 100px;
+        font-size: 14px;
+    }
+}
+
+/* About Page */
+.about-page {
+    background-color: whitesmoke;
+    border-bottom: 1px solid black;
+}
+
+.about-text,
+.working,
+.why,
+.join-us {
+    padding-left: 150px;
+    padding-right: 150px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.about-text {
+    color: white;
+    padding-bottom: 20px;
+    background: url('../assets/about.png') no-repeat center center / cover;
+    background-color: rgba(0, 0, 0, 0.8);
+    background-blend-mode: multiply;
+}
+
+.about-text img {
+    width: 30%;
+    margin-left: 550px;
+    margin-top: 10px;
+}
+
+.about-text h1,
+.about-text h2 {
+    text-align: center;
+}
+
+.abouttxt {
+    background: url('../assets/CharityHomeBack.png') no-repeat center center / 120%;
+    background-color: rgba(245, 245, 245, 0.9);
+    background-blend-mode: saturation;
+
+}
+
+.working{
+    padding-bottom: 20px;
+}
+
+.working .tutorial-btn{
+    margin-top: 20px;
+    margin-left: 230px;
+}
+
+.working-text {
+    color: black;
+}
+
+.working-text h2,
+.why h2,
+.join-us h2{
+    text-align: center;
+    margin-bottom: 0px;
+    font-weight: 600;
+}
+
+.why ul{
+    line-height: 1.5;
+    margin-top: 5px;
+}
+
+.join-us p{
+    margin-top: 5px;
+}
+
+.about-page {
+    width: 100vw;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+  
+  @media screen and (max-width: 1024px) {
+    .about-page {
+      padding: 0;
+    }
+    
+    .about-text, .working, .why, .join-us {
+      width: 100%;
+      padding-left: 20px;
+      padding-right: 20px;
+      box-sizing: border-box;
+    }
+    
+    .about-text img {
+      max-width: 100%;
+      height: auto;
+      margin-left: 0;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .working .tutorial-btn{
+        margin-left: -11px;
+        width: 200px;
+        background-size: cover;
+    }
+
+    .working .tutorial-btn button{
+        font-size: 16px;
+        padding: 10px 20px;
+        margin-left: 15px;
+    }
+  }
+  
+  /* Give Stream Documents */
+  .terms,
+  .privacy-notice,
+  .legal,
+  .accessibility,
+  .cookie-policy,
+  .privacy-choices,
+  .privacy-policy{
+    padding-left: 400px;
+    padding-right: 400px;
+    font-family: 'Times New Roman', Times, serif;
+    background-color: whitesmoke;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .terms h1,
+  .privacy-notice h1,
+  .legal h1,
+  .accessibility h1,
+  .cookie-policy h1,
+  .privacy-choices h1,
+  .privacy-policy h1{
+    text-align: center;
+    font-size: 45px;
+    font-weight: 600;
+    border-bottom: 2px solid black;
+  }
+
+  .terms h2,
+  .privacy-notice h2,
+  .legal h2,
+  .accessibility h2,
+  .cookie-policy h2,
+  .privacy-choices h2,
+  .privacy-policy h2{
+    text-align: left;
+    font-weight: 600;
+    margin-top: 25px;
+    font-size: 28px;
+  }
+
+  .terms p,
+  .privacy-notice p,
+  .legal p,
+  .accessibility p,
+  .cookie-policy p,
+  .privacy-choices p,
+  .privacy-policy p{
+    line-height: 1.5;
+    margin-top: -10px;
+    margin-bottom: 15px;
+    font-size: 18px;
+  }
+
+  .accessibility ul,
+  .cookie-policy ul,
+  .privacy-choices ul,
+  .privacy-policy ul{
+    line-height: 1.5;
+    margin-top: 5px;
+  }
+
+  .accessibility ul li,
+  .cookie-policy ul li,
+  .privacy-choices ul li,
+  .privacy-policy ul li{
+    font-size: 18px;
+  }
+
+@media screen and (max-width: 1200px) {
+    .terms,
+    .privacy-notice,
+    .legal,
+    .accessibility,
+    .cookie-policy,
+    .privacy-choices,
+    .privacy-policy {
+      padding-left: 200px;
+      padding-right: 200px;
+    }
+  }
+  
+  @media screen and (max-width: 768px) {
+    .terms,
+    .privacy-notice,
+    .legal,
+    .accessibility,
+    .cookie-policy,
+    .privacy-choices,
+    .privacy-policy {
+      padding-left: 100px;
+      padding-right: 100px;
+    }
+  
+    .terms h1,
+    .privacy-notice h1,
+    .legal h1,
+    .accessibility h1,
+    .cookie-policy h1,
+    .privacy-choices h1,
+    .privacy-policy h1 {
+      font-size: 36px;
+    }
+  
+    .terms h2,
+    .privacy-notice h2,
+    .legal h2,
+    .accessibility h2,
+    .cookie-policy h2,
+    .privacy-choices h2,
+    .privacy-policy h2 {
+      font-size: 24px;
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    .terms,
+    .privacy-notice,
+    .legal,
+    .accessibility,
+    .cookie-policy,
+    .privacy-choices,
+    .privacy-policy {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  
+    .terms h1,
+    .privacy-notice h1,
+    .legal h1,
+    .accessibility h1,
+    .cookie-policy h1,
+    .privacy-choices h1,
+    .privacy-policy h1 {
+      font-size: 28px;
+    }
+  
+    .terms h2,
+    .privacy-notice h2,
+    .legal h2,
+    .accessibility h2,
+    .cookie-policy h2,
+    .privacy-choices h2,
+    .privacy-policy h2 {
+      font-size: 20px;
+    }
+  
+    .terms p,
+    .privacy-notice p,
+    .legal p,
+    .accessibility p,
+    .cookie-policy p,
+    .privacy-choices p,
+    .privacy-policy p,
+    .accessibility ul li,
+    .cookie-policy ul li,
+    .privacy-choices ul li,
+    .privacy-policy ul li {
+      font-size: 16px;
+    }
+  }
+
+  /* FAQ Page */
+  .main-faq-container{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    background-color: whitesmoke;
+  }
+
+  .faq-container{
+    padding-top: 30px;
+    padding-bottom: 30px;
+    padding-left: 570px;
+    padding-right: 500px;
+    display: flex;
+  }
+
+  .faq-header{
+    color: white;
+    border: 1px solid black;
+    padding: 130px;
+    background: url('../assets/about.png') no-repeat center center / cover;
+    background-color: rgba(0, 0, 0, 0.8);
+    background-blend-mode: multiply;
+    border-bottom-left-radius: 45px;
+    border-bottom-right-radius: 45px;
+  }
+
+  .faq-header h1{
+    font-size: 45px;
+  }
+
+  .faq-item {
+    background-color: white;
+    border-bottom-left-radius: 20px;
+    border-top-right-radius: 20px;
+    margin: 10px 0;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.5s;
+  }
+  
+  .faq-item:hover {
+    background-color: #ebebeb;
+  }
+  
+  .faq-question {
+    font-weight: bold;
+  }
+  
+  .faq-answer {
+    margin-top: 10px;
+    padding: 10px 0;
+  }
+
+  .ask-form-icon-btn{
+    margin-left: 1700px;
+  }
+
+  .ask-form-icon-btn button{
+    background: transparent;
+    border: none;
+  }
+
+  .fa-message{
+    font-size: 50px;
+    margin-bottom: 20px;
+    color: #E66E4E;
+    transition: all ease-in-out 2s;
+    cursor: pointer;
+  }
+
+  .fa-message:hover{
+    transform: scale(1.09);
+    filter: drop-shadow(0 0 5px #318E8D);
+  }
+
+@media screen and (max-width: 1700px) {
+    .main-faq-container{
+        width: 100%;
+    }
+    
+    .faq-container {
+      padding-left: 450px;
+      padding-right: 300px;
+    }
+  
+    .ask-form-icon-btn {
+      margin-left: 1200px;
+    }
+  }
+  
+  @media screen and (max-width: 992px) {
+    .faq-container {
+      padding-left: 200px;
+      padding-right: 200px;
+    }
+  
+    .ask-form-icon-btn {
+      margin-left: 900px;
+    }
+  }
+  
+  @media screen and (max-width: 890px) {
+    .main-faq-container{
+        width: 112%;
+    }
+
+    .faq-container {
+      padding-left: 100px;
+      padding-right: 100px;
+    }
+  
+    .faq-header {
+      padding: 80px;
+      width: 82.5%;
+    }
+  
+    .faq-header h1 {
+      font-size: 36px;
+    }
+  
+    .ask-form-icon-btn {
+      margin-left: 650px;
+    }
+  }
+  
+  @media screen and (max-width: 576px) {
+    .main-faq-container{
+        width: 108.5%;
+    }
+    
+    .faq-container {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .faq-item{
+        width: 88%;
+    }
+  
+    .faq-header {
+      padding: 50px;
+      width: 76%;
+    }
+  
+    .faq-header h1 {
+      font-size: 28px;
+      text-align: center;
+    }
+  
+    .ask-form-icon-btn {
+      margin-left: 280px;
+    }
+  
+    .fa-message {
+      font-size: 40px;
+    }
+  }
+
+  /* ChatBox Styling */
+  .chat-box {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 300px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    z-index: 1000;
+    margin-top: -100px;
+  }
+  
+  .chat-box .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  .chat-box form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .chat-box textarea,
+  .chat-box input {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  .chat-box textarea {
+    height: 100px;
+    resize: vertical;
+  }
+  
+  .chat-box button[type="submit"] {
+    background-color: #E66E4E;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .chat-box button[type="submit"]:hover {
+    background-color: #D35538;
+  }
+
+
+  
+  
+
+
+  
+  
+
+
