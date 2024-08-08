@@ -136,12 +136,31 @@ class Login(Resource):
                 return {'message': 'Invalid password for admin'}, 401
         else:
             return {'message': 'User not found'}, 404
-        
+from flask_restful import Resource
+from flask import request, jsonify
+from models import db, Charity, Donation
+from datetime import datetime, timedelta
+
 class Charities(Resource):
     def get(self, id=None):
         if id:
             charity = Charity.query.get_or_404(id)
-            return charity.to_dict_with_stats()
+            charity_dict = charity.to_dict()
+            
+            # Add recent donors
+            recent_donors = Donation.query.filter_by(charity_id=id).order_by(Donation.date.desc()).limit(3).all()
+            charity_dict['recentDonors'] = [
+                {
+                    'name': donor.donor.username if not donor.is_anonymous else 'Anonymous',
+                    'amount': donor.amount,
+                    'type': 'Recent donation'
+                } for donor in recent_donors
+            ]
+            
+            # Add recent donation count
+            charity_dict['recentDonationCount'] = Donation.query.filter_by(charity_id=id).filter(Donation.date >= datetime.utcnow() - timedelta(hours=24)).count()
+            
+            return charity_dict
         else:
             charities = Charity.query.all()
             return jsonify([charity.to_dict_with_stats() for charity in charities])
@@ -161,7 +180,6 @@ def to_dict_with_stats(self):
         'needed_donation': self.needed_donation
     }
 
-    # @admin_required() 
     def post(self):
         data = request.get_json()
         new_charity = Charity(
@@ -169,13 +187,16 @@ def to_dict_with_stats(self):
             email=data['email'],
             name=data['name'],
             description=data.get('description'),
-            needed_donation=data.get('needed_donation')
+            needed_donation=data.get('needed_donation'),
+            goal_amount=data.get('goal_amount'),
+            image_url=data.get('image_url'),
+            organizer=data.get('organizer')
         )
         new_charity.password_hash = data['password']
         db.session.add(new_charity)
         db.session.commit()
         return new_charity.to_dict(), 201
-    
+
     def put(self, id):
         charity = Charity.query.get_or_404(id)
         data = request.get_json()
@@ -183,15 +204,15 @@ def to_dict_with_stats(self):
             setattr(charity, key, value)
         db.session.commit()
         return charity.to_dict()
-    
+
     def delete(self, id):
         charity = Charity.query.get_or_404(id)
         db.session.delete(charity)
         db.session.commit()
         return '', 204
+    
 
 class CharityApplications(Resource):
-    # @admin_required()  
     def get(self):
         applications = CharityApplication.query.all()
         return jsonify([app.to_dict() for app in applications])
@@ -201,13 +222,18 @@ class CharityApplications(Resource):
         new_application = CharityApplication(
             name=data['name'],
             email=data['email'],
-            description=data['description']
+            description=data['description'],
+            country=data.get('country'),
+            city=data.get('city'),
+            zipcode=data.get('zipcode'),
+            fundraising_category=data.get('fundraising_category'),
+            title=data.get('title'),
+            target_amount=data.get('target_amount')
         )
         db.session.add(new_application)
         db.session.commit()
         return new_application.to_dict(), 201
 
-    # @admin_required() 
     def put(self, id):
         application = CharityApplication.query.get_or_404(id)
         data = request.get_json()
@@ -222,9 +248,17 @@ class CharityApplications(Resource):
                 description=application.description
             )
             db.session.add(new_charity)
+            
+        application.country = data.get('country', application.country)
+        application.city = data.get('city', application.city)
+        application.zipcode = data.get('zipcode', application.zipcode)
+        application.fundraising_category = data.get('fundraising_category', application.fundraising_category)
+        application.title = data.get('title', application.title)
+        application.target_amount = data.get('target_amount', application.target_amount)
 
         db.session.commit()
         return application.to_dict(), 200
+
     
 class CommonDashboard(Resource):
     def get(self):
