@@ -57,6 +57,34 @@ const Inventory = () => {
         }
     };
 
+      // Edit an existing inventory item
+      const handleEditItem = async () => {
+        try {
+            const response = await fetch(`${apiUrl}/${editItem.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(editItem),
+            });
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            setInventoryItems(inventoryItems.map(item => (item.id === data.id ? data : item)));
+            setEditItem(null);
+        } catch (error) {
+            setError('Failed to update inventory item.');
+        }
+    };
+
+    // Delete an inventory item
+    const handleDeleteItem = async (id) => {
+        try {
+            const response = await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
+            if (!response.ok) throw new Error('Network response was not ok');
+            setInventoryItems(inventoryItems.filter(item => item.id !== id));
+        } catch (error) {
+            setError('Failed to delete inventory item.');
+        }
+    };
+
 
 export default Inventory;
 
