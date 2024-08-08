@@ -134,7 +134,8 @@ class Charity(db.Model, SerializerMixin):
             'total_raised': total_raised,
             'donation_count': donation_count,
             'percentage_raised': percentage_raised,
-            'needed_donation': self.needed_donation
+            'goal_amount': self.goal_amount,
+            'neededDonation': self.needed_donation
     }
 
 
