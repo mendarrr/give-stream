@@ -45,7 +45,7 @@ function CharityDetails() {
   useEffect(() => {
     const fetchCharityDetails = async () => {
       try {
-        const response = await fetch(`http://127.0.0.1:5000/charities/${id}`);
+        const response = await fetch(`/charities/${id}`);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -59,7 +59,7 @@ function CharityDetails() {
 
     const fetchSuccessStories = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:5000/stories");
+        const response = await fetch("/stories");
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -73,7 +73,7 @@ function CharityDetails() {
 
     const fetchDonations = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:5000/donations");
+        const response = await fetch("/donations");
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
