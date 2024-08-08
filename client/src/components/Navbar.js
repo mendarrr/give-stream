@@ -41,13 +41,13 @@ function Navbar({ isSticky, isLoggedIn }) {
               <div className="dropdown-menu">
                 <ul>
                   <li>
-                    <Link to="/questions">Questions</Link>
+                    <Link to="/faq">Questions</Link>
                   </li>
                   <li>
                     <Link to="/faq">FAQ</Link>
                   </li>
                   <li>
-                    <Link to="/communities">Communities</Link>
+                    <Link to="/completed-charities">Communities</Link>
                   </li>
                   <li>
                     <Link to="/givestream-communities">
@@ -55,7 +55,7 @@ function Navbar({ isSticky, isLoggedIn }) {
                     </Link>
                   </li>
                   <li>
-                    <Link to="/givestream-fundraisers">
+                    <Link to="/completed-charities">
                       Give Stream Administered Fundraisers
                     </Link>
                   </li>

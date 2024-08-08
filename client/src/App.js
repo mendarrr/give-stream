@@ -13,6 +13,7 @@ import PrivacyNotice from './components/PrivacyNotice';
 import TermsOfUse from './components/TermsOfUse';
 import Legal from './components/Legal';
 import FAQ from './components/FAQ';
+import CompletedCharitiesList from './components/CompletedCharitiesList';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
       <Route path="/terms" element={<TermsOfUse />} />
       <Route path="/legal" element={<Legal />} />
       <Route path="/faq" element={<FAQ />} />
+      <Route path="/completed-charities" element={<CompletedCharitiesList />} />
       </Routes>
       <Footer />
       </BrowserRouter>
