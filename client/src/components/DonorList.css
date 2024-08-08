@@ -1,0 +1,247 @@
+.donor-list-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .logo {
+    max-width: 200px;
+    height: auto;
+  }
+  
+  h1 {
+    text-align: center;
+    color: #333;
+  }
+  
+  .table-container {
+    overflow-x: auto;
+  }
+  
+  .donor-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .donor-table th,
+  .donor-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .donor-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  
+  .donor-table tr:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+  }
+  
+  .donor-table button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+  }
+  
+  .donor-table button:hover {
+    background-color: #ff3333;
+  }
+  
+  .donor-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .donor-card h2 {
+    margin-top: 0;
+    color: #333;
+  }
+  
+  .donor-card p {
+    margin: 10px 0;
+  }
+  
+  .donor-card button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 3px;
+    margin-top: 10px;
+  }
+  
+  .donor-card button:hover {
+    background-color: #45a049;
+  }
+  
+  .pagination {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+  }
+  
+  .page-item {
+    margin: 0 5px;
+  }
+  
+  .page-link {
+    color: #007bff;
+    padding: 8px 12px;
+    text-decoration: none;
+    border: 1px solid #007bff;
+    border-radius: 5px;
+  }
+  
+  .page-item.active .page-link {
+    background-color: red;
+    color: white;
+  }
+  
+  .page-link:hover {
+    background-color: #f0f0f0;
+  }
+  
+  @media screen and (max-width: 600px) {
+    .donor-table th,
+    .donor-table td {
+      padding: 8px;
+    }
+  
+    .donor-table th:nth-child(3),
+    .donor-table td:nth-child(3) {
+      display: none;
+    }
+  
+    .pagination {
+      flex-wrap: wrap;
+    }
+  
+    .page-item {
+      margin: 2px;
+    }
+  
+    .page-link {
+      padding: 6px 10px;
+    }
+
+    .edit-form {
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 20px;
+        margin-top: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      
+      .edit-form h2 {
+        margin-top: 0;
+        color: #333;
+      }
+      
+      .edit-form form > div {
+        margin-bottom: 15px;
+      }
+      
+      .edit-form label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      
+      .edit-form input[type="text"],
+      .edit-form input[type="email"] {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      
+      .edit-form input[type="checkbox"] {
+        margin-right: 5px;
+      }
+      
+      .edit-form button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 3px;
+        margin-right: 10px;
+      }
+      
+      .edit-form button[type="button"] {
+        background-color: #f44336;
+      }
+      
+      .edit-form button:hover {
+        opacity: 0.8;
+      }
+      
+      /* Small screens */
+      @media screen and (max-width: 600px) {
+        .edit-form {
+          padding: 15px;
+        }
+      
+        .edit-form button {
+          width: 100%;
+          margin-bottom: 10px;
+        }
+      }
+      
+      /* Medium screens */
+      @media screen and (min-width: 601px) and (max-width: 1024px) {
+        .edit-form {
+          padding: 20px;
+          max-width: 80%;
+          margin-left: auto;
+          margin-right: auto;
+        }
+      
+        .edit-form button {
+          width: auto;
+          margin-bottom: 0;
+        }
+      }
+      
+      /* Large screens */
+      @media screen and (min-width: 1025px) {
+        .edit-form {
+          padding: 30px;
+          max-width: 60%;
+          margin-left: auto;
+          margin-right: auto;
+        }
+      
+        .edit-form button {
+          width: auto;
+          margin-bottom: 0;
+        }
+      }
+  .button-spacer {
+    display: inline-block;
+    width: 10px; /* Adjust this value to increase or decrease space */
+  }
+  
+  }
