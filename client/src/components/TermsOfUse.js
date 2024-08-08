@@ -5,7 +5,7 @@ const TermsOfUse = () => {
   return (
     <div className="terms">
       <h3>Effective Date: [2nd August, 2024]</h3>
-      <h1>Terms of Use</h1>
+      <h4>Terms of Use</h4>
       <p>
         Welcome to Give Stream. By using our platform, you agree to the
         following terms and conditions:

@@ -20,7 +20,7 @@ const CompletedCharitiesList = ({ searchTerm }) => {
             .then(response => response.json())
             .then(data => {
                 const completedCharities = data.filter(charity => 
-                    (charity.total_raised / charity.needed_donation) * 100 >= 100
+                    (charity.total_raised / charity.goal_amount) * 100 >= 100
                 );
                 setCompletedCharities(completedCharities);
             });

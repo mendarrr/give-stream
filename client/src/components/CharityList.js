@@ -21,7 +21,7 @@ const CharityList = ({ searchTerm }) => {
       .then((data) => {
         const activeCharities = data.filter(
           (charity) =>
-            (charity.total_raised / charity.needed_donation) * 100 < 100
+            (charity.total_raised / charity.goal_amount) * 100 < 100
         );
         setCharities(activeCharities);
       });

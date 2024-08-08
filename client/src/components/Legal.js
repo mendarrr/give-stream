@@ -4,7 +4,7 @@ import "./HomePage.css";
 const Legal = () => {
   return (
     <div className="legal">
-      <h1>Legal Information</h1>
+      <h4>Legal Information</h4>
       <p>
         Give Stream operates in compliance with all applicable laws and
         regulations. This section provides information about our legal
