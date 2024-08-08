@@ -4,7 +4,7 @@ import "./HomePage.css";
 const AccessibilityStatement = () => {
   return (
     <div className="accessibility">
-      <h1>Accessibility Statement</h1>
+      <h4>Accessibility Statement</h4>
       <p>
         Give Stream is committed to ensuring digital accessibility for people
         with disabilities. We are continually improving the user experience for

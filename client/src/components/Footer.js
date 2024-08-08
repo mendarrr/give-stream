@@ -56,7 +56,7 @@ function Footer() {
           <nav>
             <ul>
               <li>
-                <Link to="/questions">Questions</Link>
+                <Link to="/faq">Questions</Link>
               </li>
               <li>
                 <Link to="/about">About</Link>

@@ -3,7 +3,7 @@ import "./HomePage.css";
 
 const CookiePolicy = () => (
   <div className="cookie-policy">
-    <h1>Cookie Policy</h1>
+    <h4>Cookie Policy</h4>
     <p>
       This Cookie Policy explains how Give Stream uses cookies and similar
       technologies to recognize you when you visit our platform. It explains

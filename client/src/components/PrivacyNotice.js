@@ -4,7 +4,7 @@ import "./HomePage.css";
 const PrivacyNotice = () => {
   return (
     <div className="privacy-notice">
-      <h1>Privacy Notice</h1>
+      <h4>Privacy Notice</h4>
       <p>
         This Privacy Notice explains how Give Stream collects, uses, and
         discloses your personal information.
