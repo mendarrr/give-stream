@@ -92,11 +92,17 @@
     height: 50px; /* Fixed height for uniform size */
     white-space: nowrap; /* Prevent button text from spilling */
     box-sizing: border-box; /* Include padding and border in width calculation */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; /* Smooth transition for color changes */
 }
 
-.fundraising-button:hover {
-    background-color: #ff8c00; /* Duller orange */
-    color: #fff; /* Optional: change text color on hover */
+.fundraising-button.selected {
+    background-color: lightblue; /* Selected button color */
+    color: #000; /* Text color for selected button */
+}
+
+.fundraising-button:hover:not(.selected) {
+    background-color: #e0e0e0; /* Light grey hover color for non-selected buttons */
+    color: #000; /* Text color for hover state */
 }
 
 .button-description {
@@ -142,4 +148,9 @@ hr {
 .next-button:hover {
     background-color: #e74c3c; /* Dark orange background on hover */
     color: #fff; /* Ensure text remains white on hover */
+}
+
+.next-button:disabled {
+    background-color: #ccc; /* Disabled button color */
+    cursor: not-allowed; /* Change cursor to indicate disabled state */
 }
