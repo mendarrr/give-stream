@@ -777,6 +777,66 @@
       font-size: 40px;
     }
   }
+
+  /* ChatBox Styling */
+  .chat-box {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 300px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    z-index: 1000;
+    margin-top: -100px;
+  }
+  
+  .chat-box .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  .chat-box form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .chat-box textarea,
+  .chat-box input {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  .chat-box textarea {
+    height: 100px;
+    resize: vertical;
+  }
+  
+  .chat-box button[type="submit"] {
+    background-color: #E66E4E;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .chat-box button[type="submit"]:hover {
+    background-color: #D35538;
+  }
+
+
+  
   
 
 

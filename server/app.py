@@ -9,7 +9,7 @@ from flask_apscheduler import APScheduler
 from notification_service import run_notification_service
 
 from config import app,db,api
-from models import db, Admin, Donor,Charity, PaymentMethod
+from models import db, Admin, Donor,Charity, PaymentMethod, Message
 
 
 scheduler = APScheduler()
@@ -666,6 +666,27 @@ class PaymentMethods(Resource):
         db.session.commit()
         return '', 204
 
+class MessageResource(Resource):
+    def get(self):
+        messages = Message.query.all()
+        return jsonify([message.to_dict() for message in messages])
+
+    def post(self):
+        data = request.get_json()
+        new_message = Message(
+            email=data['email'],
+            content=data['content']
+        )
+        db.session.add(new_message)
+        db.session.commit()
+        return new_message.to_dict(), 201
+    
+class AnswerMessage(Resource):
+    def put(self, id):
+        message = Message.query.get_or_404(id)
+        message.is_answered = True
+        db.session.commit()
+        return message.to_dict()
 
 # # Routes
 api.add_resource(Index, '/')
@@ -681,7 +702,9 @@ api.add_resource(PaymentMethods, '/payment-methods', '/payment-methods/<int:id>'
 api.add_resource(CommonDashboard, '/dashboard/common')
 api.add_resource(AdminDashboard, '/dashboard/admin')
 api.add_resource(CharityDashboard, '/dashboard/charity')
-api.add_resource(DonorDashboard, '/dashboard/donor')       
+api.add_resource(DonorDashboard, '/dashboard/donor')   
+api.add_resource(MessageResource, '/messages')
+api.add_resource(AnswerMessage, '/messages/<int:id>/answer')
 
 if __name__ == '__main__':
     app.run(debug=True)

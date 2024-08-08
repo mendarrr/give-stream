@@ -287,3 +287,23 @@ class PaymentMethod(db.Model, SerializerMixin):
 
     donors = db.relationship('Donor', backref='payment_method', lazy=True)
     donations = db.relationship('Donation', back_populates='payment_method')
+
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.now)
+    is_answered = db.Column(db.Boolean, default=False)
+
+    def __repr__(self):
+        return f'<Message {self.id}>'
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'content': self.content,
+            'timestamp': self.timestamp.isoformat() if self.timestamp else None,
+            'is_answered': self.is_answered
+        }
+
