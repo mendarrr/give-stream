@@ -14,7 +14,8 @@ import TermsOfUse from './components/TermsOfUse';
 import Legal from './components/Legal';
 import FAQ from './components/FAQ';
 import CompletedCharitiesList from './components/CompletedCharitiesList';
-// import Inventory from './components/Inventory';
+import React from 'react';
+import Inventory from './components/Inventory';
 function App() {
   return (
     <div>
@@ -31,7 +32,7 @@ function App() {
       <Route path="/legal" element={<Legal />} />
       <Route path="/faq" element={<FAQ />} />
       <Route path="/completed-charities" element={<CompletedCharitiesList />} />
-      {/* <Route path="/inventory" element={<Inventory />} />  */}
+      <Route path="/inventory" element={<Inventory />} /> 
       </Routes>
       <Footer />
       </BrowserRouter>
