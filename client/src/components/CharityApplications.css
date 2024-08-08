@@ -1,0 +1,145 @@
+.charity-applications {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    position: relative;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+}
+
+.card {
+    display: flex;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 350px 20px 20px 20px; /* Increase top margin for more space from navbar */
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 90%; /* Increase width of the card */
+    max-width: 1200px; /* Limit maximum width */
+    position: relative;
+    box-sizing: border-box; /* Include padding and border in width calculation */
+    flex-direction: column; /* Ensure vertical layout */
+    overflow: hidden; /* Ensure content does not overflow the card */
+}
+
+.card-logo {
+    width: 150px;
+    height: auto;
+    margin-right: 20px;
+    position: absolute; /* Position it relative to the card */
+    top: 20px;
+    left: 20px;
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align content to the top */
+    flex-grow: 1;
+    margin-left: 180px; /* Adjust margin to fit content within the logo space */
+    margin-right: 20px;
+    box-sizing: border-box; /* Include padding and border in width calculation */
+}
+
+.adjacent-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    width: 100%; /* Fill the available space */
+    margin-bottom: 20px; /* Space below the inner card */
+    box-sizing: border-box; /* Include padding and border in width calculation */
+}
+
+.adjacent-card h3 {
+    margin-top: 0;
+    color: #e74c3c;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center buttons horizontally */
+    margin-top: 20px;
+}
+
+.button-with-description {
+    display: flex;
+    align-items: center; /* Align button and text vertically */
+    margin-bottom: 15px; /* Space between button groups */
+    width: 100%; /* Ensure it takes full width of its container */
+}
+
+.fundraising-button {
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #000; /* Thin black border */
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    margin-right: 10px; /* Space between button and text */
+    width: 200px; /* Fixed width for uniform size */
+    height: 50px; /* Fixed height for uniform size */
+    white-space: nowrap; /* Prevent button text from spilling */
+    box-sizing: border-box; /* Include padding and border in width calculation */
+}
+
+.fundraising-button:hover {
+    background-color: #ff8c00; /* Duller orange */
+    color: #fff; /* Optional: change text color on hover */
+}
+
+.button-description {
+    font-size: 14px;
+    color: #000; /* Black color for text */
+    white-space: nowrap; /* Prevent description text from spilling */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Add ellipsis if text overflows */
+    flex: 1; /* Allow text to take available space */
+    box-sizing: border-box; /* Include padding and border in width calculation */
+}
+
+hr {
+    border: 0;
+    height: 4px; /* Increase height for a heavy appearance */
+    background-color: #ccc; /* Grey color */
+    margin: 15px 0; /* Space above and below the line */
+    width: 100%; /* Ensure it spans the full width */
+}
+
+.card-footer {
+    display: flex;
+    justify-content: center; /* Center the button horizontally */
+    margin-top: 20px; /* Space between content and footer */
+}
+
+.next-button {
+    background-color: #000; /* Black background */
+    color: #fff; /* White text */
+    border: none; /* Remove default border */
+    border-radius: 12px; /* Rounded corners */
+    padding: 12px 24px; /* Increased padding for larger button */
+    font-size: 18px; /* Slightly larger text */
+    font-weight: bold; /* Bold text */
+    cursor: pointer; /* Pointer cursor on hover */
+    text-align: center; /* Center text */
+    width: 220px; /* Increased width */
+    height: 55px; /* Increased height */
+    box-sizing: border-box; /* Include padding and border in width and height calculation */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.next-button:hover {
+    background-color: #e74c3c; /* Dark orange background on hover */
+    color: #fff; /* Ensure text remains white on hover */
+}
