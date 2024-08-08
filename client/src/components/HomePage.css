@@ -674,7 +674,9 @@
   }
 
   .ask-form-icon-btn{
+    margin-top: 800px;
     margin-left: 1700px;
+    position: fixed;
   }
 
   .ask-form-icon-btn button{
