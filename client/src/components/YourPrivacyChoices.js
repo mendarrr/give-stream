@@ -2,7 +2,7 @@ import React from "react";
 import "./HomePage.css";
 
 const YourPrivacyChoices = () => (
-  <div>
+  <div className="privacy-choices">
     <h1>Your Privacy Choices</h1>
     <p>
       At Give Stream, we respect your privacy and offer you the following
@@ -45,7 +45,7 @@ const YourPrivacyChoices = () => (
     <h2>6. Contact Us</h2>
     <p>
       If you have any questions about your privacy choices, please contact us at
-      [contact information].
+      [info@givestream.com].
     </p>
   </div>
 );

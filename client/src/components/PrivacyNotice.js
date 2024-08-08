@@ -3,7 +3,7 @@ import "./HomePage.css";
 
 const PrivacyNotice = () => {
   return (
-    <div>
+    <div className="privacy-notice">
       <h1>Privacy Notice</h1>
       <p>
         This Privacy Notice explains how Give Stream collects, uses, and
@@ -54,7 +54,7 @@ const PrivacyNotice = () => {
       <h2>7. Contact Us</h2>
       <p>
         If you have any questions about this Privacy Notice, please contact us
-        at [Your Contact Information].
+        at [info@givestream.com].
       </p>
     </div>
   );

@@ -2,7 +2,7 @@ import React from "react";
 import "./HomePage.css";
 
 const CookiePolicy = () => (
-  <div>
+  <div className="cookie-policy">
     <h1>Cookie Policy</h1>
     <p>
       This Cookie Policy explains how Give Stream uses cookies and similar
@@ -53,7 +53,7 @@ const CookiePolicy = () => (
     <h2>6. Contact Us</h2>
     <p>
       If you have any questions about our use of cookies, please contact us at
-      [contact information].
+      [info@givestream.com].
     </p>
   </div>
 );

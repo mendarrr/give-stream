@@ -3,7 +3,7 @@ import "./HomePage.css";
 
 const AccessibilityStatement = () => {
   return (
-    <div>
+    <div className="accessibility">
       <h1>Accessibility Statement</h1>
       <p>
         Give Stream is committed to ensuring digital accessibility for people
@@ -43,9 +43,17 @@ const AccessibilityStatement = () => {
         technologies or plugins installed on your computer:
       </p>
       <ul>
-        <li>HTML</li>
-        <li>CSS</li>
-        <li>JavaScript</li>
+        <li>React</li>
+        <li>Flask</li>
+        <li>ARIA roles and properties</li>
+        <li>Screen readers</li>
+        <li>Keyboard navigation</li>
+        <li>Visual contrast</li>
+        <li>Color contrast</li>
+        <li>Text alternatives</li>
+        <li>Content descriptions</li>
+        <li>Audio descriptions</li>
+        <li>Labeling and ARIA attributes</li>
       </ul>
 
       <h2>5. Assessment Approach</h2>
@@ -55,7 +63,7 @@ const AccessibilityStatement = () => {
       </p>
 
       <h2>6. Date</h2>
-      <p>This statement was last updated on [Date of Last Update].</p>
+      <p>This statement was last updated on [3rd August, 2024].</p>
     </div>
   );
 };

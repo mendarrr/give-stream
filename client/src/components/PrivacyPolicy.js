@@ -2,7 +2,7 @@ import React from "react";
 import "./HomePage.css";
 
 const PrivacyPolicy = () => (
-  <div>
+  <div className="privacy-policy">
     <h1>Privacy Policy</h1>
     <p>
       Give Stream is committed to protecting your privacy. This Privacy Policy
@@ -51,7 +51,7 @@ const PrivacyPolicy = () => (
     <h2>7. Contact Us</h2>
     <p>
       If you have any questions about this Privacy Policy, please contact us at
-      [contact information].
+      [info@givestream.com].
     </p>
   </div>
 );

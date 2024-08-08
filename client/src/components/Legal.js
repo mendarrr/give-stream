@@ -3,7 +3,7 @@ import "./HomePage.css";
 
 const Legal = () => {
   return (
-    <div>
+    <div className="legal">
       <h1>Legal Information</h1>
       <p>
         Give Stream operates in compliance with all applicable laws and
@@ -53,8 +53,7 @@ const Legal = () => {
 
       <h2>7. Contact Information</h2>
       <p>
-        If you have any legal inquiries, please contact us at [Your Legal
-        Contact Information].
+        If you have any legal inquiries, please contact us at [legaldesk@givestream.com].
       </p>
     </div>
   );

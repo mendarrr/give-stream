@@ -3,7 +3,8 @@ import "./HomePage.css";
 
 const TermsOfUse = () => {
   return (
-    <div>
+    <div className="terms">
+      <h3>Effective Date: [2nd August, 2024]</h3>
       <h1>Terms of Use</h1>
       <p>
         Welcome to Give Stream. By using our platform, you agree to the
@@ -74,7 +75,7 @@ const TermsOfUse = () => {
       <h2>10. Governing Law</h2>
       <p>
         These Terms of Use are governed by and construed in accordance with the
-        laws of [Your Jurisdiction], without regard to its conflict of law
+        laws of [State of Delaware], without regard to its conflict of law
         principles.
       </p>
     </div>
