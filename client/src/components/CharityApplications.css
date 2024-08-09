@@ -33,8 +33,10 @@
 }
 
 #card2,
-#card3 {
-    margin-top: 250px; /* Adjusted top margin for both card2 and card3 */
+#card3,
+#card4,
+#card5 {
+    margin-top: 200px; /* Adjusted top margin for both card2 and card3 */
     background-color: #f9f9f9; /* Match background color */
     align-self: center; /* Center both card 2 and card 3 horizontally */
     position: relative; /* Ensure card positioning is relative to its container */
@@ -166,7 +168,7 @@
     height: 55px; /* Uniform height for buttons on card 2 and card 3 */
 }
 
-/* Donation button styling */
+/* Custom donation amount styling */
 .donation-buttons {
     display: flex;
     flex-wrap: wrap;
@@ -197,6 +199,25 @@
     background-color: #d0f0fd; 
     border-color: #4CAF50;
     color: #1a1616;
+}
+
+/* Custom amount input field styling */
+.custom-amount {
+    text-align: center;
+    margin: 20px 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    
+}
+
+.custom-amount input {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    width: 220px; /* Match width of donation buttons */
+    box-sizing: border-box;
 }
 
 /* Input fields styling */
@@ -248,7 +269,7 @@ hr {
     width: 100%;
 }
 
-/* Custom donation styling */
+
 .custom-donation {
     text-align: center;
     margin: 20px 0;
@@ -274,7 +295,7 @@ hr {
 }
 
 .custom-donation input[type="number"]:focus {
-    border-color: #525355; /* Change border color on focus */
+    border-color: #007bff; /* Change border color on focus */
     outline: none;
     box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
 }

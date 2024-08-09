@@ -13,22 +13,16 @@ const CharityApplications = () => {
         city: '',
         zipCode: '',
         title: '',
-        donationTarget: '' // Updated to reflect new field
+        donationTarget: '', // Updated to reflect new field
+        imageUrl: '', // New field for image URL
+        summary: '' // New field for summary
     });
     const [selectedCategory, setSelectedCategory] = useState(new Set());
-    const [selectedDonations, setSelectedDonations] = useState(new Set()); // Track selected donation amounts
+    const [selectedDonation, setSelectedDonation] = useState(null); // Track single selected donation amount
 
     // Handle selection for buttons in Card 1
     const handleButtonClick = (option) => {
-        setSelectedOptions(prev => {
-            const newSelection = new Set(prev);
-            if (newSelection.has(option)) {
-                newSelection.delete(option); // Deselect if already selected
-            } else {
-                newSelection.add(option); // Select if not already selected
-            }
-            return newSelection;
-        });
+        setSelectedOptions(new Set([option])); // Only one option allowed
     };
 
     // Handle selection for buttons in Card 2
@@ -46,15 +40,7 @@ const CharityApplications = () => {
 
     // Handle donation amount selection on Card 3
     const handleDonationClick = (amount) => {
-        setSelectedDonations(prev => {
-            const newSelection = new Set(prev);
-            if (newSelection.has(amount)) {
-                newSelection.delete(amount); // Deselect if already selected
-            } else {
-                newSelection.add(amount); // Select if not already selected
-            }
-            return newSelection;
-        });
+        setSelectedDonation(amount); // Only one donation amount allowed
     };
 
     const handleNextClick = () => {
@@ -62,10 +48,10 @@ const CharityApplications = () => {
             setCurrentStep(2); // Move to Card 2
         } else if (currentStep === 2 && selectedCategory.size > 0) {
             setCurrentStep(3); // Move to Card 3
-        } else if (currentStep === 3 && (selectedDonations.size > 0 || formData.donationTarget)) {
+        } else if (currentStep === 3 && (selectedDonation || formData.donationTarget)) {
             setCurrentStep(4); // Move to Card 4
-        } else {
-            alert("Please make a selection before proceeding.");
+        } else if (currentStep === 4 && formData.imageUrl) {
+            setCurrentStep(5); // Move to Card 5
         }
     };
 
@@ -76,6 +62,8 @@ const CharityApplications = () => {
             setCurrentStep(2); // Move back to Card 2
         } else if (currentStep === 4) {
             setCurrentStep(3); // Move back to Card 3
+        } else if (currentStep === 5) {
+            setCurrentStep(4); // Move back to Card 4
         }
     };
 
@@ -254,28 +242,20 @@ const CharityApplications = () => {
                                 Environment
                             </button>
                             <button 
-                                className={`fundraising-button ${selectedCategory.has('Community') ? 'selected' : ''}`}
-                                onClick={() => handleCategoryClick('Community')}
-                            >
-                                Community
-                            </button>
-                            <button 
                                 className={`fundraising-button ${selectedCategory.has('Animal Welfare') ? 'selected' : ''}`}
                                 onClick={() => handleCategoryClick('Animal Welfare')}
                             >
                                 Animal Welfare
                             </button>
                             <button 
-                                className={`fundraising-button ${selectedCategory.has('Arts') ? 'selected' : ''}`}
-                                onClick={() => handleCategoryClick('Arts')}
+                                className={`fundraising-button ${selectedCategory.has('Other') ? 'selected' : ''}`}
+                                onClick={() => handleCategoryClick('Other')}
                             >
-                                Arts
+                                Other
                             </button>
                         </div>
                         <div className="card-footer">
-                            <button className="previous-button" onClick={handlePreviousClick}>
-                                Previous
-                            </button>
+                            <button className="previous-button" onClick={handlePreviousClick}>Previous</button>
                             <button 
                                 className={`next-button ${selectedCategory.size === 0 ? 'disabled' : ''}`}
                                 onClick={handleNextClick}
@@ -293,50 +273,57 @@ const CharityApplications = () => {
                 <div id="card3" className="card">
                     <img src="/GiveStreamLogo.png" alt="Logo" className="card-logo" />
                     <div className="card-content">
-                        <h3>What Amount Are You Trying to Raise?</h3>
+                        <h3>Set Your Donation Target and Amount</h3>
                         <div className="donation-buttons">
                             <button 
-                                className={`donation-button ${selectedDonations.has('5000') ? 'selected' : ''}`}
-                                onClick={() => handleDonationClick('5000')}
+                                className={`donation-button ${selectedDonation === 50 ? 'selected' : ''}`}
+                                onClick={() => handleDonationClick(50)}
                             >
-                                5000
+                                $50
                             </button>
                             <button 
-                                className={`donation-button ${selectedDonations.has('10000') ? 'selected' : ''}`}
-                                onClick={() => handleDonationClick('10000')}
+                                className={`donation-button ${selectedDonation === 100 ? 'selected' : ''}`}
+                                onClick={() => handleDonationClick(100)}
                             >
-                                10000
+                                $100
                             </button>
                             <button 
-                                className={`donation-button ${selectedDonations.has('20000') ? 'selected' : ''}`}
-                                onClick={() => handleDonationClick('20000')}
+                                className={`donation-button ${selectedDonation === 200 ? 'selected' : ''}`}
+                                onClick={() => handleDonationClick(200)}
                             >
-                                20000
+                                $200
                             </button>
                             <button 
-                                className={`donation-button ${selectedDonations.has('50000') ? 'selected' : ''}`}
-                                onClick={() => handleDonationClick('50000')}
+                                className={`donation-button ${selectedDonation === 500 ? 'selected' : ''}`}
+                                onClick={() => handleDonationClick(500)}
                             >
-                                50000
+                                $500
+                            </button>
+                            <button 
+                                className={`donation-button ${selectedDonation === 1000 ? 'selected' : ''}`}
+                                onClick={() => handleDonationClick(1000)}
+                            >
+                                $1000
                             </button>
                         </div>
-                        <div className="custom-donation">
-                            <input
-                                type="number"
-                                name="donationTarget"
-                                value={formData.donationTarget}
-                                onChange={handleInputChange}
-                                placeholder="Custom Amount"
-                            />
+                        <div className="input-group">
+                            <div className="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    id="donationTarget" 
+                                    name="donationTarget" 
+                                    value={formData.donationTarget} 
+                                    onChange={handleInputChange} 
+                                    placeholder="Or enter a custom amount" 
+                                />
+                            </div>
                         </div>
                         <div className="card-footer">
-                            <button className="previous-button" onClick={handlePreviousClick}>
-                                Previous
-                            </button>
+                            <button className="previous-button" onClick={handlePreviousClick}>Previous</button>
                             <button 
-                                className={`next-button ${(selectedDonations.size > 0 || formData.donationTarget) ? '' : 'disabled'}`}
+                                className={`next-button ${!selectedDonation && !formData.donationTarget ? 'disabled' : ''}`}
                                 onClick={handleNextClick}
-                                disabled={selectedDonations.size === 0 && !formData.donationTarget}
+                                disabled={!selectedDonation && !formData.donationTarget}
                             >
                                 Next
                             </button>
@@ -350,21 +337,67 @@ const CharityApplications = () => {
                 <div id="card4" className="card">
                     <img src="/GiveStreamLogo.png" alt="Logo" className="card-logo" />
                     <div className="card-content">
-                        <h3>Summary</h3>
-                        <p>Name: {formData.name}</p>
-                        <p>Email: {formData.email}</p>
-                        <p>Description: {formData.description}</p>
-                        <p>Country: {formData.country}</p>
-                        <p>City/Town: {formData.city}</p>
-                        <p>Zip Code: {formData.zipCode}</p>
-                        <p>Title: {formData.title}</p>
-                        <p>Reason: {Array.from(selectedCategory).join(', ')}</p>
-                        <p>Donation Target: {Array.from(selectedDonations).join(', ') || formData.donationTarget}</p>
+                        <h3>Provide Additional Details</h3>
+                        <div className="input-group">
+                            <div className="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    id="imageUrl" 
+                                    name="imageUrl" 
+                                    value={formData.imageUrl} 
+                                    onChange={handleInputChange} 
+                                    placeholder="Image URL" 
+                                />
+                            </div>
+                            <div className="input-wrapper">
+                                <textarea 
+                                    id="summary" 
+                                    name="summary" 
+                                    value={formData.summary} 
+                                    onChange={handleInputChange} 
+                                    placeholder="Summary" 
+                                />
+                            </div>
+                        </div>
                         <div className="card-footer">
-                            <button className="previous-button" onClick={handlePreviousClick}>
-                                Previous
+                            <button className="previous-button" onClick={handlePreviousClick}>Previous</button>
+                            <button 
+                                className={`next-button ${!formData.imageUrl ? 'disabled' : ''}`}
+                                onClick={handleNextClick}
+                                disabled={!formData.imageUrl}
+                            >
+                                Next
                             </button>
-                            <button className="submit-button">
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Final Card */}
+            {currentStep === 5 && (
+                <div id="card5" className="card">
+                    <img src="/GiveStreamLogo.png" alt="Logo" className="card-logo" />
+                    <div className="card-content">
+                        <h3>Review and Submit</h3>
+                        <div className="summary">
+                            <p><strong>Name:</strong> {formData.name}</p>
+                            <p><strong>Email:</strong> {formData.email}</p>
+                            <p><strong>Description:</strong> {formData.description}</p>
+                            <p><strong>Country:</strong> {formData.country}</p>
+                            <p><strong>City:</strong> {formData.city}</p>
+                            <p><strong>Zip Code:</strong> {formData.zipCode}</p>
+                            <p><strong>Title:</strong> {formData.title}</p>
+                            <p><strong>Donation Target:</strong> {formData.donationTarget}</p>
+                            <p><strong>Selected Donation:</strong> ${selectedDonation}</p>
+                            <p><strong>Image URL:</strong> {formData.imageUrl}</p>
+                            <p><strong>Summary:</strong> {formData.summary}</p>
+                        </div>
+                        <div className="card-footer">
+                            <button className="previous-button" onClick={handlePreviousClick}>Previous</button>
+                            <button 
+                                className="submit-button"
+                                onClick={() => console.log('Form data:', formData, 'Selected Donation:', selectedDonation)}
+                            >
                                 Submit
                             </button>
                         </div>
