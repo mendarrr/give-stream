@@ -3,7 +3,7 @@ import "./HomePage.css";
 
 const YourPrivacyChoices = () => (
   <div className="privacy-choices">
-    <h1>Your Privacy Choices</h1>
+    <h4>Your Privacy Choices</h4>
     <p>
       At Give Stream, we respect your privacy and offer you the following
       choices regarding your personal information:

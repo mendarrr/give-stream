@@ -14,7 +14,11 @@ import TermsOfUse from "./components/TermsOfUse";
 import Legal from "./components/Legal";
 import FAQ from "./components/FAQ";
 import CompletedCharitiesList from "./components/CompletedCharitiesList";
-import CharityProfile from "./components/CharityProfile";
+import LoginPage from "./components/LoginForm";
+import NewDonorForm from "./components/NewDonor";
+import DonationForm from "./components/NewDonation";
+import CharityList from "./components/CharityList";
+import Inventory from "./components/Inventory";
 
 function App() {
   return (
@@ -35,7 +39,11 @@ function App() {
             path="/completed-charities"
             element={<CompletedCharitiesList />}
           />
-          <Route path="/charity-profile" element={<CharityProfile />} />
+          <Route path="/signin" element={<LoginPage />} />
+          <Route path="/donor" element={<NewDonorForm />} />
+          <Route path="/charities" element={<CharityList />} />
+          <Route path="/donation" element={<DonationForm />} />
+          <Route path="/inventory" element={<Inventory />} />
         </Routes>
         <Footer />
       </BrowserRouter>

@@ -3,7 +3,7 @@ import './CharityCard.css';
 import defaultProfile from '../assets/defaultProfile.png'
 
 const CharityCard = ({ charity }) => {
-    const progressPercentage = (charity.total_raised / charity.needed_donation) * 100;
+    const progressPercentage = (charity.total_raised / charity.goal_amount) * 100;
 
     return (
         <div>
@@ -24,7 +24,7 @@ const CharityCard = ({ charity }) => {
                         style={{width: `${progressPercentage}%`}}
                     ></div>
                 </div>
-                <p className='goal'><span className='money'>KES {charity.total_raised}</span> funds raised of <span className='money'>KES {charity.needed_donation}</span> goal</p>
+                <p className='goal'><span className='money'>KES {charity.total_raised}</span> funds raised of <span className='money'>KES {charity.goal_amount}</span> goal</p>
                 <div className='donate-btn'>
                     <button>Donate</button>
                 </div>

@@ -94,7 +94,7 @@ const FAQ = () => {
     return (
       <div className="main-faq-container">
         <div className="faq-header">
-          <h1>Questions</h1>
+          <h4>Questions</h4>
         </div>
         <div className="faq-container">
           <div className="card-question-container">

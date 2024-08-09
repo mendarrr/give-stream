@@ -3,7 +3,7 @@ import "./HomePage.css";
 
 const PrivacyPolicy = () => (
   <div className="privacy-policy">
-    <h1>Privacy Policy</h1>
+    <h4>Privacy Policy</h4>
     <p>
       Give Stream is committed to protecting your privacy. This Privacy Policy
       explains how we collect, use, and disclose your personal information.

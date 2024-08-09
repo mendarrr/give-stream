@@ -1,8 +1,8 @@
-"""initial migration
+"""adjusting admin login logic
 
-Revision ID: 2700cee765c9
+Revision ID: 5cc2cfc41e05
 Revises: 
-Create Date: 2024-08-08 13:44:25.451107
+Create Date: 2024-08-09 09:41:16.859128
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2700cee765c9'
+revision = '5cc2cfc41e05'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -23,6 +23,7 @@ def upgrade():
     sa.Column('username', sa.String(length=64), nullable=False),
     sa.Column('email', sa.String(length=120), nullable=False),
     sa.Column('_password_hash', sa.String(), nullable=True),
+    sa.Column('role', sa.String(length=20), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')

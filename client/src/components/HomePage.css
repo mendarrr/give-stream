@@ -472,13 +472,14 @@
     padding-bottom: 20px;
   }
 
-  .terms h1,
-  .privacy-notice h1,
-  .legal h1,
-  .accessibility h1,
-  .cookie-policy h1,
-  .privacy-choices h1,
-  .privacy-policy h1{
+  .terms h4,
+  .privacy-notice h4,
+  .legal h4,
+  .accessibility h4,
+  .cookie-policy h4,
+  .privacy-choices h4,
+  .privacy-policy h4 {
+    color: black;
     text-align: center;
     font-size: 45px;
     font-weight: 600;
@@ -551,13 +552,13 @@
       padding-right: 100px;
     }
   
-    .terms h1,
-    .privacy-notice h1,
-    .legal h1,
-    .accessibility h1,
-    .cookie-policy h1,
-    .privacy-choices h1,
-    .privacy-policy h1 {
+    .terms h4,
+    .privacy-notice h4,
+    .legal h4,
+    .accessibility h4,
+    .cookie-policy h4,
+    .privacy-choices h4,
+    .privacy-policy h4 {
       font-size: 36px;
     }
   
@@ -584,13 +585,13 @@
       padding-right: 20px;
     }
   
-    .terms h1,
-    .privacy-notice h1,
-    .legal h1,
-    .accessibility h1,
-    .cookie-policy h1,
-    .privacy-choices h1,
-    .privacy-policy h1 {
+    .terms h4,
+    .privacy-notice h4,
+    .legal h4,
+    .accessibility h4,
+    .cookie-policy h4,
+    .privacy-choices h4,
+    .privacy-policy h4 {
       font-size: 28px;
     }
   
@@ -646,7 +647,7 @@
     border-bottom-right-radius: 45px;
   }
 
-  .faq-header h1{
+  .faq-header h4{
     font-size: 45px;
   }
 
