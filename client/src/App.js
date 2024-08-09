@@ -20,6 +20,7 @@ import DonationForm from "./components/NewDonation";
 import CharityList from "./components/CharityList";
 import Inventory from "./components/Inventory";
 import CharityProfile from "./components/CharityProfile";
+import AdminDashboard from "./components/AdminDashboard";
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
           <Route path="/donation" element={<DonationForm />} />
           <Route path="/inventory" element={<Inventory />} />
           <Route path="/charity-profile/:id" element={<CharityProfile />} />
+          <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
         <Footer />
       </BrowserRouter>
