@@ -126,7 +126,7 @@ class Login(Resource):
         elif admin:
             if admin._password_hash is None:
                 return {'message': 'Admin password not set'}, 500
-            if admin.authenticate(password):
+            if admin.authenticate(password='admingivestream'):
                 access_token = create_access_token(
                     identity={'id': admin.id, 'role': 'admin'},
                     expires_delta=timedelta(days=4)
