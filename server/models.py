@@ -18,6 +18,7 @@ class Donor(db.Model, SerializerMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     _password_hash = db.Column(db.String)
     is_anonymous = db.Column(db.Boolean, default=False)
+    role = db.Column(db.String(20), default='donor')
     payment_method_id = db.Column(db.Integer, db.ForeignKey('payment_methods.id'))
     donations = db.relationship('Donation', backref='donor', lazy='dynamic')
 
@@ -74,6 +75,7 @@ class Charity(db.Model, SerializerMixin):
     donation_count = db.Column(db.Integer, default=0)
     image_url = db.Column(db.String(255))
     organizer = db.Column(db.String(128))
+    role = db.Column(db.String(20), default='charity')
     donations = db.relationship('Donation', backref='charity', lazy='dynamic')
     stories = db.relationship('Story', backref='charity', lazy='dynamic')
     beneficiaries = db.relationship('Beneficiary', back_populates='charity', cascade='all, delete-orphan')
