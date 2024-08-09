@@ -18,6 +18,7 @@ import LoginPage from './components/LoginForm';
 import NewDonorForm from './components/NewDonor';
 import DonationForm from './components/NewDonation';
 import CharityList from './components/CharityList';
+import Inventory from './components/Inventory';
 
 
 function App() {
