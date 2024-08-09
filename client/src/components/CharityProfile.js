@@ -93,18 +93,27 @@ const CharityProfile = () => {
 
   const handleInventorySubmit = async (e) => {
     e.preventDefault();
+    const data = {
+      ...newInventoryItem,
+      charity_id: charity.id,
+      quantity: parseInt(newInventoryItem.quantity, 10),
+    };
+    console.log("Sending data to server:", data);
     try {
-      const response = await axios.post("http://127.0.0.1:5000/inventory", {
-        ...newInventoryItem,
-        charity_id: charity.id,
-      });
+      const response = await axios.post(
+        "http://127.0.0.1:5000/inventory",
+        data
+      );
+      console.log("Server response:", response.data);
       setInventory([...inventory, response.data]);
       setNewInventoryItem({ item_name: "", quantity: 0 });
     } catch (error) {
-      console.error("Error submitting inventory item:", error);
+      console.error(
+        "Error submitting inventory item:",
+        error.response ? error.response.data : error.message
+      );
     }
   };
-
   const handlePreviousStory = () => {
     setCurrentStoryIndex((prevIndex) =>
       prevIndex === 0 ? stories.length - 1 : prevIndex - 1
