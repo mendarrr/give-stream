@@ -9,7 +9,7 @@ const CommunitiesSection = () => {
   const [joinedCommunities, setJoinedCommunities] = useState({});
 
   useEffect(() => {
-    fetchCommunities();
+    fetchCommunities(searchTerm);
   }, [searchTerm]);
 
   useEffect(() => {
@@ -32,15 +32,17 @@ const CommunitiesSection = () => {
     ? communities.slice(currentIndex, currentIndex + 1)
     : communities.slice(currentIndex, currentIndex + 3);
 
-  const fetchCommunities = async () => {
-    try {
-      const response = await fetch(`/communities?search=${searchTerm}`);
-      const data = await response.json();
-      setCommunities(data);
-    } catch (error) {
-      console.error("Error fetching communities:", error);
-    }
-  };
+    const fetchCommunities = async () => {
+      try {
+        const response = await fetch(`/communities?search=${encodeURIComponent(searchTerm)}`);
+        const data = await response.json();
+        console.log('Fetched communities:', data);
+        setCommunities(data);
+      } catch (error) {
+        console.error("Error fetching communities:", error);
+      }
+    };
+    
 
   const handleCommunityClick = async (id) => {
     try {
@@ -103,8 +105,14 @@ const CommunitiesSection = () => {
   };
 
   const handleSearch = (e) => {
+    console.log('Search term:', e.target.value);
     setSearchTerm(e.target.value);
   };
+
+  const filteredCommunities = communities.filter(community =>
+    community.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  
 
   const categories = [
     "Arts",
@@ -112,6 +120,7 @@ const CommunitiesSection = () => {
     "Health",
     "Environment",
     "Local Causes",
+    "Animals",
   ];
 
   return (
