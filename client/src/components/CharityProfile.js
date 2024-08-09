@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 import "./CharityProfile.css";
 
 const CharityProfile = () => {
+  const { id } = useParams();
   const [charity, setCharity] = useState(null);
   const [totalDonations, setTotalDonations] = useState(0);
   const [anonymousDonations, setAnonymousDonations] = useState(0);
@@ -26,54 +28,58 @@ const CharityProfile = () => {
     const fetchCharityData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://127.0.0.1:5000/charities/1");
+        const response = await axios.get(
+          `http://127.0.0.1:5000/charities/${id}`
+        );
         setCharity(response.data);
 
         const donationsResponse = await axios.get(
-          "http://127.0.0.1:5000/donations/charity/1"
+          `http://127.0.0.1:5000/donations/charity/${id}`
         );
-        setTotalDonations(donationsResponse.data.total_amount);
+        const donationsData = donationsResponse.data || {};
+        setTotalDonations(parseFloat(donationsData.total_amount) || 0);
         setAnonymousDonations(
-          donationsResponse.data.donations
+          (donationsData.donations || [])
             .filter((donation) => donation.is_anonymous)
-            .reduce((total, donation) => total + donation.amount, 0)
+            .reduce((total, donation) => total + (donation.amount || 0), 0)
         );
 
         const storiesResponse = await axios.get(
-          "http://127.0.0.1:5000/stories?charity_id=1"
+          `http://127.0.0.1:5000/stories?charity_id=${id}`
         );
-        setStories(storiesResponse.data);
+        setStories(storiesResponse.data || []);
 
         const beneficiariesResponse = await axios.get(
-          "http://127.0.0.1:5000/beneficiaries?charity_id=1"
+          `http://127.0.0.1:5000/beneficiaries?charity_id=${id}`
         );
-        setBeneficiaries(beneficiariesResponse.data);
+        setBeneficiaries(beneficiariesResponse.data || []);
 
         const inventoryResponse = await axios.get(
-          "http://127.0.0.1:5000/inventory?charity_id=1"
+          `http://127.0.0.1:5000/inventory?charity_id=${id}`
         );
-        setInventory(inventoryResponse.data);
+        setInventory(inventoryResponse.data || []);
       } catch (error) {
-        setError("Error fetching charity data");
         console.error("Error fetching charity data:", error);
+        setError("Error fetching charity data. Please try again later.");
       } finally {
         setLoading(false);
       }
     };
     fetchCharityData();
-  }, []);
+  }, [id]);
 
   const handleStorySubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post("http://127.0.0.1:5000/stories", {
         ...newStory,
-        charity_id: charity.id,
+        charity_id: id,
       });
       setStories([...stories, response.data]);
       setNewStory({ title: "", content: "" });
     } catch (error) {
       console.error("Error submitting story:", error);
+      setError("Error submitting story. Please try again later.");
     }
   };
 
@@ -82,12 +88,13 @@ const CharityProfile = () => {
     try {
       const response = await axios.post("http://127.0.0.1:5000/beneficiaries", {
         ...newBeneficiary,
-        charity_id: charity.id,
+        charity_id: id,
       });
       setBeneficiaries([...beneficiaries, response.data]);
       setNewBeneficiary({ name: "", description: "" });
     } catch (error) {
       console.error("Error submitting beneficiary:", error);
+      setError("Error submitting beneficiary. Please try again later.");
     }
   };
 
@@ -95,25 +102,22 @@ const CharityProfile = () => {
     e.preventDefault();
     const data = {
       ...newInventoryItem,
-      charity_id: charity.id,
-      quantity: parseInt(newInventoryItem.quantity, 10),
+      charity_id: id,
+      quantity: parseInt(newInventoryItem.quantity, 10) || 0,
     };
-    console.log("Sending data to server:", data);
     try {
       const response = await axios.post(
         "http://127.0.0.1:5000/inventory",
         data
       );
-      console.log("Server response:", response.data);
       setInventory([...inventory, response.data]);
       setNewInventoryItem({ item_name: "", quantity: 0 });
     } catch (error) {
-      console.error(
-        "Error submitting inventory item:",
-        error.response ? error.response.data : error.message
-      );
+      console.error("Error submitting inventory item:", error);
+      setError("Error submitting inventory item. Please try again later.");
     }
   };
+
   const handlePreviousStory = () => {
     setCurrentStoryIndex((prevIndex) =>
       prevIndex === 0 ? stories.length - 1 : prevIndex - 1
@@ -135,7 +139,9 @@ const CharityProfile = () => {
       <div className="charity-info">
         <h1>{charity.name}</h1>
         <p>{charity.description}</p>
-        <p>Needed Donation: ${charity.needed_donation}</p>
+        <p>
+          Needed Donation: ${parseFloat(charity.needed_donation).toFixed(2)}
+        </p>
         <p>Total Donations: ${totalDonations.toFixed(2)}</p>
         <p>Anonymous Donations: ${anonymousDonations.toFixed(2)}</p>
       </div>

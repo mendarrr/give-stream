@@ -19,6 +19,7 @@ import NewDonorForm from "./components/NewDonor";
 import DonationForm from "./components/NewDonation";
 import CharityList from "./components/CharityList";
 import Inventory from "./components/Inventory";
+import CharityProfile from "./components/CharityProfile";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
           <Route path="/charities" element={<CharityList />} />
           <Route path="/donation" element={<DonationForm />} />
           <Route path="/inventory" element={<Inventory />} />
+          <Route path="/charity-profile/:id" element={<CharityProfile />} />
         </Routes>
         <Footer />
       </BrowserRouter>

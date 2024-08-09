@@ -372,7 +372,7 @@ class Donations(Resource):
             total_amount = sum(donation.amount for donation in donor_donations)
             return {
                 'donations': donations_json,
-                'total_amount': total_amount
+                'total_amount': str(total_amount)  # Ensure total_amount is a string
             }
         else:
             return {'message': 'No donations found for this donor'}, 404
@@ -385,10 +385,10 @@ class Donations(Resource):
             total_amount = sum(donation.amount for donation in charity_donations)
             return {
                 'donations': donations_json,
-                'total_amount': total_amount
+                'total_amount': str(total_amount)  # Ensure total_amount is a string
             }
         else:
-            return {'message': 'No donations found for this charity'}, 404.
+            return {'message': 'No donations found for this charity'}, 404
     
     # Create a new donation
     def post(self):
