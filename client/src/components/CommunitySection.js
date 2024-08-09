@@ -7,10 +7,11 @@ const CommunitiesSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [joinedCommunities, setJoinedCommunities] = useState({});
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   useEffect(() => {
-    fetchCommunities(searchTerm);
-  }, [searchTerm]);
+    fetchCommunities();
+  }, [searchTerm, selectedCategory]);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -18,32 +19,38 @@ const CommunitiesSection = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const filteredCommunities = communities.filter(community =>
+    (selectedCategory === '' || community.category.toLowerCase() === selectedCategory.toLowerCase()) &&
+    community.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );  
+
   const moveLeft = () => {
     setCurrentIndex((prev) => Math.max(prev - 1, 0));
   };
 
   const moveRight = () => {
     setCurrentIndex((prev) =>
-      Math.min(prev + 1, communities.length - (isMobile ? 1 : 3))
+      Math.min(prev + 1, filteredCommunities.length - (isMobile ? 1 : 3))
     );
   };
+  
 
   const visibleCommunities = isMobile
-    ? communities.slice(currentIndex, currentIndex + 1)
-    : communities.slice(currentIndex, currentIndex + 3);
+  ? filteredCommunities.slice(currentIndex, currentIndex + 1)
+  : filteredCommunities.slice(currentIndex, currentIndex + 3);
 
-    const fetchCommunities = async () => {
+
+  const fetchCommunities = async () => {
       try {
-        const response = await fetch(`/communities?search=${encodeURIComponent(searchTerm)}`);
+        const response = await fetch(`/communities?search=${searchTerm}&category=${selectedCategory}`);
+        console.log('Fetching communities with:', { searchTerm, selectedCategory });
         const data = await response.json();
-        console.log('Fetched communities:', data);
         setCommunities(data);
       } catch (error) {
         console.error("Error fetching communities:", error);
       }
     };
     
-
   const handleCommunityClick = async (id) => {
     try {
       const response = await fetch(`/communities/${id}`);
@@ -105,14 +112,15 @@ const CommunitiesSection = () => {
   };
 
   const handleSearch = (e) => {
-    console.log('Search term:', e.target.value);
+    console.log("Search term:", e.target.value);
     setSearchTerm(e.target.value);
   };
 
-  const filteredCommunities = communities.filter(community =>
-    community.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  
+  const handleCategoryChange = (e) => {
+    console.log('Selected category:', e.target.value);
+    setSelectedCategory(e.target.value);
+  };
+   
 
   const categories = [
     "Arts",
@@ -128,7 +136,11 @@ const CommunitiesSection = () => {
       {!selectedCommunity && (
         <div className="community-categories">
           <h2>Browse by Category</h2>
-          <select className="category-dropdown">
+          <select
+            className="category-dropdown"
+            value={selectedCategory}
+            onChange={handleCategoryChange}
+          >
             <option value="">Select a category</option>
             {categories.map((category, index) => (
               <option key={index} value={category.toLowerCase()}>
@@ -232,19 +244,19 @@ const CommunitiesSection = () => {
             </div>
           </div>
           <div className="right-column">
-              <h3>Impact Stories</h3>
-              <ul>
-                {selectedCommunity.impactStories.map((story, index) => (
-                  <li key={index}>{story}</li>
-                ))}
-              </ul>
-            
-              <h3>Upcoming Events</h3>
-              <ul>
-                {selectedCommunity.events.map((event, index) => (
-                  <li key={index}>{event}</li>
-                ))}
-              </ul>
+            <h3>Impact Stories</h3>
+            <ul>
+              {selectedCommunity.impactStories.map((story, index) => (
+                <li key={index}>{story}</li>
+              ))}
+            </ul>
+
+            <h3>Upcoming Events</h3>
+            <ul>
+              {selectedCommunity.events.map((event, index) => (
+                <li key={index}>{event}</li>
+              ))}
+            </ul>
           </div>
         </div>
       )}
