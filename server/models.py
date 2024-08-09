@@ -189,6 +189,7 @@ class Admin(db.Model):
     username = db.Column(db.String(64), unique=True, nullable=False, default='admingivestream')
     email = db.Column(db.String(120), unique=True, nullable=False)
     _password_hash = db.Column(db.String, default='admingivestream')
+    role = db.Column(db.String(20), default='admin')
 
     @hybrid_property
     def password_hash(self):
@@ -208,7 +209,7 @@ class Admin(db.Model):
         return {
             'id': self.id,
             'username': self.username,
-            'email': self.email
+            'email': self.email,
         }
 
     def __repr__(self):

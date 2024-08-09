@@ -8,12 +8,11 @@ def seed_data():
         db.drop_all()
         db.create_all()
 
-        # Create sample admins
-        admin1 = Admin(username='admin1', email='admin1@example.com')
-        admin2 = Admin(username='admin2', email='admin2@example.com')
-        db.session.add(admin1)
-        db.session.add(admin2)
-        
+       # Create admin with default values
+        admin = Admin(username='admingivestream', email='admin@example.com')  # Add an email here
+        admin.password_hash = 'admingivestream'
+        db.session.add(admin)
+
         # Create sample donors
         donor1 = Donor(username='donor1', email='donor1@example.com')
         donor2 = Donor(username='donor2', email='donor2@example.com')
