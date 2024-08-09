@@ -27,11 +27,10 @@ const Inventory = () => {
 
     useEffect(() => {
         fetchInventoryItems();
-    }, []);}
+    }, []);
 
-
-      // Handle input changes for new item and edit forms
-      const handleInputChange = (e, item = null) => {
+    // Handle input changes for new item and edit forms
+    const handleInputChange = (e, item = null) => {
         const { name, value } = e.target;
         if (item) {
             setEditItem({ ...editItem, [name]: value });
@@ -57,8 +56,8 @@ const Inventory = () => {
         }
     };
 
-      // Edit an existing inventory item
-      const handleEditItem = async () => {
+    // Edit an existing inventory item
+    const handleEditItem = async () => {
         try {
             const response = await fetch(`${apiUrl}/${editItem.id}`, {
                 method: 'PUT',
@@ -84,6 +83,7 @@ const Inventory = () => {
             setError('Failed to delete inventory item.');
         }
     };
+
     return (
         <div className="inventory-container">
             <h2>Inventory Management</h2>
@@ -157,11 +157,9 @@ const Inventory = () => {
             </div>
         </div>
     );
+};
 
 export default Inventory;
-
-
-
 
 // import React, { useEffect, useState } from 'react';
 // import axios from 'axios';
