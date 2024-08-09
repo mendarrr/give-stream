@@ -14,7 +14,7 @@ const CharityApplications = () => {
         zipcode: '',
         title: '',
         target_amount: '', // Updated from donationTarget
-        imageUrl: '',
+        image: '', // Updated field name
         summary: ''
     });
     const [selectedCategory, setSelectedCategory] = useState(new Set());
@@ -48,7 +48,7 @@ const CharityApplications = () => {
             setCurrentStep(3);
         } else if (currentStep === 3 && (selectedDonation || formData.target_amount)) {
             setCurrentStep(4);
-        } else if (currentStep === 4 && formData.imageUrl && formData.summary) {
+        } else if (currentStep === 4 && formData.image && formData.summary) {
             setCurrentStep(5);
         }
     };
@@ -75,7 +75,7 @@ const CharityApplications = () => {
             'zipcode',
             'title',
             'target_amount',
-            'imageUrl',
+            'image', // Updated field name
             'summary'
         ];
 
@@ -250,39 +250,40 @@ const CharityApplications = () => {
                 <div id="card4" className="card">
                     <img src="/GiveStreamLogo.png" alt="Logo" className="card-logo" />
                     <div className="card-content">
-                        <h3>Additional Information</h3>
-                        <div className="input-group">
-                            <div className="input-wrapper">
-                                <input
-                                    type="text" 
-                                    id="imageUrl" 
-                                    name="imageUrl" 
-                                    value={formData.imageUrl} 
-                                    onChange={handleInputChange} 
-                                    placeholder="Image URL" 
-                                />
+                        <h3>Add Your Image and Summary</h3>
+                        <form>
+                            <div className="input-group">
+                                <div className="input-wrapper">
+                                    <input 
+                                        type="text" 
+                                        id="image" 
+                                        name="image" 
+                                        value={formData.image} 
+                                        onChange={handleInputChange} 
+                                        placeholder="Image URL" 
+                                    />
+                                </div>
                             </div>
-                        </div>
-                        <div className="input-group">
-                            <div className="input-wrapper">
-                                <input
-                                    type="text" 
-                                    id="summary" 
-                                    name="summary" 
-                                    value={formData.summary} 
-                                    onChange={handleInputChange} 
-                                    placeholder="Summary" 
-                                />
+                            <div className="input-group">
+                                <div className="input-wrapper">
+                                    <textarea 
+                                        id="summary" 
+                                        name="summary" 
+                                        value={formData.summary} 
+                                        onChange={handleInputChange} 
+                                        placeholder="Write a brief summary of your campaign..." 
+                                    />
+                                </div>
                             </div>
-                        </div>
+                        </form>
                         <div className="card-footer">
                             <button className="previous-button" onClick={handlePreviousClick}>Previous</button>
                             <button 
-                                className={`next-button ${formData.imageUrl && formData.summary ? '' : 'disabled'}`}
-                                onClick={handleSubmit}
-                                disabled={!formData.imageUrl || !formData.summary}
+                                className={`next-button ${(formData.image === '' || formData.summary === '') ? 'disabled' : ''}`}
+                                onClick={handleNextClick}
+                                disabled={formData.image === '' || formData.summary === ''}
                             >
-                                Submit
+                                Next
                             </button>
                         </div>
                     </div>
@@ -294,10 +295,28 @@ const CharityApplications = () => {
                 <div id="card5" className="card">
                     <img src="/GiveStreamLogo.png" alt="Logo" className="card-logo" />
                     <div className="card-content">
-                        <h3>Thank You!</h3>
-                        <p>Your application has been submitted successfully. We will review it and get back to you soon.</p>
+                        <h3>Review Your Application</h3>
+                        <div className="review-section">
+                            <p><strong>Name:</strong> {formData.name}</p>
+                            <p><strong>Email:</strong> {formData.email}</p>
+                            <p><strong>Description:</strong> {formData.description}</p>
+                            <p><strong>Country:</strong> {formData.country}</p>
+                            <p><strong>City:</strong> {formData.city}</p>
+                            <p><strong>Zip Code:</strong> {formData.zipcode}</p>
+                            <p><strong>Title:</strong> {formData.title}</p>
+                            <p><strong>Target Amount:</strong> {formData.target_amount}</p>
+                            <p><strong>Image URL:</strong> {formData.image}</p> {/* Updated field name */}
+                            <p><strong>Summary:</strong> {formData.summary}</p>
+                        </div>
                         <div className="card-footer">
-                            <button className="previous-button" onClick={() => setCurrentStep(1)}>Start Over</button>
+                            <button className="previous-button" onClick={handlePreviousClick}>Previous</button>
+                            <button 
+                                className={`submit-button ${(formData.image === '' || formData.summary === '') ? 'disabled' : ''}`}
+                                onClick={handleSubmit}
+                                disabled={formData.image === '' || formData.summary === ''}
+                            >
+                                Submit
+                            </button>
                         </div>
                     </div>
                 </div>

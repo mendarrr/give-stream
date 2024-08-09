@@ -169,15 +169,16 @@ class CharityApplication(db.Model, SerializerMixin):
             'email': self.email,
             'description': self.description,
             'status': self.status,
-            'submission_date': self.submission_date,
+            'submission_date': self.submission_date.isoformat() if self.submission_date else None,
             'reviewed_by': self.reviewed_by,
-            'review_date': self.review_date,
+            'review_date': self.review_date.isoformat() if self.review_date else None,
             'country': self.country,
             'city': self.city,
             'zipcode': self.zipcode,
             'fundraising_category': self.fundraising_category,
             'title': self.title,
-            'target_amount': self.target_amount
+            'target_amount': self.target_amount,
+            'image': self.image
         }
 
     
