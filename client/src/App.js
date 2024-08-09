@@ -17,6 +17,7 @@ import CompletedCharitiesList from './components/CompletedCharitiesList';
 import LoginPage from './components/LoginForm';
 import NewDonorForm from './components/NewDonor';
 import DonationForm from './components/NewDonation';
+import CharityList from './components/CharityList';
 
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
       <Route path="/completed-charities" element={<CompletedCharitiesList />} />
       <Route path="/signin" element={< LoginPage/>} />
       <Route path="/donor" element={<NewDonorForm/>} />
+      <Route path="/charities" element={<CharityList/>} />
       <Route path="/donation" element={<DonationForm />} />
       </Routes>
       <Footer />
