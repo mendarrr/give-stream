@@ -1,8 +1,8 @@
-"""adjusting admin login logic
+"""Initial Migration
 
-Revision ID: 5cc2cfc41e05
+Revision ID: 5500480aaac6
 Revises: 
-Create Date: 2024-08-09 09:41:16.859128
+Create Date: 2024-08-09 12:32:31.971568
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '5cc2cfc41e05'
+revision = '5500480aaac6'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -45,6 +45,17 @@ def upgrade():
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('name'),
     sa.UniqueConstraint('username')
+    )
+    op.create_table('community',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=100), nullable=False),
+    sa.Column('description', sa.String(length=255), nullable=False),
+    sa.Column('members', sa.Integer(), nullable=False),
+    sa.Column('impact_stories', sa.Text(), nullable=False),
+    sa.Column('events', sa.Text(), nullable=False),
+    sa.Column('banner', sa.String(length=255), nullable=False),
+    sa.Column('category', sa.String(length=255), nullable=False),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('message',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -147,6 +158,7 @@ def downgrade():
     op.drop_table('beneficiaries')
     op.drop_table('payment_methods')
     op.drop_table('message')
+    op.drop_table('community')
     op.drop_table('charities')
     op.drop_table('admins')
     # ### end Alembic commands ###
