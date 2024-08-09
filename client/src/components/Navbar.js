@@ -47,7 +47,7 @@ function Navbar({ isSticky, isLoggedIn }) {
                     <Link to="/faq">FAQ</Link>
                   </li>
                   <li>
-                    <Link to="/communties">Communities</Link>
+                    <Link to="/communities">Communities</Link>
                   </li>
                   <li>
                     <Link to="/communities">

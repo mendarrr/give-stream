@@ -137,14 +137,17 @@ const CommunitiesSection = () => {
             create your own community.
           </p>
         </div>
-        <div className="search-bar community-search">
-          <input
-            type="text"
-            placeholder="Search for communities..."
-            value={searchTerm}
-            onChange={handleSearch}
-          />
-        </div>
+        {!selectedCommunity && (
+          <div className="search-bar community-search">
+            <input
+              type="text"
+              placeholder="Search for communities..."
+              value={searchTerm}
+              onChange={handleSearch}
+            />
+          </div>
+        )}
+
         {!selectedCommunity && (
           <div className="featured-communities">
             <h2>Featured Communities</h2>
@@ -203,28 +206,37 @@ const CommunitiesSection = () => {
       </div>
       {selectedCommunity && (
         <div className="community-detail">
-          <button onClick={() => setSelectedCommunity(null)}>
-            Back to Communities
-          </button>
-          <h2>{selectedCommunity.name}</h2>
-          <img
-            src={selectedCommunity.banner}
-            alt={`${selectedCommunity.name} banner`}
-          />
-          <p>{selectedCommunity.description}</p>
-          <h3>Impact Stories</h3>
-          <ul>
-            {selectedCommunity.impactStories.map((story, index) => (
-              <li key={index}>{story}</li>
-            ))}
-          </ul>
-          <h3>Upcoming Events</h3>
-          <ul>
-            {selectedCommunity.events.map((event, index) => (
-              <li key={index}>{event}</li>
-            ))}
-          </ul>
-          <button>Donate</button>
+          <div className="left-column">
+            <div className="profilee">
+              <h2>{selectedCommunity.name}</h2>
+              <img
+                src={selectedCommunity.banner}
+                alt={`${selectedCommunity.name} banner`}
+              />
+              <p>{selectedCommunity.description}</p>
+            </div>
+            <div className="button-container">
+              <button onClick={() => setSelectedCommunity(null)}>
+                Back to Communities
+              </button>
+              <button className="profile-button">Donate</button>
+            </div>
+          </div>
+          <div className="right-column">
+              <h3>Impact Stories</h3>
+              <ul>
+                {selectedCommunity.impactStories.map((story, index) => (
+                  <li key={index}>{story}</li>
+                ))}
+              </ul>
+            
+              <h3>Upcoming Events</h3>
+              <ul>
+                {selectedCommunity.events.map((event, index) => (
+                  <li key={index}>{event}</li>
+                ))}
+              </ul>
+          </div>
         </div>
       )}
     </div>

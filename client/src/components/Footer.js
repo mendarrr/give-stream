@@ -70,7 +70,7 @@ function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/fundraisers">
+                <Link to="/communities">
                   Give Stream Administered Fundraisers
                 </Link>
               </li>
