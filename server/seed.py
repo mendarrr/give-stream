@@ -1,5 +1,5 @@
 from app import app
-from models import db, Donor, Charity, Admin, CharityApplication, Donation, Story, Beneficiary, Inventory, PaymentMethod
+from models import db, Donor, Charity, Admin, CharityApplication, Donation, Story, Beneficiary, Inventory, PaymentMethod, Community
 from datetime import datetime
 
 def seed_data():
@@ -347,6 +347,101 @@ def seed_data():
             Inventory(charity_id=charities[1].id, item_name='Shoes', quantity=500)
         ]
         db.session.add_all(inventory_items)
+
+        communities = [
+            Community( 
+                name='Local Heroes', 
+                description='Recognizing and supporting local community heroes.', 
+                members=1000,
+                impact_stories='Honored local volunteers;Provided grants to community leaders',
+                events='Local Heroes Awards;Volunteer Recognition Day',
+                banner='https://i.pinimg.com/564x/82/d1/19/82d119adba8bf922485f199e4d1d4603.jpg',
+                category='local causes'
+            ),
+            Community(
+                name='Neighborhood Watch', 
+                description='A community-based safety initiative to keep neighborhoods safe.', 
+                members=900,
+                impact_stories='Installed neighborhood security cameras;Hosted a self-defense class',
+                events='Community Safety Day;Self-Defense Workshop',
+                banner='https://i.pinimg.com/564x/2u/2u/2u/2u2u2u2u2u2u2u2u.jpg',
+                category='local causes'
+            ),
+            Community(
+                name='Local Business Boosters', 
+                description='Supporting local businesses and encouraging community shopping.', 
+                members=800,
+                impact_stories='Launched a shop local campaign;Provided free marketing workshops for small businesses',
+                events='Small Business Expo;Shop Local Saturday',
+                banner='https://i.pinimg.com/564x/b0/00/0c/b0000cd9721bb3ca65dbda2466084a84.jpg',
+                category='local causes'
+            ),
+            Community(
+                name='Community Gardeners', 
+                description='Bringing neighbors together through community gardening.', 
+                members=700,
+                impact_stories='Started a community garden;Donated fresh produce to local food banks',
+                events='Garden Workshop;Harvest Festival',
+                banner='https://i.pinimg.com/564x/37/de/20/37de20e0147104867a51ba207ac771f5.jpg',
+                category='local causes'
+            ),
+            Community(
+                name='Youth Mentors', 
+                description='Providing mentorship and support to local youth.', 
+                members=600,
+                impact_stories='Matched 100 youth with mentors;Held a youth leadership camp',
+                events='Youth Leadership Camp;Mentorship Workshop',
+                banner='https://i.pinimg.com/564x/8f/18/23/8f18233c6daec69a1468f0ec2abfcd7b.jpg',
+                category='local causes'
+            ),
+            Community(
+                name='Emergency Responders', 
+                description='Supporting local emergency responders and disaster relief efforts.', 
+                members=500,
+                impact_stories='Organized a disaster preparedness drill;Raised funds for local fire department',
+                events='Disaster Preparedness Workshop;Emergency Response Drill',
+                banner='https://i.pinimg.com/564x/0e/4b/30/0e4b30b3174f6d68cf895027bf93c106.jpg',
+                category='local causes'
+            ),
+            Community(
+                name='Senior Support Network', 
+                description='Providing resources and support to senior citizens in the community.', 
+                members=400,
+                impact_stories='Organized a senior transportation program;Provided home care services',
+                events='Senior Health Fair;Home Care Workshop',
+                banner='https://i.pinimg.com/736x/9d/4e/b6/9d4eb6217a93a36f6c41f61d47aa5045.jpg',
+                category='local causes'
+            ),
+                Community(
+                name='Animal Rescue Team', 
+                description='Rescuing and rehabilitating animals in need.', 
+                members=300,
+                impact_stories='Rescued 100 animals from hoarding situation;Found forever homes for 50 pets',
+                events='Pet Adoption Fair;Animal Rescue Workshop',
+                banner='https://i.pinimg.com/564x/9f/24/fd/9f24fd7d2ed8f3c3014355c68ea3bd68.jpg',
+                category='animal welfare'
+            ),
+            Community(
+                name='Environmental Activists', 
+                description='Promoting sustainability and protecting the environment.', 
+                members=200,
+                impact_stories='Organized beach cleanup;Advocated for renewable energy policies',
+                events='Earth Day Celebration;Sustainability Workshop',
+                banner='https://i.pinimg.com/564x/bf/48/2b/bf482b9bdb5dc29aee76b678b05b9105.jpg',
+                category='environmental causes'
+            ),
+            Community(
+                name='Mental Health Advocates', 
+                description='Raising awareness and supporting mental health initiatives.', 
+                members=100,
+                impact_stories='Hosted mental health awareness event;Provided resources for mental health support',
+                events='Mental Health Awareness Month;Self-Care Workshop',
+                banner='https://i.pinimg.com/564x/a6/07/24/a6072475d585129ec6972ca995284024.jpg',
+                category='health and wellness'
+        )
+        ]
+
+        db.session.add_all(communities)
 
         # Commit all changes
         db.session.commit()

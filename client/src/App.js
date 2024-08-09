@@ -18,9 +18,10 @@ import LoginPage from './components/LoginForm';
 import NewDonorForm from './components/NewDonor';
 import DonationForm from './components/NewDonation';
 import CharityList from './components/CharityList';
-import Inventory from './components/Inventory';
+// import Inventory from './components/Inventory';
 
 import CommunitiesSection from './components/CommunitySection';
+import CharityDetails from './components/CharityDashbord';
 
 function App() {
   return (
@@ -42,8 +43,9 @@ function App() {
       <Route path="/donor" element={<NewDonorForm/>} />
       <Route path="/charities" element={<CharityList/>} />
       <Route path="/donation" element={<DonationForm />} />
-      <Route path="/inventory" element={<Inventory />} /> 
+      {/* <Route path="/inventory" element={<Inventory />} />  */}
       <Route path="/communities" element={<CommunitiesSection />} />
+      <Route path="/charity-dashboard" element={<CharityDetails />} />
       </Routes>
       <Footer />
       </BrowserRouter>
