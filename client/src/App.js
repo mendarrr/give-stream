@@ -13,6 +13,11 @@ import PrivacyNotice from './components/PrivacyNotice';
 import TermsOfUse from './components/TermsOfUse';
 import Legal from './components/Legal';
 import FAQ from './components/FAQ';
+import CompletedCharitiesList from './components/CompletedCharitiesList';
+import LoginPage from './components/LoginForm';
+import NewDonorForm from './components/NewDonor';
+import DonationForm from './components/NewDonation';
+
 import CommunitiesSection from './components/CommunitySection';
 
 function App() {
@@ -30,6 +35,10 @@ function App() {
       <Route path="/terms" element={<TermsOfUse />} />
       <Route path="/legal" element={<Legal />} />
       <Route path="/faq" element={<FAQ />} />
+      <Route path="/completed-charities" element={<CompletedCharitiesList />} />
+      <Route path="/signin" element={< LoginPage/>} />
+      <Route path="/donor" element={<NewDonorForm/>} />
+      <Route path="/donation" element={<DonationForm />} />
       <Route path="/communities" element={<CommunitiesSection />} />
       </Routes>
       <Footer />
