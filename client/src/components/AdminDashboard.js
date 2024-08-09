@@ -1,61 +1,111 @@
 import React, { useState, useEffect } from "react";
 import "./AdminDashboard.css";
+import defaultProfileImage from "../assets/defaultProfile.png";
 
 const AdminDashboard = () => {
   const [charityApplications, setCharityApplications] = useState([]);
   const [charities, setCharities] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
     fetchCharityApplications();
     fetchCharities();
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const fetchCharityApplications = async () => {
-    const response = await fetch("/charity-applications");
-    const data = await response.json();
-    setCharityApplications(data);
+    try {
+      const response = await fetch("/charity-applications");
+      const data = await response.json();
+      setCharityApplications(data);
+    } catch (error) {
+      console.error("Error fetching charity applications:", error);
+    }
   };
 
   const fetchCharities = async () => {
-    const response = await fetch("/charities");
-    const data = await response.json();
-    setCharities(data);
+    try {
+      const response = await fetch("/charities");
+      const data = await response.json();
+      console.log("Fetched charities:", data);
+      setCharities(data);
+    } catch (error) {
+      console.error("Error fetching charities:", error);
+    }
   };
 
   const handleApprove = async (application) => {
-    const response = await fetch(`/charity-applications/${application.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status: "approved" }),
-    });
+    try {
+      const response = await fetch(`/charity-applications/${application.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "approved" }),
+      });
 
-    if (response.ok) {
-      fetchCharityApplications();
-      fetchCharities();
+      if (response.ok) {
+        fetchCharityApplications();
+        fetchCharities();
+      } else {
+        console.error("Failed to approve application");
+      }
+    } catch (error) {
+      console.error("Error approving application:", error);
     }
   };
 
   const handleReject = async (application) => {
-    const response = await fetch(`/charity-applications/${application.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status: "rejected" }),
-    });
+    try {
+      const response = await fetch(`/charity-applications/${application.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "rejected" }),
+      });
 
-    if (response.ok) {
-      fetchCharityApplications();
+      if (response.ok) {
+        fetchCharityApplications();
+      } else {
+        console.error("Failed to reject application");
+      }
+    } catch (error) {
+      console.error("Error rejecting application:", error);
     }
   };
 
   const handleDeleteCharity = async (charityId) => {
-    const response = await fetch(`/charities/${charityId}`, {
-      method: "DELETE",
-    });
+    try {
+      const response = await fetch(`/charities/${charityId}`, {
+        method: "DELETE",
+      });
 
-    if (response.ok) {
-      fetchCharities();
+      if (response.ok) {
+        fetchCharities();
+      } else {
+        console.error("Failed to delete charity");
+      }
+    } catch (error) {
+      console.error("Error deleting charity:", error);
     }
   };
+
+  const moveLeft = () => {
+    setCurrentIndex((prev) => Math.max(prev - 1, 0));
+  };
+
+  const moveRight = () => {
+    setCurrentIndex((prev) =>
+      Math.min(prev + 1, charities.length - (isMobile ? 1 : 3))
+    );
+  };
+
+  const visibleCharities = isMobile
+    ? charities.slice(currentIndex, currentIndex + 1)
+    : charities.slice(currentIndex, currentIndex + 3);
 
   return (
     <div className="admin-dashboard">
@@ -96,22 +146,50 @@ const AdminDashboard = () => {
 
       <section className="admin-dashboard__charities">
         <h2 className="admin-dashboard__section-title">Approved Charities</h2>
-        <ul className="admin-dashboard__charity-list">
-          {charities.map((charity) => (
-            <li key={charity.id} className="admin-dashboard__charity-item">
-              <h3 className="admin-dashboard__charity-name">{charity.name}</h3>
-              <p className="admin-dashboard__charity-description">
-                {charity.description}
-              </p>
-              <button
-                className="admin-dashboard__delete-btn"
-                onClick={() => handleDeleteCharity(charity.id)}
-              >
-                Delete
-              </button>
-            </li>
-          ))}
-        </ul>
+        <div className="admin-dashboard__charity-list-container">
+          <button
+            className="admin-dashboard__nav-button left"
+            onClick={moveLeft}
+            disabled={currentIndex === 0}
+          >
+            &lt;
+          </button>
+          <div className="admin-dashboard__charity-list">
+            {visibleCharities.map((charity) => (
+              <div key={charity.id} className="admin-dashboard__charity-card">
+                <div className="admin-dashboard__charity-image">
+                  <img
+                    src={charity.image_url || defaultProfileImage}
+                    alt={charity.name}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = defaultProfileImage;
+                    }}
+                  />
+                </div>
+                <h3 className="admin-dashboard__charity-name">
+                  {charity.name}
+                </h3>
+                <p className="admin-dashboard__charity-description">
+                  {charity.description}
+                </p>
+                <button
+                  className="admin-dashboard__delete-btn"
+                  onClick={() => handleDeleteCharity(charity.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
+          </div>
+          <button
+            className="admin-dashboard__nav-button right"
+            onClick={moveRight}
+            disabled={currentIndex >= charities.length - (isMobile ? 1 : 3)}
+          >
+            &gt;
+          </button>
+        </div>
       </section>
     </div>
   );
