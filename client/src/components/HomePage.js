@@ -94,13 +94,12 @@ const HomePage = () => {
               <span className="givestream">GIVE STREAM</span>
             </h1>
           </div>
-          <a
-            href="#charities-section"
+          <Link to="/donor"
             id="counter-button"
             className="counter-button"
           >
             Donate Now
-          </a>
+          </Link>
         </section>
         <section id="charities-section" className="charities-list">
           <div className="charities-section-text">

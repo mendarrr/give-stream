@@ -1,78 +1,91 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import axios from "axios";
+import "./Form.css";
+import { Link, useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     try {
       // Send login request to the backend
-      const response = await axios.post('/login', {
+      const response = await axios.post("/login", {
         username,
-        password
+        password,
       });
 
       // Extract the access token and user role from the response
       const { access_token, role } = response.data;
 
       // Store the access token and user role in localStorage
-      localStorage.setItem('token', access_token);
-      localStorage.setItem('role', role);
+      localStorage.setItem("token", access_token);
+      localStorage.setItem("role", role);
 
       // Redirect based on the user role
       switch (role) {
-        case 'admin':
-          navigate('/admin-dashboard');
+        case "admin":
+          navigate("/admin-dashboard");
           break;
-        case 'donor':
-          navigate('/charities');
+        case "donor":
+          navigate("/charities");
           break;
-        case 'charity':
-          navigate('/charity-dashboard');
+        case "charity":
+          navigate("/charity-dashboard");
           break;
         default:
-          navigate('/');
+          navigate("/");
       }
     } catch (err) {
       // Handle errors, providing feedback to the user
-      setError('Invalid credentials. Please try again.');
-      console.error('Login error:', err);
+      setError("Invalid credentials. Please try again.");
+      console.error("Login error:", err);
     }
   };
 
   return (
     <div className="login-page">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">Username:</label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
+      <div className="form-page">
+      <div className="login-logo form-left">
+        <Link to="/">
+          <img
+            src={`${process.env.PUBLIC_URL}/GiveStreamLogo.png`}
+            alt="logo"
           />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
+        </Link>
+      </div>
+      <div className="form-right">
+        <form onSubmit={handleSubmit}>
+          <h2>Login</h2>
+          <div>
+            <label htmlFor="username">Username:</label>
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="password">Password:</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button type="submit">Login</button>
+        </form>
+      </div>
+      </div>
       {error && <p className="error">{error}</p>}
     </div>
   );

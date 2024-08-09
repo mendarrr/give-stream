@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './DonationForm.css'; // Make sure to create this CSS file
+import './Form.css';
 
 const DonationForm = () => {
   const [donationAmount, setDonationAmount] = useState(0);
