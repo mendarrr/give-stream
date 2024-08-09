@@ -31,7 +31,7 @@ function App() {
           <Route path="/legal" element={<Legal />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/completed-charities" element={<CompletedCharitiesList />} />
-          <Route path="/create-campaign" element={<CharityApplications />} /> {/* Add this route */}
+          <Route path="/create-campaign" element={<CharityApplications />} /> {/* Route for CharityApplications */}
         </Routes>
         <Footer />
       </BrowserRouter>
