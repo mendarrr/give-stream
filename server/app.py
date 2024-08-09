@@ -734,13 +734,15 @@ class CommunityListResource(Resource):
             name=data['name'],
             description=data['description'],
             members=data['members'],
-            impact_stories=';'.join(data.get('impactStories', [])),
+            impact_stories=';'.join(data.get('impact_stories', [])),
             events=';'.join(data.get('events', [])),
-            banner=data['banner']
+            banner=data['banner'],
+            category=data.get('category', 'General')
         )
         db.session.add(new_community)
         db.session.commit()
         return new_community.to_dict(), 201
+
 
 class CommunityResource(Resource):
     def get(self, id):
@@ -754,16 +756,23 @@ class CommunityResource(Resource):
         if data.get('action') == 'join':
             community.members += 1
 
-        if 'impactStories' in data:
-            new_stories = ';'.join(data['impactStories'])
-            community.impact_stories = community.impact_stories + ';' + new_stories if community.impact_stories else new_stories
+        if data.get('action') == 'leave':
+            community.members -= 1
+
+        if 'impact_stories' in data:
+            new_stories = data['impact_stories'].split(';')
+            community.impact_stories.extend(new_stories)
 
         if 'events' in data:
-            new_events = ';'.join(data['events'])
-            community.events = community.events + ';' + new_events if community.events else new_events
+            new_events = data['events'].split(';')
+            community.events.extend(new_events)
+
+        if 'category' in data:
+            community.category = data['category']
 
         db.session.commit()
         return community.to_dict(), 200
+
 
 # # Routes
 api.add_resource(Index, '/')

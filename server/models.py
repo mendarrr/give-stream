@@ -331,7 +331,6 @@ class Message(db.Model):
             'timestamp': self.timestamp.isoformat() if self.timestamp else None,
             'is_answered': self.is_answered
         }
-    
 class Community(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -340,6 +339,7 @@ class Community(db.Model):
     impact_stories = db.Column(db.Text, nullable=False)
     events = db.Column(db.Text, nullable=False)
     banner = db.Column(db.String(255), nullable=False)
+    category = db.Column(db.String(255), nullable=False, default='General')
 
     def to_dict(self):
         return {
@@ -347,8 +347,11 @@ class Community(db.Model):
             "name": self.name,
             "description": self.description,
             "members": self.members,
-            "impactStories": self.impact_stories.split(';'),
-            "events": self.events.split(';'),
-            "banner": self.banner
+            "impactStories": self.impact_stories.replace(';', '').split(';;') if self.impact_stories else [],
+            "events": self.events.replace(';', '').split(';;') if self.events else [],
+            "banner": self.banner,
+            "category": self.category
         }
+
+
 

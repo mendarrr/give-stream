@@ -849,9 +849,320 @@
   }
 
   /* Communities Section */
+  .communities-section{
+    padding-top: 20px;
+    height: 100vh;
+    background: url('../assets/CharityHomeBack.png') no-repeat center center / 120%;
+    background-color: rgba(245, 245, 245, 0.9);
+    background-blend-mode: saturation;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 70px;
+    padding-left: 20px;
+  }
 
+  .community-categories {
+    margin: 20px 0;
+    text-align: center;
+  }
+  
+  .community-categories h2 {
+    font-size: 21px;
+    color: #333;
+    margin-bottom: 15px;
+  }
+  
+  .category-dropdown {
+    width: 110%;
+    max-width: 300px;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    cursor: pointer;
+  }
+  
+  .category-dropdown option {
+    padding: 12px;
+  }
+  
+  .category-dropdown:focus {
+    outline: none;
+    border-color: #D35538;
+    box-shadow: 0 0 0 2px #318E8D;
+  }
 
+  .category-dropdown option:hover {
+    background-color: #f2f2f2;
+  }
 
+  .community-container{
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    width: 1450px;
+  }
+
+  .communities-text h4{
+    text-align: center;
+    font-size: 45px;
+    margin-top: 30px;
+  }
+
+  .communities-text p{
+    margin-top: -30px;
+    text-align: center;
+    font-size: 18px;
+  }
+
+  .community-search{
+    margin-left: 250px;
+    margin-top: 50px;
+  }
+
+  .featured-communities{
+    margin-top: 18px;
+    padding: 10px;
+  }
+
+  .featured-communities h2{
+    margin-top: -2px;
+    text-align: center;
+    font-size: 28px;
+  }
+  
+  .community-list{
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .community-profile {
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+  }
+  
+  .community-banner {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .community-card{
+    height: 400px;
+    padding-top: 30px;
+    cursor: pointer;
+  }
+
+  .community-card h3{
+    margin-top: 12px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  .community-card p{
+    margin-top: 10px;
+    text-align: center;
+    font-size: 18px;
+  }
+
+  .membership-button {
+    width: 250px;
+    margin-left: 48px;
+    margin-top: 20px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .membership-button.join {
+    background-color: #318E8D;
+    color: white;
+  }
+  
+  .membership-button.leave {
+    background-color: #E66E4E;
+    color: white;
+  }
+  
+  .membership-button:hover {
+    opacity: 0.8;
+  }
+
+  .community-right{
+    margin-right: 720px;
+  }
+
+  .community-left{
+    margin-left: 1020px;
+  }
+
+  .community-left,
+  .community-right{
+    margin-top: 350px;
+  }
+  
+  @media screen and (max-width: 1440px) {
+    .communities-section {
+      padding: 20px;
+      gap: 40px;
+    }
+  
+    .community-container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+  
+    .community-search {
+      margin-left: 0;
+      text-align: center;
+    }
+  
+    .community-list {
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
+  
+    .community-card {
+      width: calc(33.33% - 20px);
+      margin-bottom: 20px;
+    }
+  
+    .membership-button {
+      width: 90%;
+      margin-left: 5%;
+    }
+  }
+  
+  @media screen and (max-width: 1024px) {
+    .communities-text h4 {
+      font-size: 36px;
+    }
+  
+    .community-card {
+      width: calc(50% - 20px);
+    }
+  
+    .community-search {
+      margin-top: 30px;
+    }
+  
+    .featured-communities h2 {
+      font-size: 24px;
+    }
+  }
+  
+  
+  @media screen and (max-width: 768px) {
+    .communities-section {
+      height: auto;
+      padding: 20px 3%;
+    }
+  
+    .communities-text h4 {
+      font-size: 32px;
+    }
+  
+    .communities-text p {
+      font-size: 16px;
+    }
+  
+    .community-card {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto 20px;
+    }
+  
+    .community-left,
+    .community-right {
+      margin: 20px auto;
+      text-align: center;
+      margin-top: 220px;
+    }
+
+    .community-left{
+      margin-left: -10px;
+    }
+
+    .community-right{
+      margin-right: -40px;
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    .communities-section {
+      padding: 25px;
+      width: 90%;
+    }
+
+    .category-dropdown {
+      width: 100%;
+      max-width: none;
+    }
+  
+    .communities-text h4 {
+      font-size: 28px;
+      margin-left: -50px;
+      margin-top: -25px;
+    }
+  
+    .communities-text p {
+      font-size: 14px;
+      margin-left: -50px;
+    }
+
+    .featured-communities h2{
+      margin-top: -2px;
+      text-align: center;
+      font-size: 22px;
+      margin-left: -30px;
+    }
+
+    .community-card{
+      margin-left: -37px;
+    }
+
+    .community-left,
+    .community-right{
+      margin-top: 350px;
+    }
+
+    .community-right{
+      margin-right: -50px;
+    }
+
+    .community-left{
+      margin-left: -25px;
+    }
+
+    .community-search{
+      margin-top: -2px;
+      margin-left: -18px;
+    }
+  
+    .community-profile {
+      height: 120px;
+    }
+  
+    .community-card h3 {
+      font-size: 20px;
+    }
+  
+    .community-card p {
+      font-size: 16px;
+    }
+  }
+  
+  
 
   
   
