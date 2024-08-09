@@ -32,7 +32,7 @@ const LoginPage = () => {
           navigate('/admin-dashboard');
           break;
         case 'donor':
-          navigate('/donor-dashboard');
+          navigate('/charities');
           break;
         case 'charity':
           navigate('/charity-dashboard');

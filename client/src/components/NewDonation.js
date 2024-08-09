@@ -17,16 +17,16 @@ const DonationForm = () => {
 
   const donationAmounts = [500, 2500, 5000, 10000, 25000, 50000];
 
-  //useEffect(() => {
-    // Check if user is logged in and has selected a charity
-    //const donor = JSON.parse(localStorage.getItem('donor'));
-    //const charity = JSON.parse(localStorage.getItem('selectedCharity'));
-    //if (!donor || !charity) {
-    //  navigate('/login');
-    //} else {
-     // setSelectedCharity(charity);
-   // }
- // }, [navigate]);
+  useEffect(() => {
+    //check if user is logged in and has selected a charity
+    const donor = JSON.parse(localStorage.getItem('donor'));
+    const charity = JSON.parse(localStorage.getItem('selectedCharity'));
+    if (!donor || !charity) {
+     navigate('/login');
+    } else {
+      setSelectedCharity(charity);
+   }
+  }, [navigate]);
 
   const handleDonationAmount = (amount) => {
     setDonationAmount(amount);
