@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './NewDonor.css';
+import { useNavigate } from 'react-router-dom';
 
 
 const NewDonorForm = () => {
@@ -12,6 +13,8 @@ const NewDonorForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [formErrors, setFormErrors] = useState({});
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -78,6 +81,7 @@ const NewDonorForm = () => {
           password: '',
           is_anonymous: false,
         });
+        navigate('/signin');
       }
     }
   };

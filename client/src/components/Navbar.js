@@ -24,6 +24,9 @@ function Navbar({ isSticky, isLoggedIn }) {
             <Link to="/create-campaign">Set up a Donation Campaign</Link>
           </li>
           <li>
+            <Link to="/donor">Register</Link>
+          </li>
+          <li>
             <Link to="/about">About Us</Link>
           </li>
           {isLoggedIn ? (
