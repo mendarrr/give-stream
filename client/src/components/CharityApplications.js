@@ -13,9 +13,10 @@ const CharityApplications = () => {
         city: '',
         zipCode: '',
         title: '',
-        target_amount: ''
+        donationTarget: '' // Updated to reflect new field
     });
     const [selectedCategory, setSelectedCategory] = useState(new Set());
+    const [selectedDonations, setSelectedDonations] = useState(new Set()); // Track selected donation amounts
 
     // Handle selection for buttons in Card 1
     const handleButtonClick = (option) => {
@@ -43,12 +44,26 @@ const CharityApplications = () => {
         });
     };
 
+    // Handle donation amount selection on Card 3
+    const handleDonationClick = (amount) => {
+        setSelectedDonations(prev => {
+            const newSelection = new Set(prev);
+            if (newSelection.has(amount)) {
+                newSelection.delete(amount); // Deselect if already selected
+            } else {
+                newSelection.add(amount); // Select if not already selected
+            }
+            return newSelection;
+        });
+    };
+
     const handleNextClick = () => {
         if (currentStep === 1 && selectedOptions.size > 0) {
             setCurrentStep(2); // Move to Card 2
         } else if (currentStep === 2 && selectedCategory.size > 0) {
-            console.log("Next step triggered with selected options:", selectedCategory);
-            // Handle form submission or next step logic
+            setCurrentStep(3); // Move to Card 3
+        } else if (currentStep === 3 && (selectedDonations.size > 0 || formData.donationTarget)) {
+            setCurrentStep(4); // Move to Card 4
         } else {
             alert("Please make a selection before proceeding.");
         }
@@ -57,6 +72,10 @@ const CharityApplications = () => {
     const handlePreviousClick = () => {
         if (currentStep === 2) {
             setCurrentStep(1); // Move back to Card 1
+        } else if (currentStep === 3) {
+            setCurrentStep(2); // Move back to Card 2
+        } else if (currentStep === 4) {
+            setCurrentStep(3); // Move back to Card 3
         }
     };
 
@@ -212,17 +231,6 @@ const CharityApplications = () => {
                                         placeholder="Title" 
                                     />
                                 </div>
-                                <div className="input-wrapper">
-                                    <input 
-                                        type="number" 
-                                        id="target_amount" 
-                                        name="target_amount" 
-                                        value={formData.target_amount} 
-                                        onChange={handleInputChange} 
-                                        placeholder="Target Amount" 
-                                        step="0.01"
-                                    />
-                                </div>
                             </div>
                         </form>
                         <h3 className="reason-title">What Best Describes Your Reason for Fundraising?</h3>
@@ -258,30 +266,14 @@ const CharityApplications = () => {
                                 Animal Welfare
                             </button>
                             <button 
-                                className={`fundraising-button ${selectedCategory.has('Business') ? 'selected' : ''}`}
-                                onClick={() => handleCategoryClick('Business')}
+                                className={`fundraising-button ${selectedCategory.has('Arts') ? 'selected' : ''}`}
+                                onClick={() => handleCategoryClick('Arts')}
                             >
-                                Business
-                            </button>
-                            <button 
-                                className={`fundraising-button ${selectedCategory.has('Sports') ? 'selected' : ''}`}
-                                onClick={() => handleCategoryClick('Sports')}
-                            >
-                                Sports
-                            </button>
-                            <button 
-                                className={`fundraising-button ${selectedCategory.has('Other') ? 'selected' : ''}`}
-                                onClick={() => handleCategoryClick('Other')}
-                            >
-                                Other
+                                Arts
                             </button>
                         </div>
                         <div className="card-footer">
-                            <button 
-                                className={`previous-button ${currentStep === 1 ? 'disabled' : ''}`}
-                                onClick={handlePreviousClick}
-                                disabled={currentStep === 1}
-                            >
+                            <button className="previous-button" onClick={handlePreviousClick}>
                                 Previous
                             </button>
                             <button 
@@ -290,6 +282,90 @@ const CharityApplications = () => {
                                 disabled={selectedCategory.size === 0}
                             >
                                 Next
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Third Card */}
+            {currentStep === 3 && (
+                <div id="card3" className="card">
+                    <img src="/GiveStreamLogo.png" alt="Logo" className="card-logo" />
+                    <div className="card-content">
+                        <h3>What Amount Are You Trying to Raise?</h3>
+                        <div className="donation-buttons">
+                            <button 
+                                className={`donation-button ${selectedDonations.has('5000') ? 'selected' : ''}`}
+                                onClick={() => handleDonationClick('5000')}
+                            >
+                                5000
+                            </button>
+                            <button 
+                                className={`donation-button ${selectedDonations.has('10000') ? 'selected' : ''}`}
+                                onClick={() => handleDonationClick('10000')}
+                            >
+                                10000
+                            </button>
+                            <button 
+                                className={`donation-button ${selectedDonations.has('20000') ? 'selected' : ''}`}
+                                onClick={() => handleDonationClick('20000')}
+                            >
+                                20000
+                            </button>
+                            <button 
+                                className={`donation-button ${selectedDonations.has('50000') ? 'selected' : ''}`}
+                                onClick={() => handleDonationClick('50000')}
+                            >
+                                50000
+                            </button>
+                        </div>
+                        <div className="custom-donation">
+                            <input
+                                type="number"
+                                name="donationTarget"
+                                value={formData.donationTarget}
+                                onChange={handleInputChange}
+                                placeholder="Custom Amount"
+                            />
+                        </div>
+                        <div className="card-footer">
+                            <button className="previous-button" onClick={handlePreviousClick}>
+                                Previous
+                            </button>
+                            <button 
+                                className={`next-button ${(selectedDonations.size > 0 || formData.donationTarget) ? '' : 'disabled'}`}
+                                onClick={handleNextClick}
+                                disabled={selectedDonations.size === 0 && !formData.donationTarget}
+                            >
+                                Next
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Fourth Card */}
+            {currentStep === 4 && (
+                <div id="card4" className="card">
+                    <img src="/GiveStreamLogo.png" alt="Logo" className="card-logo" />
+                    <div className="card-content">
+                        <h3>Summary</h3>
+                        <p>Name: {formData.name}</p>
+                        <p>Email: {formData.email}</p>
+                        <p>Description: {formData.description}</p>
+                        <p>Country: {formData.country}</p>
+                        <p>City/Town: {formData.city}</p>
+                        <p>Zip Code: {formData.zipCode}</p>
+                        <p>Title: {formData.title}</p>
+                        <p>Reason: {Array.from(selectedCategory).join(', ')}</p>
+                        <p>Donation Target: {Array.from(selectedDonations).join(', ') || formData.donationTarget}</p>
+                        <div className="card-footer">
+                            <button className="previous-button" onClick={handlePreviousClick}>
+                                Previous
+                            </button>
+                            <button className="submit-button">
+                                Submit
                             </button>
                         </div>
                     </div>

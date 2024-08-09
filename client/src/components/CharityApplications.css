@@ -11,7 +11,7 @@
     min-height: 100vh;
 }
 
-/* Common card styles */
+/* Card styles */
 .card {
     display: flex;
     border: 1px solid #ddd;
@@ -32,10 +32,12 @@
     margin-top: 350px; /* Adjusted top margin */
 }
 
-#card2 {
-    margin-top: 250px; /* Adjusted top margin */
-    background-color: #f9f9f9; /* Match background color with card1 */
-    align-self: center; /* Center card 2 horizontally */
+#card2,
+#card3 {
+    margin-top: 250px; /* Adjusted top margin for both card2 and card3 */
+    background-color: #f9f9f9; /* Match background color */
+    align-self: center; /* Center both card 2 and card 3 horizontally */
+    position: relative; /* Ensure card positioning is relative to its container */
 }
 
 /* Logo styling within cards */
@@ -59,6 +61,14 @@
     box-sizing: border-box;
 }
 
+/* Card footer styling */
+.card-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 20px; /* Add separation distance between buttons */
+}
+
 /* Button container styling */
 .button-container {
     display: flex;
@@ -75,65 +85,10 @@
     width: 100%;
 }
 
-.fundraising-button {
-    background-color: #fff;
-    color: #000;
-    border: 1px solid #000;
-    border-radius: 12px;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    text-align: center;
-    margin-right: 10px;
-    width: 200px;
-    height: 50px;
-    white-space: nowrap;
-    box-sizing: border-box;
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-}
-
-.fundraising-button.selected {
-    background-color: #d0f0fd; /* Lighter blue for selected state */
-    color: #000;
-}
-
-.fundraising-button:hover:not(.selected) {
-    background-color: #e0e0e0;
-    color: #000;
-}
-
-/* Button description styling */
-.button-description {
-    font-size: 14px;
-    color: #000;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex: 1;
-    box-sizing: border-box;
-}
-
-/* Horizontal line styling */
-hr {
-    border: 0;
-    height: 4px;
-    background-color: #ccc;
-    margin: 15px 0;
-    width: 100%;
-}
-
-/* Card footer styling */
-.card-footer {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-/* Next button styling */
+/* Button styling */
+.fundraising-button,
+.previous-button,
 .next-button {
-    background-color: #000;
-    color: #fff;
     border: none;
     border-radius: 12px;
     padding: 12px 24px;
@@ -147,6 +102,44 @@ hr {
     transition: background-color 0.3s ease;
 }
 
+.fundraising-button {
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #000;
+    margin-right: 10px;
+    white-space: nowrap;
+}
+
+.fundraising-button.selected {
+    background-color: #d0f0fd; /* Lighter blue for selected state */
+    color: #000;
+}
+
+.fundraising-button:hover:not(.selected) {
+    background-color: #e0e0e0;
+    color: #000;
+}
+
+.previous-button {
+    background-color: #000;
+    color: #fff;
+}
+
+.previous-button:hover {
+    background-color: #e74c3c;
+    color: #fff;
+}
+
+.previous-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.next-button {
+    background-color: #000;
+    color: #fff;
+}
+
 .next-button:hover {
     background-color: #e74c3c;
     color: #fff;
@@ -157,13 +150,56 @@ hr {
     cursor: not-allowed;
 }
 
-/* Adjusted styles for uniform button sizes on card 2 */
-#card2 .fundraising-button, #card2 .next-button {
-    width: 220px; /* Uniform width for buttons on card 2 */
-    height: 55px; /* Uniform height for buttons on card 2 */
+/* Uniform size for Previous and Next buttons in card2 and card3 */
+#card2 .previous-button, 
+#card2 .next-button,
+#card3 .previous-button, 
+#card3 .next-button {
+    width: 220px; /* Uniform width */
+    height: 55px; /* Uniform height */
 }
 
-/* New styles for input fields */
+/* Uniform size for fundraising buttons in card2 and card3 */
+#card2 .fundraising-button,
+#card3 .fundraising-button {
+    width: 220px; /* Uniform width for buttons on card 2 and card 3 */
+    height: 55px; /* Uniform height for buttons on card 2 and card 3 */
+}
+
+/* Donation button styling */
+.donation-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.donation-button {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    width: 220px; /* Match width of input field */
+}
+
+.donation-button:hover {
+    background-color: #e0e0e0;
+    border-color: #aaa;
+}
+
+.donation-button.selected {
+    background-color: #d0f0fd; 
+    border-color: #4CAF50;
+    color: #1a1616;
+}
+
+/* Input fields styling */
 .input-group {
     margin-bottom: 15px;
     width: 100%;
@@ -203,70 +239,48 @@ input[type="email"]::placeholder {
     color: #888;
 }
 
-/* Card footer styling */
-.card-footer {
+/* Horizontal line styling */
+hr {
+    border: 0;
+    height: 4px;
+    background-color: #ccc;
+    margin: 15px 0;
+    width: 100%;
+}
+
+/* Custom donation styling */
+.custom-donation {
+    text-align: center;
+    margin: 20px 0;
+    width: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 20px;
-    gap: 20px; /* Add separation distance between buttons */
 }
 
-/* Previous button styling */
-.previous-button {
-    background-color: #000;
-    color: #fff;
-    border: none;
-    border-radius: 12px;
-    padding: 12px 24px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
+.custom-donation input[type="number"] {
+    width: 100%;
+    max-width: 300px; /* Limit the maximum width */
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
     text-align: center;
-    width: 220px;
-    height: 55px;
-    box-sizing: border-box;
-    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.previous-button:hover {
-    background-color: #e74c3c;
-    color: #fff;
+.custom-donation input[type="number"]::placeholder {
+    color: #888;
 }
 
-.previous-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+.custom-donation input[type="number"]:focus {
+    border-color: #525355; /* Change border color on focus */
+    outline: none;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
 }
 
-/* Next button styling */
-.next-button {
-    background-color: #000;
-    color: #fff;
-    border: none;
-    border-radius: 12px;
-    padding: 12px 24px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    text-align: center;
-    width: 220px;
-    height: 55px;
-    box-sizing: border-box;
-    transition: background-color 0.3s ease;
-}
-
-.next-button:hover {
-    background-color: #e74c3c;
-    color: #fff;
-}
-
-.next-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-/* Ensure uniform size for Previous and Next buttons in card2 */
-#card2 .previous-button, #card2 .next-button {
-    width: 220px; /* Uniform width */
-    height: 55px; /* Uniform height */
+.custom-donation input[type="number"]::-webkit-inner-spin-button,
+.custom-donation input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none; /* Remove default spinner in WebKit browsers */
+    margin: 0;
 }
