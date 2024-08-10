@@ -17,10 +17,11 @@ import CompletedCharitiesList from "./components/CompletedCharitiesList";
 import LoginPage from "./components/LoginForm";
 import NewDonorForm from "./components/NewDonor";
 import DonationForm from "./components/NewDonation";
-import CharityList from "./components/CharityList";
 import Inventory from "./components/Inventory";
 import CharityProfile from "./components/CharityProfile";
 import AdminDashboard from "./components/AdminDashboard";
+import CharityDashboard from "./components/AdminDashboard";
+import CharitiesPage from "./components/CharitiesPage";
 
 function App() {
   return (
@@ -43,11 +44,12 @@ function App() {
           />
           <Route path="/signin" element={<LoginPage />} />
           <Route path="/donor" element={<NewDonorForm />} />
-          <Route path="/charities" element={<CharityList />} />
           <Route path="/donation" element={<DonationForm />} />
           <Route path="/inventory" element={<Inventory />} />
           <Route path="/charity-profile/:id" element={<CharityProfile />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/charity-dashboard/:id" element={<CharityDashboard />} />
+          <Route path="/charities" element={<CharitiesPage />} />
         </Routes>
         <Footer />
       </BrowserRouter>
