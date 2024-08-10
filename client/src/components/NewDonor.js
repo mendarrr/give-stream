@@ -114,7 +114,7 @@ const NewDonorForm = () => {
             <div className="form-group">
               <input
                 className={`form-input ${formErrors.username ? "error" : ""}`}
-                type="text"
+                type="name"
                 id="username"
                 name="username"
                 value={formData.username}
@@ -182,7 +182,7 @@ const NewDonorForm = () => {
             </p>
               </div>
             <button
-              className="submit-btn"
+              className="login-btn"
               type="submit"
               disabled={isLoading}
             >

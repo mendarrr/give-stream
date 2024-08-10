@@ -391,6 +391,56 @@
   }
 }
 
+/* Login Form Styling*/
+
+.form-right{
+  background-image: url('../assets/photo.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: rgba(255, 255, 255, 0.9);
+  background-blend-mode: overlay;
+  padding-top: 20px;
+}
+
+.login{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 130px;
+}
+
+.login p,
+.accept p{
+  font-weight: 600;
+}
+
+.form-header{
+  margin-top: 80px;
+  text-align: center;
+  font-size: 20px;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.login-btn{
+  width: 200px;
+  height: 50px;
+  border-radius: 10px;
+  background-color: #E66E4E;
+  color: white;
+  font-size: 24px;
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 1.5s ease-in-out;
+  margin-left: 200px;
+  margin-top: 40px;
+}
+
+.llink{
+  color: #E66E4E;
+  text-decoration: none;
+  font-weight: 600;
+}
   
 
 /* donation */
@@ -483,4 +533,6 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+
   
