@@ -1329,6 +1329,113 @@
     font-size: 22px;
   }
 
+  /* For tablets and medium-sized screens (768px to 1024px) */
+@media screen and (max-width: 1024px) {
+  .main-error-page {
+    padding-left: 200px;
+    padding-right: 200px;
+  }
+
+  .error-contents {
+    margin-top: 100px;
+  }
+
+  .section1 {
+    padding-left: 150px;
+  }
+
+  .section1 h4 {
+    font-size: 28px;
+    margin-left: 50px;
+  }
+
+  .error-contents p {
+    font-size: 18px;
+    margin-left: 50px;
+  }
+
+  .section2,
+  .section3,
+  .section4 {
+    padding-right: 40px;
+  }
+}
+
+/* For large mobile devices (480px to 767px) */
+@media screen and (max-width: 767px) {
+  .main-error-page {
+    padding-left: 100px;
+    padding-right: 100px;
+    background-size: 180%;
+  }
+
+  .error-contents {
+    margin-top: 80px;
+  }
+
+  .section1 {
+    padding-left: 80px;
+  }
+
+  .section1 h4 {
+    font-size: 24px;
+    margin-left: 30px;
+  }
+
+  .error-contents p {
+    font-size: 16px;
+    margin-left: 30px;
+  }
+
+  .section2,
+  .section3,
+  .section4 {
+    padding-right: 20px;
+  }
+}
+
+/* For small mobile devices (up to 479px) */
+@media screen and (max-width: 480px) {
+  .main-error-page {
+    width: 100%;
+    height: auto;
+    padding-left: 10px;
+    padding-right: 20px;
+    background-size: 200%;
+  }
+
+  .error-contents {
+    margin-top: 60px;
+  }
+
+  .section1{
+    padding-left: 0px;
+    margin-left: -5px;
+  }
+
+  .section1 h4 {
+    font-size: 26px;
+    margin-left: 10px;
+    padding-left: 80px;
+  }
+
+  .error-contents p {
+    font-size: 14px;
+    margin-left: 10px;
+  }
+
+  .section2,
+  .section3,
+  .section4 {
+    padding-right: 10px;
+  }
+
+  .section3 ul li {
+    font-size: 16px;
+  }
+}
+
+
   
   
 
