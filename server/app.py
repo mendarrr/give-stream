@@ -142,6 +142,7 @@ from models import db, Charity, Donation
 from datetime import datetime, timedelta
 
 class Charities(Resource):
+    
     def get(self, id=None):
         if id:
             charity = Charity.query.get_or_404(id)
@@ -165,52 +166,57 @@ class Charities(Resource):
             charities = Charity.query.all()
             return jsonify([charity.to_dict_with_stats() for charity in charities])
 
-def to_dict_with_stats(self):
-    donations = Donation.query.filter_by(charity_id=self.id).all()
-    total_raised = sum(donation.amount for donation in donations)
-    donation_count = len(donations)
-    percentage_raised = (total_raised / self.needed_donation) * 100 if self.needed_donation else 0
-
-    return {
-        'id': self.id,
-        'name': self.name,
-        'total_raised': total_raised,
-        'donation_count': donation_count,
-        'percentage_raised': percentage_raised,
-        'needed_donation': self.needed_donation
-    }
-
     def post(self):
-        data = request.get_json()
-        new_charity = Charity(
-            username=data['username'],
-            email=data['email'],
-            name=data['name'],
-            description=data.get('description'),
-            needed_donation=data.get('needed_donation'),
-            goal_amount=data.get('goal_amount'),
-            image_url=data.get('image_url'),
-            organizer=data.get('organizer')
-        )
-        new_charity.password_hash = data['password']
-        db.session.add(new_charity)
-        db.session.commit()
-        return new_charity.to_dict(), 201
+        try:
+            data = request.get_json()
+            new_charity = Charity(
+                username=data['username'],
+                email=data['email'],
+                name=data['name'],
+                description=data.get('description'),
+                needed_donation=data.get('needed_donation'),
+                goal_amount=data.get('goal_amount'),
+                image_url=data.get('image_url'),
+                organizer=data.get('organizer')
+            )
+            new_charity.password_hash = data['password']
+            db.session.add(new_charity)
+            db.session.commit()
+            return new_charity.to_dict(), 201
+        except KeyError as e:
+            db.session.rollback()
+            return {'error': f'Missing required field: {str(e)}'}, 400
+        except Exception as e:
+            db.session.rollback()
+            return {'error': str(e)}, 400
 
     def put(self, id):
-        charity = Charity.query.get_or_404(id)
-        data = request.get_json()
-        for key, value in data.items():
-            setattr(charity, key, value)
-        db.session.commit()
-        return charity.to_dict()
+        try:
+            charity = Charity.query.get_or_404(id)
+            data = request.get_json()
+            for key, value in data.items():
+                if hasattr(charity, key):
+                    setattr(charity, key, value)
+            db.session.commit()
+            return charity.to_dict(), 200
+        except Exception as e:
+            db.session.rollback()
+            return {'error': str(e)}, 400
 
     def delete(self, id):
-        charity = Charity.query.get_or_404(id)
-        db.session.delete(charity)
-        db.session.commit()
-        return '', 204
-    
+        try:
+            charity = Charity.query.get_or_404(id)
+            # Delete related records first
+            Donation.query.filter_by(charity_id=id).delete()
+            Story.query.filter_by(charity_id=id).delete()
+            Beneficiary.query.filter_by(charity_id=id).delete()
+            Inventory.query.filter_by(charity_id=id).delete()
+            db.session.delete(charity)
+            db.session.commit()
+            return '', 204
+        except Exception as e:
+            db.session.rollback()
+            return {'error': str(e)}, 500
 
 class CharityApplications(Resource):
     def get(self):
@@ -238,9 +244,12 @@ class CharityApplications(Resource):
         application = CharityApplication.query.get_or_404(id)
         data = request.get_json()
         application.status = data['status']
-        # application.reviewed_by = get_jwt_identity()['id']  # Comment out this line
 
         if data['status'] == 'approved':
+            existing_charity = Charity.query.filter_by(name=application.name).first()
+            if existing_charity:
+                return {'message': 'A charity with this name already exists'}, 400
+            
             new_charity = Charity(
                 username=application.name.lower().replace(' ', '_'),
                 email=application.email,
@@ -248,7 +257,7 @@ class CharityApplications(Resource):
                 description=application.description
             )
             db.session.add(new_charity)
-            
+        
         application.country = data.get('country', application.country)
         application.city = data.get('city', application.city)
         application.zipcode = data.get('zipcode', application.zipcode)
@@ -258,6 +267,22 @@ class CharityApplications(Resource):
 
         db.session.commit()
         return application.to_dict(), 200
+
+# This method should be part of the Charity model
+def to_dict_with_stats(self):
+    donations = Donation.query.filter_by(charity_id=self.id).all()
+    total_raised = sum(donation.amount for donation in donations)
+    donation_count = len(donations)
+    percentage_raised = (total_raised / self.needed_donation) * 100 if self.needed_donation else 0
+
+    return {
+        'id': self.id,
+        'name': self.name,
+        'total_raised': total_raised,
+        'donation_count': donation_count,
+        'percentage_raised': percentage_raised,
+        'needed_donation': self.needed_donation
+    }
 
     
 class CommonDashboard(Resource):
@@ -730,7 +755,7 @@ api.add_resource(StoryResource, '/stories', '/stories/<int:id>')
 api.add_resource(Beneficiaries, '/beneficiaries', '/beneficiaries/<int:beneficiary_id>')
 api.add_resource(DonorResource, '/donors', '/donors/<string:donor_type>', '/donors/<int:id>')
 api.add_resource(InventoryResource, '/inventory', '/inventory/<int:id>')
-api.add_resource(Charities, '/charities', '/charities/<int:id>')
+api.add_resource(Charities, '/charities', '/charities/<int:id>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 api.add_resource(CharityApplications, '/charity-applications', '/charity-applications/<int:id>')
 api.add_resource(PaymentMethods, '/payment-methods', '/payment-methods/<int:id>')
 api.add_resource(CommonDashboard, '/dashboard/common')

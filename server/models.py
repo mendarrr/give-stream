@@ -76,7 +76,7 @@ class Charity(db.Model, SerializerMixin):
     image_url = db.Column(db.String(255))
     organizer = db.Column(db.String(128))
     role = db.Column(db.String(20), default='charity')
-    donations = db.relationship('Donation', backref='charity', lazy='dynamic')
+    donations = db.relationship('Donation', backref='charity', lazy='dynamic', cascade='all, delete-orphan')
     stories = db.relationship('Story', backref='charity', lazy='dynamic')
     beneficiaries = db.relationship('Beneficiary', back_populates='charity', cascade='all, delete-orphan')
     inventories = db.relationship('Inventory', backref='charity', lazy='dynamic')
@@ -166,22 +166,22 @@ class CharityApplication(db.Model, SerializerMixin):
     admin = db.relationship('Admin', backref='reviewed_applications')
 
     def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'email': self.email,
-            'description': self.description,
-            'status': self.status,
-            'submission_date': self.submission_date,
-            'reviewed_by': self.reviewed_by,
-            'review_date': self.review_date,
-            'country': self.country,
-            'city': self.city,
-            'zipcode': self.zipcode,
-            'fundraising_category': self.fundraising_category,
-            'title': self.title,
-            'target_amount': self.target_amount
-        }
+     return {
+        'id': self.id,
+        'name': self.name,
+        'email': self.email,
+        'description': self.description,
+        'status': self.status,
+        'submission_date': self.submission_date.isoformat() if self.submission_date else None,
+        'reviewed_by': self.reviewed_by,
+        'review_date': self.review_date.isoformat() if self.review_date else None,
+        'country': self.country,
+        'city': self.city,
+        'zipcode': self.zipcode,
+        'fundraising_category': self.fundraising_category,
+        'title': self.title,
+        'target_amount': self.target_amount
+    }
 
     
 
@@ -225,7 +225,7 @@ class Donation(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     donor_id = db.Column(db.Integer, db.ForeignKey('donors.id'), nullable=False)
-    charity_id = db.Column(db.Integer, db.ForeignKey('charities.id'), nullable=False)
+    charity_id = db.Column(db.Integer, db.ForeignKey('charities.id', ondelete='CASCADE'), nullable=False)
     payment_method_id = db.Column(db.Integer, db.ForeignKey('payment_methods.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False)
     date = db.Column(db.DateTime, default=datetime.now)

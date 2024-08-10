@@ -52,10 +52,13 @@ const AdminDashboard = () => {
         fetchCharityApplications();
         fetchCharities();
       } else {
-        console.error("Failed to approve application");
+        const errorData = await response.json();
+        console.error("Failed to approve application:", errorData);
+        alert(`Failed to approve application: ${errorData.message}`);
       }
     } catch (error) {
       console.error("Error approving application:", error);
+      alert(`Error approving application: ${error.message}`);
     }
   };
 
@@ -86,10 +89,13 @@ const AdminDashboard = () => {
       if (response.ok) {
         fetchCharities();
       } else {
-        console.error("Failed to delete charity");
+        const errorData = await response.json();
+        console.error("Failed to delete charity:", errorData);
+        alert(`Failed to delete charity: ${errorData.error}`);
       }
     } catch (error) {
       console.error("Error deleting charity:", error);
+      alert(`Error deleting charity: ${error.message}`);
     }
   };
 
