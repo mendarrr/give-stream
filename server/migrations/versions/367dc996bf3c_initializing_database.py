@@ -1,8 +1,8 @@
-"""adjusting admin login logic
+"""initializing database
 
-Revision ID: 5cc2cfc41e05
+Revision ID: 367dc996bf3c
 Revises: 
-Create Date: 2024-08-09 09:41:16.859128
+Create Date: 2024-08-09 14:09:53.443680
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '5cc2cfc41e05'
+revision = '367dc996bf3c'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -41,6 +41,7 @@ def upgrade():
     sa.Column('donation_count', sa.Integer(), nullable=True),
     sa.Column('image_url', sa.String(length=255), nullable=True),
     sa.Column('organizer', sa.String(length=128), nullable=True),
+    sa.Column('role', sa.String(length=20), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('name'),
@@ -94,6 +95,7 @@ def upgrade():
     sa.Column('email', sa.String(length=120), nullable=False),
     sa.Column('_password_hash', sa.String(), nullable=True),
     sa.Column('is_anonymous', sa.Boolean(), nullable=True),
+    sa.Column('role', sa.String(length=20), nullable=True),
     sa.Column('payment_method_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['payment_method_id'], ['payment_methods.id'], name=op.f('fk_donors_payment_method_id_payment_methods')),
     sa.PrimaryKeyConstraint('id'),

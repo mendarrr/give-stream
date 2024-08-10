@@ -335,3 +335,23 @@ class Message(db.Model):
             'is_answered': self.is_answered
         }
 
+class Payment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    amount = db.Column(db.Float, nullable=False)
+    phone_number = db.Column(db.String(20), nullable=False)
+    transaction_id = db.Column(db.String(100), nullable=False)
+    status = db.Column(db.String(20), nullable=False)
+    user_id = db.Column(db.Integer, nullable=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'amount': self.amount,
+            'phone_number': self.phone_number,
+            'transaction_id': self.transaction_id,
+            'status': self.status,
+            'user_id': self.user_id,
+            'timestamp': self.timestamp.isoformat()
+        }    
+

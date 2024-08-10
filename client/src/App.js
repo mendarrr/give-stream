@@ -19,6 +19,7 @@ import NewDonorForm from './components/NewDonor';
 import DonationForm from './components/NewDonation';
 import CharityList from './components/CharityList';
 import Inventory from './components/Inventory';
+import PaymentMethodSelector from './components/PaymentMethod';
 
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
       <Route path="/donor" element={<NewDonorForm/>} />
       <Route path="/charities" element={<CharityList/>} />
       <Route path="/donation" element={<DonationForm />} />
+      <Route path="/payment" element={<PaymentMethodSelector />} /> 
       <Route path="/inventory" element={<Inventory />} /> 
       </Routes>
       <Footer />

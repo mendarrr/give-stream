@@ -32,10 +32,10 @@ const LoginPage = () => {
           navigate('/admin-dashboard');
           break;
         case 'donor':
-          navigate('/charities');
+          navigate('/charity-dashboard');
           break;
         case 'charity':
-          navigate('/charity-dashboard');
+          navigate('/charity-profile');
           break;
         default:
           navigate('/');
