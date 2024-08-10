@@ -1258,7 +1258,76 @@
     font-family: 'Times New Roman', Times, serif;
     font-size: 30px;
   }
-  
+
+  /* 404 Error Page */
+  .main-error-page{
+    height: 100vh;
+    background: url('../assets/CharityHomeBack.png') no-repeat center center / 120%;
+    background-color: rgba(245, 245, 245, 0.9);
+    background-blend-mode: saturation;
+    padding-left: 400px;
+    padding-right: 400px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .error-contents{
+    margin: 20px;
+    height: 90vh;
+    margin-top: 150px;
+  }
+
+  .section1{
+    padding-left: 330px;
+  }
+
+  .section1 h4{
+    font-size: 32px;
+    font-family: 'Times New Roman', Times, serif;
+    margin-left: 80px;
+    margin-top: -10px
+  }
+
+  .error-contents p{
+    font-size: 20px;
+    font-family: 'Times New Roman', Times, serif;
+    margin-left: 80px;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  .error-contents .link{
+    font-size: 18px;
+  }
+
+  .section2{
+    padding-right: 70px;
+  }
+
+  .section3{
+    padding-right: 70px;
+  }
+
+  .section3 ul{
+    margin-top: -15px;
+  }
+
+  .section3 ul li{
+    text-align: center;
+    font-size: 20px;
+    list-style: none;
+    line-height: 1.5;
+    font-weight: 600;
+    font-family: 'Times New Roman', Times, serif;
+  }
+
+  .section4{
+    padding-right: 70px;
+  }
+
+  .section4 .link{
+    font-size: 22px;
+  }
 
   
   

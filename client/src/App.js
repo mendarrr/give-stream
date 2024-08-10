@@ -22,6 +22,7 @@ import CharityList from './components/CharityList';
 
 import CommunitiesSection from './components/CommunitySection';
 import CharityDetails from './components/CharityDashbord';
+import Error404 from './components/Error404';
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
       {/* <Route path="/inventory" element={<Inventory />} />  */}
       <Route path="/communities" element={<CommunitiesSection />} />
       <Route path="/charity-dashboard" element={<CharityDetails />} />
+      <Route path="/404" element={<Error404/>} />
       </Routes>
       <Footer />
       </BrowserRouter>

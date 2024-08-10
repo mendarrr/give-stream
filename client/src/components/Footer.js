@@ -74,6 +74,9 @@ function Footer() {
                   Give Stream Administered Fundraisers
                 </Link>
               </li>
+              <li>
+                <Link to="/404">404 Error</Link>
+              </li>
             </ul>
           </nav>
         </div>
