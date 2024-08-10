@@ -28,14 +28,10 @@ const CharityProfile = () => {
     const fetchCharityData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(
-          `http://127.0.0.1:5000/charities/${id}`
-        );
+        const response = await axios.get(`/charities/${id}`);
         setCharity(response.data);
 
-        const donationsResponse = await axios.get(
-          `http://127.0.0.1:5000/donations/charity/${id}`
-        );
+        const donationsResponse = await axios.get(`/donations/charity/${id}`);
         const donationsData = donationsResponse.data || {};
         setTotalDonations(parseFloat(donationsData.total_amount) || 0);
         setAnonymousDonations(
@@ -44,18 +40,16 @@ const CharityProfile = () => {
             .reduce((total, donation) => total + (donation.amount || 0), 0)
         );
 
-        const storiesResponse = await axios.get(
-          `http://127.0.0.1:5000/stories?charity_id=${id}`
-        );
+        const storiesResponse = await axios.get(`/stories?charity_id=${id}`);
         setStories(storiesResponse.data || []);
 
         const beneficiariesResponse = await axios.get(
-          `http://127.0.0.1:5000/beneficiaries?charity_id=${id}`
+          `/beneficiaries?charity_id=${id}`
         );
         setBeneficiaries(beneficiariesResponse.data || []);
 
         const inventoryResponse = await axios.get(
-          `http://127.0.0.1:5000/inventory?charity_id=${id}`
+          `/inventory?charity_id=${id}`
         );
         setInventory(inventoryResponse.data || []);
       } catch (error) {
@@ -71,7 +65,7 @@ const CharityProfile = () => {
   const handleStorySubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://127.0.0.1:5000/stories", {
+      const response = await axios.post("/stories", {
         ...newStory,
         charity_id: id,
       });
@@ -86,7 +80,7 @@ const CharityProfile = () => {
   const handleBeneficiarySubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://127.0.0.1:5000/beneficiaries", {
+      const response = await axios.post("/beneficiaries", {
         ...newBeneficiary,
         charity_id: id,
       });
@@ -106,10 +100,7 @@ const CharityProfile = () => {
       quantity: parseInt(newInventoryItem.quantity, 10) || 0,
     };
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:5000/inventory",
-        data
-      );
+      const response = await axios.post("/inventory", data);
       setInventory([...inventory, response.data]);
       setNewInventoryItem({ item_name: "", quantity: 0 });
     } catch (error) {
