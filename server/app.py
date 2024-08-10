@@ -7,10 +7,18 @@ import bcrypt
 from datetime import datetime, timedelta
 from flask_apscheduler import APScheduler
 from notification_service import run_notification_service
+from json import JSONEncoder
 
 from config import app,db,api
 from models import db, Admin, Donor,Charity, PaymentMethod, Message
 
+class CustomJSONEncoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+        return super().default(obj)
+
+app.json_encoder = CustomJSONEncoder
 
 scheduler = APScheduler()
 scheduler.init_app(app)
@@ -635,7 +643,6 @@ class Beneficiaries(Resource):
         return '', 204
 
 class InventoryResource(Resource):
-    # Retrieve all inventory items
     def get(self, id=None):
         if id:
             inventory_item = Inventory.query.get(id)
@@ -646,42 +653,55 @@ class InventoryResource(Resource):
             inventory_list = Inventory.query.all()
             return jsonify([item.to_dict() for item in inventory_list])
 
-    # Create a new inventory item
     def post(self):
         data = request.get_json()
         try:
+            if not data.get('item_name'):
+                return {'message': 'Item name is required'}, 400
+            if not isinstance(data.get('quantity'), int) or data.get('quantity') < 0:
+                return {'message': 'Quantity must be a non-negative integer'}, 400
+            if not data.get('charity_id'):
+                return {'message': 'Charity ID is required'}, 400
+
             new_item = Inventory(
                 charity_id=data['charity_id'],
                 item_name=data['item_name'],
                 quantity=data['quantity'],
-                date_updated=datetime.now()  # Set current date and time
+                last_updated=datetime.now()
             )
             db.session.add(new_item)
             db.session.commit()
             return new_item.to_dict(), 201
+        except KeyError as e:
+            return {'message': f'Missing required field: {str(e)}'}, 400
+        except ValueError as e:
+            return {'message': f'Invalid data: {str(e)}'}, 400
         except Exception as e:
             db.session.rollback()
-            return {'message': 'Failed to create item', 'error': str(e)}, 400
+            return {'message': 'Failed to create item', 'error': str(e)}, 500
 
-    # Update an existing inventory item
     def put(self, id):
         data = request.get_json()
         inventory_item = Inventory.query.get(id)
         if inventory_item:
             try:
-                inventory_item.charity_id = data['charity_id']
-                inventory_item.item_name = data['item_name']
-                inventory_item.quantity = data['quantity']
-                inventory_item.date_updated = datetime.now()  # Update timestamp
+                if 'item_name' in data:
+                    inventory_item.item_name = data['item_name']
+                if 'quantity' in data:
+                    if not isinstance(data['quantity'], int) or data['quantity'] < 0:
+                        return {'message': 'Quantity must be a non-negative integer'}, 400
+                    inventory_item.quantity = data['quantity']
+                if 'charity_id' in data:
+                    inventory_item.charity_id = data['charity_id']
+                inventory_item.last_updated = datetime.now()
                 db.session.commit()
                 return inventory_item.to_dict()
             except Exception as e:
                 db.session.rollback()
-                return {'message': 'Failed to update item', 'error': str(e)}, 400
+                return {'message': 'Failed to update item', 'error': str(e)}, 500
         else:
             return {'message': 'Inventory item not found'}, 404
 
-    # Delete an inventory item
     def delete(self, id):
         inventory_item = Inventory.query.get(id)
         if inventory_item:
@@ -691,7 +711,7 @@ class InventoryResource(Resource):
                 return {'message': 'Item deleted successfully'}, 200
             except Exception as e:
                 db.session.rollback()
-                return {'message': 'Failed to delete item', 'error': str(e)}, 400
+                return {'message': 'Failed to delete item', 'error': str(e)}, 500
         else:
             return {'message': 'Inventory item not found'}, 404
             

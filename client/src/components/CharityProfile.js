@@ -64,6 +64,10 @@ const CharityProfile = () => {
 
   const handleStorySubmit = async (e) => {
     e.preventDefault();
+    if (!newStory.title.trim() || !newStory.content.trim()) {
+      setError("Story title and content are required.");
+      return;
+    }
     try {
       const response = await axios.post("/stories", {
         ...newStory,
@@ -71,6 +75,7 @@ const CharityProfile = () => {
       });
       setStories([...stories, response.data]);
       setNewStory({ title: "", content: "" });
+      setError("");
     } catch (error) {
       console.error("Error submitting story:", error);
       setError("Error submitting story. Please try again later.");
@@ -79,6 +84,10 @@ const CharityProfile = () => {
 
   const handleBeneficiarySubmit = async (e) => {
     e.preventDefault();
+    if (!newBeneficiary.name.trim()) {
+      setError("Beneficiary name is required.");
+      return;
+    }
     try {
       const response = await axios.post("/beneficiaries", {
         ...newBeneficiary,
@@ -86,6 +95,7 @@ const CharityProfile = () => {
       });
       setBeneficiaries([...beneficiaries, response.data]);
       setNewBeneficiary({ name: "", description: "" });
+      setError("");
     } catch (error) {
       console.error("Error submitting beneficiary:", error);
       setError("Error submitting beneficiary. Please try again later.");
@@ -94,18 +104,37 @@ const CharityProfile = () => {
 
   const handleInventorySubmit = async (e) => {
     e.preventDefault();
+    if (!newInventoryItem.item_name.trim()) {
+      setError("Item name is required.");
+      return;
+    }
+    if (isNaN(newInventoryItem.quantity) || newInventoryItem.quantity < 0) {
+      setError("Quantity must be a non-negative number.");
+      return;
+    }
     const data = {
       ...newInventoryItem,
       charity_id: id,
-      quantity: parseInt(newInventoryItem.quantity, 10) || 0,
+      quantity: parseInt(newInventoryItem.quantity, 10),
     };
     try {
       const response = await axios.post("/inventory", data);
       setInventory([...inventory, response.data]);
       setNewInventoryItem({ item_name: "", quantity: 0 });
+      setError("");
     } catch (error) {
       console.error("Error submitting inventory item:", error);
-      setError("Error submitting inventory item. Please try again later.");
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setError(
+          `Error submitting inventory item: ${error.response.data.message}`
+        );
+      } else {
+        setError("Error submitting inventory item. Please try again later.");
+      }
     }
   };
 
@@ -122,7 +151,7 @@ const CharityProfile = () => {
   };
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  if (error) return <div className="error-message">{error}</div>;
   if (!charity) return <div>No charity data available</div>;
 
   return (

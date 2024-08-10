@@ -288,6 +288,8 @@ class Beneficiary(db.Model, SerializerMixin):
             'description': self.description
         }
 
+from datetime import datetime
+
 class Inventory(db.Model):
     __tablename__ = 'inventories'
     id = db.Column(db.Integer, primary_key=True)
@@ -302,8 +304,9 @@ class Inventory(db.Model):
             'charity_id': self.charity_id,
             'item_name': self.item_name,
             'quantity': self.quantity,
-            'last_updated': self.last_updated
+            'last_updated': self.last_updated.isoformat() if self.last_updated else None
         }
+
 
 class PaymentMethod(db.Model, SerializerMixin):
     __tablename__ = 'payment_methods'
