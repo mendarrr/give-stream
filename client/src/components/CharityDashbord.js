@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Login from "./components/Login";
 import "./CharityDetails.css";
 
-function CharityDetails() {
+function CharityDashboard() {
   const [charity, setCharity] = useState(null);
   const [successStories, setSuccessStories] = useState([]);
   const [donations, setDonations] = useState([]);
@@ -286,4 +286,4 @@ function Comment({ comment, formatNumber }) {
   );
 }
 
-export default CharityDetails;
+export default CharityDashboard;
