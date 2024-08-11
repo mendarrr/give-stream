@@ -31,20 +31,21 @@ const CharityApplications = () => {
     const handleCategoryClick = (category) => {
         setSelectedCategory(prev => {
             const newSelection = new Set(prev);
-            if (newSelection.has(category)) {
-                newSelection.delete(category);
-            } else {
-                newSelection.add(category);
-            }
+            newSelection.has(category) ? newSelection.delete(category) : newSelection.add(category);
             return newSelection;
         });
     };
 
     const handleDonationClick = (amount) => {
         setSelectedDonation(amount);
+        setFormData(prevData => ({ ...prevData, target_amount: amount }));
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
         setFormData(prevData => ({
             ...prevData,
-            target_amount: '' // Clear the custom amount field
+            [name]: value
         }));
     };
 
@@ -54,15 +55,7 @@ const CharityApplications = () => {
         if (currentStep === 1 && selectedOptions.size === 0) {
             newErrorMessages.step1 = 'Please select an option.';
         } else if (currentStep === 2) {
-            const requiredFields = [
-                'name',
-                'email',
-                'description',
-                'country',
-                'city',
-                'zipcode',
-                'title'
-            ];
+            const requiredFields = ['name', 'email', 'description', 'country', 'city', 'zipcode', 'title'];
             requiredFields.forEach(field => {
                 if (!formData[field]) {
                     newErrorMessages[field] = 'Please fill this field.';
@@ -73,7 +66,7 @@ const CharityApplications = () => {
             }
         } else if (currentStep === 3 && !formData.target_amount && !selectedDonation) {
             newErrorMessages.target_amount = 'Please set a target amount.';
-        } else if (currentStep === 4 && (!formData.image || !formData.summary)) {
+        } else if (currentStep === 4) {
             if (!formData.image) newErrorMessages.image = 'Please provide an image URL.';
             if (!formData.summary) newErrorMessages.summary = 'Please provide a summary.';
         }
@@ -83,16 +76,24 @@ const CharityApplications = () => {
             return;
         }
 
-        if (currentStep === 1 && selectedOptions.size > 0) {
-            setCurrentStep(2);
-        } else if (currentStep === 2 && selectedCategory.size > 0) {
-            setCurrentStep(3);
-        } else if (currentStep === 3 && (selectedDonation || formData.target_amount)) {
-            setCurrentStep(4);
-        } else if (currentStep === 4 && formData.image && formData.summary) {
-            setCurrentStep(6); // Move to the preview step
-        } else if (currentStep === 5) {
-            handleSubmit(); // Submit form when on the final confirmation step
+        switch (currentStep) {
+            case 1:
+                if (selectedOptions.size > 0) setCurrentStep(2);
+                break;
+            case 2:
+                if (selectedCategory.size > 0) setCurrentStep(3);
+                break;
+            case 3:
+                if (selectedDonation || formData.target_amount) setCurrentStep(4);
+                break;
+            case 4:
+                if (formData.image && formData.summary) setCurrentStep(6);
+                break;
+            case 5:
+                handleSubmit();
+                break;
+            default:
+                break;
         }
     };
 
@@ -100,82 +101,41 @@ const CharityApplications = () => {
         setCurrentStep(prevStep => prevStep - 1);
     };
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prevData => ({
-            ...prevData,
-            [name]: value
-        }));
-
-        // If custom target amount input field is changed, clear the predefined donation selection
-        if (name === 'target_amount') {
-            setSelectedDonation(null);
-        }
-    };
-
     const handleSubmit = async () => {
-        const requiredFields = [
-            'name',
-            'email',
-            'description',
-            'country',
-            'city',
-            'zipcode',
-            'title',
-            'target_amount',
-            'image',
-            'summary'
-        ];
-    
+        const requiredFields = ['name', 'email', 'description', 'country', 'city', 'zipcode', 'title', 'target_amount', 'image', 'summary'];
         const isFormValid = requiredFields.every(field => formData[field] || (field === 'target_amount' && selectedDonation));
-    
+
         if (!isFormValid) {
-            setErrorMessages(prev => ({
-                ...prev,
-                form: 'Please fill out all required fields.'
-            }));
+            setErrorMessages(prev => ({ ...prev, form: 'Please fill out all required fields.' }));
             return;
         }
-    
+
         try {
             const response = await fetch('/charity-applications', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             });
-    
+
             if (response.ok) {
                 const result = await response.json();
                 if (result.emailExists) {
-                    setErrorMessages(prev => ({
-                        ...prev,
-                        submitError: 'Email already exists in the system.'
-                    }));
+                    setErrorMessages(prev => ({ ...prev, submitError: 'Email already exists in the system.' }));
                 } else {
-                    setCurrentStep(5); // Move to the confirmation step
+                    setCurrentStep(5);
                 }
-            } else if (response.status === 409) {
-                setErrorMessages(prev => ({
-                    ...prev,
-                    submitError: 'Email already exists in the system. Please use a different email.'
-                }));
             } else {
-                setErrorMessages(prev => ({
-                    ...prev,
-                    submitError: 'There was an error submitting your application. Please try again.'
-                }));
+                const error = response.status === 409
+                    ? 'Email already exists in the system. Please use a different email.'
+                    : 'There was an error submitting your application. Please try again.';
+                setErrorMessages(prev => ({ ...prev, submitError: error }));
             }
         } catch (error) {
             console.error('Error:', error);
-            setErrorMessages(prev => ({
-                ...prev,
-                submitError: 'An unexpected error occurred. Please try again.'
-            }));
+            setErrorMessages(prev => ({ ...prev, submitError: 'An unexpected error occurred. Please try again.' }));
         }
     };
-    
+
     const handleExit = () => {
         navigate('/'); // Navigate to the main page or any other route
     };
@@ -386,12 +346,11 @@ const CharityApplications = () => {
                             <p><strong>City:</strong> {formData.city}</p>
                             <p><strong>Zip Code:</strong> {formData.zipcode}</p>
                             <p><strong>Title:</strong> {formData.title}</p>
-                            <p><strong>Target Amount:</strong> {formData.target_amount || selectedDonation}</p>
+                            <p><strong>Target Amount:</strong> {formData.target_amount}</p>
                         </div>
                         <div className="card-footer">
                             <button className="previous-button" onClick={() => setCurrentStep(4)}>Previous</button>
                             <button className="submit-button" onClick={handlePreviewSubmit}>Submit</button>
-                            {/* Unique Error Message Container for Submit Button */}
                             {errorMessages.submitError && <div className="submit-error-message">{errorMessages.submitError}</div>}
                         </div>
                     </div>
@@ -405,7 +364,7 @@ const CharityApplications = () => {
                     <div className="card-content">
                         <h3>Thank You!</h3>
                         <p>Your application has been submitted successfully. We will get back to you soon.</p>
-                        <button className="exit-button" onClick={handleExit}>Exit Page</button>
+                        <button className="exit-button" onClick={handleExit}>Back to Home</button>
                     </div>
                 </div>
             )}
