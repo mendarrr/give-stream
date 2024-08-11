@@ -20,7 +20,7 @@ import DonationForm from "./components/NewDonation";
 import Inventory from "./components/Inventory";
 import CharityProfile from "./components/CharityProfile";
 import AdminDashboard from "./components/AdminDashboard";
-import CharityDashboard from "./components/AdminDashboard";
+import CharityDashboard from "./components/CharityDashbord";
 import CharityList from "./components/CharityList";
 import PaymentMethodSelector from "./components/PaymentMethod";
 import CharityApplications from "./components/CharityApplications";
@@ -51,8 +51,8 @@ function App() {
           <Route path="/payment" element={<PaymentMethodSelector />} />
           <Route path="/inventory" element={<Inventory />} />
           <Route path="/charity-profile/:id" element={<CharityProfile />} />
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/charity-dashboard/:id" element={<CharityDashboard />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/create-campaign" element={<CharityApplications />} />
         </Routes>
         <Footer />
