@@ -7,6 +7,10 @@ const AdminDashboard = () => {
   const [charities, setCharities] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [applicationsPerPage] = useState(5);
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     fetchCharityApplications();
@@ -26,6 +30,10 @@ const AdminDashboard = () => {
       setCharityApplications(data);
     } catch (error) {
       console.error("Error fetching charity applications:", error);
+      setMessage({
+        type: "error",
+        text: "Failed to fetch charity applications. Please try again.",
+      });
     }
   };
 
@@ -33,10 +41,13 @@ const AdminDashboard = () => {
     try {
       const response = await fetch("/charities");
       const data = await response.json();
-      console.log("Fetched charities:", data);
       setCharities(data);
     } catch (error) {
       console.error("Error fetching charities:", error);
+      setMessage({
+        type: "error",
+        text: "Failed to fetch charities. Please try again.",
+      });
     }
   };
 
@@ -51,14 +62,23 @@ const AdminDashboard = () => {
       if (response.ok) {
         fetchCharityApplications();
         fetchCharities();
+        setMessage({
+          type: "success",
+          text: "Application approved successfully.",
+        });
       } else {
         const errorData = await response.json();
-        console.error("Failed to approve application:", errorData);
-        alert(`Failed to approve application: ${errorData.message}`);
+        setMessage({
+          type: "error",
+          text: `Failed to approve application: ${errorData.message}`,
+        });
       }
     } catch (error) {
       console.error("Error approving application:", error);
-      alert(`Error approving application: ${error.message}`);
+      setMessage({
+        type: "error",
+        text: `Error approving application: ${error.message}`,
+      });
     }
   };
 
@@ -72,11 +92,19 @@ const AdminDashboard = () => {
 
       if (response.ok) {
         fetchCharityApplications();
+        setMessage({
+          type: "success",
+          text: "Application rejected successfully.",
+        });
       } else {
-        console.error("Failed to reject application");
+        setMessage({ type: "error", text: "Failed to reject application" });
       }
     } catch (error) {
       console.error("Error rejecting application:", error);
+      setMessage({
+        type: "error",
+        text: `Error rejecting application: ${error.message}`,
+      });
     }
   };
 
@@ -88,15 +116,22 @@ const AdminDashboard = () => {
 
       if (response.ok) {
         fetchCharities();
+        setMessage({ type: "success", text: "Charity deleted successfully." });
       } else {
         const errorData = await response.json();
-        console.error("Failed to delete charity:", errorData);
-        alert(`Failed to delete charity: ${errorData.error}`);
+        setMessage({
+          type: "error",
+          text: `Failed to delete charity: ${errorData.error}`,
+        });
       }
     } catch (error) {
       console.error("Error deleting charity:", error);
-      alert(`Error deleting charity: ${error.message}`);
+      setMessage({
+        type: "error",
+        text: `Error deleting charity: ${error.message}`,
+      });
     }
+    setDeleteConfirmation(null);
   };
 
   const moveLeft = () => {
@@ -113,14 +148,36 @@ const AdminDashboard = () => {
     ? charities.slice(currentIndex, currentIndex + 1)
     : charities.slice(currentIndex, currentIndex + 3);
 
+  // Pagination logic
+  const indexOfLastApplication = currentPage * applicationsPerPage;
+  const indexOfFirstApplication = indexOfLastApplication - applicationsPerPage;
+  const currentApplications = charityApplications.slice(
+    indexOfFirstApplication,
+    indexOfLastApplication
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div className="admin-dashboard">
       <h1 className="admin-dashboard__title">Admin Dashboard</h1>
 
+      {message && (
+        <div className={`admin-dashboard__message ${message.type}`}>
+          {message.text}
+          <button
+            onClick={() => setMessage(null)}
+            className="admin-dashboard__message-close"
+          >
+            &times;
+          </button>
+        </div>
+      )}
+
       <section className="admin-dashboard__applications">
         <h2 className="admin-dashboard__section-title">Charity Applications</h2>
         <ul className="admin-dashboard__application-list">
-          {charityApplications.map((application) => (
+          {currentApplications.map((application) => (
             <li
               key={application.id}
               className="admin-dashboard__application-item"
@@ -148,6 +205,21 @@ const AdminDashboard = () => {
             </li>
           ))}
         </ul>
+        <div className="admin-dashboard__pagination">
+          {Array.from({
+            length: Math.ceil(charityApplications.length / applicationsPerPage),
+          }).map((_, index) => (
+            <button
+              key={index}
+              onClick={() => paginate(index + 1)}
+              className={`admin-dashboard__pagination-btn ${
+                currentPage === index + 1 ? "active" : ""
+              }`}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
       </section>
 
       <section className="admin-dashboard__charities">
@@ -181,7 +253,7 @@ const AdminDashboard = () => {
                 </p>
                 <button
                   className="admin-dashboard__delete-btn"
-                  onClick={() => handleDeleteCharity(charity.id)}
+                  onClick={() => setDeleteConfirmation(charity.id)}
                 >
                   Delete
                 </button>
@@ -197,6 +269,23 @@ const AdminDashboard = () => {
           </button>
         </div>
       </section>
+
+      {deleteConfirmation && (
+        <div className="admin-dashboard__modal">
+          <div className="admin-dashboard__modal-content">
+            <h2>Confirm Deletion</h2>
+            <p>Are you sure you want to delete this charity?</p>
+            <div className="admin-dashboard__modal-actions">
+              <button onClick={() => handleDeleteCharity(deleteConfirmation)}>
+                Yes, Delete
+              </button>
+              <button onClick={() => setDeleteConfirmation(null)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
