@@ -192,23 +192,98 @@ function ShareButton({ type }) {
 }
 
 function CharityDescription({ charity, successStories, comments, formatNumber, scrollCarousel, carouselRef }) {
-  // ... (CharityDescription component remains the same)
+  return (
+    <div className="charity-description">
+      <img src={charity.imageUrl} alt={charity.name} className="charity-image" />
+      <p>{charity.organizer} is organizing this fundraiser.</p>
+      <div className="donation-protected">
+        <span>Donation protected</span>
+      </div>
+      <h3>Support Malnourished School Children in Moyale</h3>
+      <p>{charity.description}</p>
+      <SuccessStories
+        stories={successStories}
+        formatNumber={formatNumber}
+        scrollCarousel={scrollCarousel}
+        carouselRef={carouselRef}
+      />
+      <CommentsSection comments={comments} formatNumber={formatNumber} />
+    </div>
+  );
 }
-
 function SuccessStories({ stories, formatNumber, scrollCarousel, carouselRef }) {
-  // ... (SuccessStories component remains the same)
+  return (
+    <div className="success-stories">
+      <h3>Success Stories</h3>
+      <div className="stories-carousel-container">
+        <button className="carousel-arrow left" onClick={() => scrollCarousel("left")}>
+          <i className="fas fa-chevron-left"></i>
+        </button>
+        <div className="stories-carousel" ref={carouselRef}>
+          {stories.map((story, index) => (
+            <StoryCard key={index} story={story} formatNumber={formatNumber} />
+          ))}
+        </div>
+        <button className="carousel-arrow right" onClick={() => scrollCarousel("right")}>
+          <i className="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  );
 }
-
 function StoryCard({ story, formatNumber }) {
-  // ... (StoryCard component remains the same)
+  return (
+    <div className="story-card">
+      <img src={story.image} alt={story.title} />
+      <h4>{story.title}</h4>
+      <p>RAISED: KES {formatNumber(story.raised)}</p>
+      <p>Donations: {formatNumber(story.donations)}</p>
+      <div className="progress-bar">
+        <div
+          className="progress"
+          style={{
+            width: `${(story.raised / story.goal) * 100}%`,
+          }}
+        ></div>
+      </div>
+      <p>
+        KES {formatNumber(story.raised)} funds raised of KES{" "}
+        {formatNumber(story.goal)} goal
+      </p>
+      <button className="donate-button">DONATE</button>
+    </div>
+  );
 }
-
 function CommentsSection({ comments, formatNumber }) {
-  // ... (CommentsSection component remains the same)
+  return (
+    <div className="comments-section">
+      <h3>Comments and Insights ({comments.length})</h3>
+      {comments.map((comment, index) => (
+        <Comment key={index} comment={comment} formatNumber={formatNumber} />
+      ))}
+      <button className="report-button">
+        <i className="fas fa-flag"></i> Report Fundraiser
+      </button>
+      <p className="created-info">
+        Created 5 d ago · <i className="fas fa-tag"></i> Humanitarian
+      </p>
+    </div>
+  );
 }
-
 function Comment({ comment, formatNumber }) {
-  // ... (Comment component remains the same)
+  return (
+    <div className="comment">
+      <div className="comment-header">
+        <span className="commenter-initial">{comment.name[0]}</span>
+        <span className="commenter-name">{comment.name}</span>
+        <span className="comment-amount">
+          KES {formatNumber(comment.amount)}
+        </span>
+        <span className="comment-time">{comment.time}</span>
+      </div>
+      <p className="comment-text">{comment.comment}</p>
+    </div>
+  );
 }
 
 export default CharityDetails;
