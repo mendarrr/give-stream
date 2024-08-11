@@ -5,6 +5,7 @@ import CommunitiesSection from "./CommunitySection";
 import CharityList from "./CharityList";
 import CompletedCharitiesList from "./CompletedCharitiesList";
 import "./HomePage.css";
+import "./CharityApplications";
 
 const HomePage = () => {
   const [isLoggedIn] = useState(false);

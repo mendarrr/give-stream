@@ -1,6 +1,6 @@
-import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Footer from './components/Footer';
+import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Footer from "./components/Footer";
 // import NewDonorForm from './components/NewDonor';
 // import DonorList from './components/AllDonors';
 import HomePage from './components/HomePage';
@@ -18,8 +18,14 @@ import LoginPage from './components/LoginForm';
 import NewDonorForm from './components/NewDonor';
 import DonationForm from './components/NewDonation';
 import CharityList from './components/CharityList';
-// import Inventory from './components/Inventory';
-
+import Inventory from "./components/Inventory";
+import CharityProfile from "./components/CharityProfile";
+import AdminDashboard from "./components/AdminDashboard";
+import CharityDashboard from "./components/AdminDashboard";
+// import CharitiesPage from "./components/CharitiesPage";
+import CharityList from "./components/CharityList";
+import PaymentMethodSelector from "./components/PaymentMethod";
+import CharityApplications from "./components/CharityApplications";
 import CommunitiesSection from './components/CommunitySection';
 import CharityDetails from './components/CharityDashbord';
 import Error404 from './components/Error404';
@@ -48,11 +54,18 @@ function App() {
       <Route path="/communities" element={<CommunitiesSection />} />
       <Route path="/charity-dashboard" element={<CharityDetails />} />
       <Route path="/404" element={<Error404/>} />
+      <Route path="/payment" element={<PaymentMethodSelector />} /> 
+      <Route path="/inventory" element={<Inventory />} /> 
+      <Route path="/charity-profile/:id" element={<CharityProfile />} />
+      <Route path="/admin-dashboard" element={<AdminDashboard />} />
+      <Route path="/charity-dashboard/:id" element={<CharityDashboard />} />
+      <Route path="/create-campaign" element={<CharityApplications />} />
       </Routes>
       <Footer />
       </BrowserRouter>
     </div>
-  )
+  );
+  
 }
 
 export default App;
