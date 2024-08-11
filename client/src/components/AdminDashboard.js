@@ -4,6 +4,7 @@ import defaultProfileImage from "../assets/defaultProfile.png";
 
 const AdminDashboard = () => {
   const [charityApplications, setCharityApplications] = useState([]);
+  const [rejectedApplications, setRejectedApplications] = useState([]);
   const [charities, setCharities] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -14,6 +15,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     fetchCharityApplications();
+    fetchRejectedApplications();
     fetchCharities();
 
     const handleResize = () => {
@@ -25,7 +27,7 @@ const AdminDashboard = () => {
 
   const fetchCharityApplications = async () => {
     try {
-      const response = await fetch("/charity-applications");
+      const response = await fetch("/charity-applications?status=pending");
       const data = await response.json();
       setCharityApplications(data);
     } catch (error) {
@@ -33,6 +35,20 @@ const AdminDashboard = () => {
       setMessage({
         type: "error",
         text: "Failed to fetch charity applications. Please try again.",
+      });
+    }
+  };
+
+  const fetchRejectedApplications = async () => {
+    try {
+      const response = await fetch("/charity-applications?status=rejected");
+      const data = await response.json();
+      setRejectedApplications(data);
+    } catch (error) {
+      console.error("Error fetching rejected applications:", error);
+      setMessage({
+        type: "error",
+        text: "Failed to fetch rejected applications. Please try again.",
       });
     }
   };
@@ -92,6 +108,7 @@ const AdminDashboard = () => {
 
       if (response.ok) {
         fetchCharityApplications();
+        fetchRejectedApplications();
         setMessage({
           type: "success",
           text: "Application rejected successfully.",
@@ -148,7 +165,6 @@ const AdminDashboard = () => {
     ? charities.slice(currentIndex, currentIndex + 1)
     : charities.slice(currentIndex, currentIndex + 3);
 
-  // Pagination logic
   const indexOfLastApplication = currentPage * applicationsPerPage;
   const indexOfFirstApplication = indexOfLastApplication - applicationsPerPage;
   const currentApplications = charityApplications.slice(
@@ -220,6 +236,34 @@ const AdminDashboard = () => {
             </button>
           ))}
         </div>
+      </section>
+
+      <section className="admin-dashboard__rejected-applications">
+        <h2 className="admin-dashboard__section-title">
+          Rejected Applications
+        </h2>
+        <table className="admin-dashboard__rejected-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Description</th>
+              <th>Submission Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rejectedApplications.map((application) => (
+              <tr key={application.id}>
+                <td>{application.name}</td>
+                <td>{application.email}</td>
+                <td>{application.description}</td>
+                <td>
+                  {new Date(application.submission_date).toLocaleDateString()}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </section>
 
       <section className="admin-dashboard__charities">
