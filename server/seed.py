@@ -12,7 +12,8 @@ def seed_data():
         admin = Admin(username='admingivestream', email='admin@example.com')  # Add an email here
         admin.password_hash = 'admingivestream'
         db.session.add(admin)
-
+        
+        
         # Create sample donors
         donor1 = Donor(username='donor1', email='donor1@example.com')
         donor2 = Donor(username='donor2', email='donor2@example.com')
@@ -53,7 +54,7 @@ def seed_data():
                 needed_donation=25000.00,
                 raised_amount=12000.00,
                 goal_amount=50000.00,
-                donation_count=100,
+                donation_count=100.00,
                 image_url='https://images.pexels.com/photos/6472487/pexels-photo-6472487.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
                 organizer='Anna Lee'
             ),
@@ -322,9 +323,30 @@ def seed_data():
 
         # Create sample donations
         donations = [
-            Donation(donor_id=donor1.id, charity_id=charities[1].id, payment_method_id=payment_methods[0].id, amount=1000.00, is_anonymous=False),
-            Donation(donor_id=donor2.id, charity_id=charities[0].id, payment_method_id=payment_methods[1].id, amount=2000.00, is_anonymous=True)
-        ]
+    # Initial donations
+    Donation(donor_id=1, charity_id=2, payment_method_id=1, amount=1000.00, is_anonymous=False),
+    Donation(donor_id=2, charity_id=1, payment_method_id=2, amount=2000.00, is_anonymous=True),
+    Donation(donor_id=1, charity_id=3, payment_method_id=1, amount=250.00, is_anonymous=False),
+    Donation(donor_id=2, charity_id=4, payment_method_id=3, amount=500.00, is_anonymous=True),
+    Donation(donor_id=1, charity_id=5, payment_method_id=2, amount=300.00, is_anonymous=False),
+    Donation(donor_id=2, charity_id=6, payment_method_id=4, amount=750.00, is_anonymous=True),
+    Donation(donor_id=1, charity_id=7, payment_method_id=1, amount=1200.00, is_anonymous=False),
+    Donation(donor_id=2, charity_id=8, payment_method_id=3, amount=1500.00, is_anonymous=True),
+    Donation(donor_id=1, charity_id=9, payment_method_id=2, amount=600.00, is_anonymous=False),
+    Donation(donor_id=2, charity_id=10, payment_method_id=4, amount=900.00, is_anonymous=True),
+    Donation(donor_id=1, charity_id=11, payment_method_id=1, amount=400.00, is_anonymous=False),
+    Donation(donor_id=2, charity_id=12, payment_method_id=3, amount=350.00, is_anonymous=True),
+    Donation(donor_id=1, charity_id=13, payment_method_id=2, amount=800.00, is_anonymous=False),
+    Donation(donor_id=2, charity_id=14, payment_method_id=4, amount=450.00, is_anonymous=True),
+    Donation(donor_id=1, charity_id=15, payment_method_id=1, amount=220.00, is_anonymous=False),
+    Donation(donor_id=2, charity_id=16, payment_method_id=3, amount=330.00, is_anonymous=True),
+    Donation(donor_id=1, charity_id=17, payment_method_id=2, amount=950.00, is_anonymous=False),
+    Donation(donor_id=2, charity_id=18, payment_method_id=4, amount=500.00, is_anonymous=True),
+    Donation(donor_id=1, charity_id=19, payment_method_id=1, amount=700.00, is_anonymous=False),
+    Donation(donor_id=2, charity_id=20, payment_method_id=3, amount=1000.00, is_anonymous=True),
+    Donation(donor_id=1, charity_id=21, payment_method_id=2, amount=450.00, is_anonymous=False),
+    Donation(donor_id=2, charity_id=22, payment_method_id=4, amount=600.00, is_anonymous=True),
+]
         db.session.add_all(donations)
 
         # Create sample stories

@@ -17,9 +17,14 @@ import CompletedCharitiesList from "./components/CompletedCharitiesList";
 import LoginPage from "./components/LoginForm";
 import NewDonorForm from "./components/NewDonor";
 import DonationForm from "./components/NewDonation";
-import CharityList from "./components/CharityList";
 import Inventory from "./components/Inventory";
-import CharityDashboard from "./components/CharityDashbord";
+import CharityProfile from "./components/CharityProfile";
+import AdminDashboard from "./components/AdminDashboard";
+import CharityDashboard from "./components/AdminDashboard";
+import CharitiesPage from "./components/CharitiesPage";
+import CharityList from "./components/CharityList";
+import PaymentMethodSelector from "./components/PaymentMethod";
+import CharityApplications from "./components/CharityApplications";
 
 function App() {
   return (
@@ -45,7 +50,6 @@ function App() {
           <Route path="/charities" element={<CharityList />} />
           <Route path="/donation" element={<DonationForm />} />
           <Route path="/inventory" element={<Inventory />} />
-          <Route path="/charity-dashboard/:id" element={<CharityDashboard />} />
         </Routes>
         <Footer />
       </BrowserRouter>

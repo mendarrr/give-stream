@@ -1,8 +1,8 @@
-"""adjusting admin login logic
+"""initializing databse
 
-Revision ID: 5cc2cfc41e05
+Revision ID: fe58aa75b233
 Revises: 
-Create Date: 2024-08-09 09:41:16.859128
+Create Date: 2024-08-11 13:13:05.586876
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '5cc2cfc41e05'
+revision = 'fe58aa75b233'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -41,6 +41,7 @@ def upgrade():
     sa.Column('donation_count', sa.Integer(), nullable=True),
     sa.Column('image_url', sa.String(length=255), nullable=True),
     sa.Column('organizer', sa.String(length=128), nullable=True),
+    sa.Column('role', sa.String(length=20), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('name'),
@@ -52,6 +53,16 @@ def upgrade():
     sa.Column('content', sa.Text(), nullable=False),
     sa.Column('timestamp', sa.DateTime(), nullable=True),
     sa.Column('is_answered', sa.Boolean(), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('payment',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('amount', sa.Float(), nullable=False),
+    sa.Column('phone_number', sa.String(length=20), nullable=False),
+    sa.Column('transaction_id', sa.String(length=100), nullable=False),
+    sa.Column('status', sa.String(length=20), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('timestamp', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('payment_methods',
@@ -94,6 +105,7 @@ def upgrade():
     sa.Column('email', sa.String(length=120), nullable=False),
     sa.Column('_password_hash', sa.String(), nullable=True),
     sa.Column('is_anonymous', sa.Boolean(), nullable=True),
+    sa.Column('role', sa.String(length=20), nullable=True),
     sa.Column('payment_method_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['payment_method_id'], ['payment_methods.id'], name=op.f('fk_donors_payment_method_id_payment_methods')),
     sa.PrimaryKeyConstraint('id'),
@@ -129,7 +141,7 @@ def upgrade():
     sa.Column('is_recurring', sa.Boolean(), nullable=True),
     sa.Column('recurring_frequency', sa.String(length=20), nullable=True),
     sa.Column('next_donation_date', sa.DateTime(), nullable=True),
-    sa.ForeignKeyConstraint(['charity_id'], ['charities.id'], name=op.f('fk_donations_charity_id_charities')),
+    sa.ForeignKeyConstraint(['charity_id'], ['charities.id'], name=op.f('fk_donations_charity_id_charities'), ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['donor_id'], ['donors.id'], name=op.f('fk_donations_donor_id_donors')),
     sa.ForeignKeyConstraint(['payment_method_id'], ['payment_methods.id'], name=op.f('fk_donations_payment_method_id_payment_methods')),
     sa.PrimaryKeyConstraint('id')
@@ -146,6 +158,7 @@ def downgrade():
     op.drop_table('charity_applications')
     op.drop_table('beneficiaries')
     op.drop_table('payment_methods')
+    op.drop_table('payment')
     op.drop_table('message')
     op.drop_table('charities')
     op.drop_table('admins')

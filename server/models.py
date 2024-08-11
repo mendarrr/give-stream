@@ -67,7 +67,7 @@ class Charity(db.Model, SerializerMixin):
     username = db.Column(db.String(64), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     name = db.Column(db.String(128), unique=True, nullable=False)
-    _password_hash = db.Column(db.String)
+    _password_hash = db.Column(db.String, default="charities")
     description = db.Column(db.Text)
     needed_donation = db.Column(db.Float)
     raised_amount = db.Column(db.Float, default=0.0)
@@ -76,7 +76,7 @@ class Charity(db.Model, SerializerMixin):
     image_url = db.Column(db.String(255))
     organizer = db.Column(db.String(128))
     role = db.Column(db.String(20), default='charity')
-    donations = db.relationship('Donation', backref='charity', lazy='dynamic')
+    donations = db.relationship('Donation', backref='charity', lazy='dynamic', cascade='all, delete-orphan')
     stories = db.relationship('Story', backref='charity', lazy='dynamic')
     beneficiaries = db.relationship('Beneficiary', back_populates='charity', cascade='all, delete-orphan')
     inventories = db.relationship('Inventory', backref='charity', lazy='dynamic')
@@ -160,28 +160,29 @@ class CharityApplication(db.Model, SerializerMixin):
     city = db.Column(db.String(100))
     zipcode = db.Column(db.String(20))
     fundraising_category = db.Column(db.String(100))
-    title = db.Column(db.String(256))
+    username = db.Column(db.String(256))
     target_amount = db.Column(db.Float)
     image = db.Column(db.String(255), nullable=True)
     admin = db.relationship('Admin', backref='reviewed_applications')
 
     def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'email': self.email,
-            'description': self.description,
-            'status': self.status,
-            'submission_date': self.submission_date,
-            'reviewed_by': self.reviewed_by,
-            'review_date': self.review_date,
-            'country': self.country,
-            'city': self.city,
-            'zipcode': self.zipcode,
-            'fundraising_category': self.fundraising_category,
-            'title': self.title,
-            'target_amount': self.target_amount
-        }
+     return {
+        'id': self.id,
+        'name': self.name,
+        'email': self.email,
+        'description': self.description,
+        'status': self.status,
+        'submission_date': self.submission_date.isoformat() if self.submission_date else None.isoformat() if self.submission_date else None,
+        'reviewed_by': self.reviewed_by,
+        'review_date': self.review_date.isoformat() if self.review_date else None.isoformat() if self.review_date else None,
+        'country': self.country,
+        'city': self.city,
+        'zipcode': self.zipcode,
+        'fundraising_category': self.fundraising_category,
+        'username': self.username,
+        'target_amount': self.target_amount,
+            'image': self.image
+    }
 
     
 
@@ -225,7 +226,7 @@ class Donation(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     donor_id = db.Column(db.Integer, db.ForeignKey('donors.id'), nullable=False)
-    charity_id = db.Column(db.Integer, db.ForeignKey('charities.id'), nullable=False)
+    charity_id = db.Column(db.Integer, db.ForeignKey('charities.id', ondelete='CASCADE'), nullable=False)
     payment_method_id = db.Column(db.Integer, db.ForeignKey('payment_methods.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False)
     date = db.Column(db.DateTime, default=datetime.now)
@@ -288,6 +289,8 @@ class Beneficiary(db.Model, SerializerMixin):
             'description': self.description
         }
 
+from datetime import datetime
+
 class Inventory(db.Model):
     __tablename__ = 'inventories'
     id = db.Column(db.Integer, primary_key=True)
@@ -302,8 +305,9 @@ class Inventory(db.Model):
             'charity_id': self.charity_id,
             'item_name': self.item_name,
             'quantity': self.quantity,
-            'last_updated': self.last_updated
+            'last_updated': self.last_updated.isoformat() if self.last_updated else None
         }
+
 
 class PaymentMethod(db.Model, SerializerMixin):
     __tablename__ = 'payment_methods'
@@ -334,4 +338,24 @@ class Message(db.Model):
             'timestamp': self.timestamp.isoformat() if self.timestamp else None,
             'is_answered': self.is_answered
         }
+
+class Payment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    amount = db.Column(db.Float, nullable=False)
+    phone_number = db.Column(db.String(20), nullable=False)
+    transaction_id = db.Column(db.String(100), nullable=False)
+    status = db.Column(db.String(20), nullable=False)
+    user_id = db.Column(db.Integer, nullable=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'amount': self.amount,
+            'phone_number': self.phone_number,
+            'transaction_id': self.transaction_id,
+            'status': self.status,
+            'user_id': self.user_id,
+            'timestamp': self.timestamp.isoformat()
+        }    
 

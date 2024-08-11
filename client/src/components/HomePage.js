@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 import CharityList from "./CharityList";
 import CompletedCharitiesList from "./CompletedCharitiesList";
 import "./HomePage.css";
+import "./CharityApplications";
 
 const HomePage = () => {
   const [isLoggedIn] = useState(false);
