@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const PaymentMethodSelector = ({ userId }) => {
+const PaymentMethodSelector = ({ userId, amount, onPaymentInitiated }) => {
   const [selectedMethod, setSelectedMethod] = useState(null);
   const [inputValue, setInputValue] = useState('');
   const [paymentStatus, setPaymentStatus] = useState(null);
   const [checkoutRequestId, setCheckoutRequestId] = useState(null);
-
-  const totalAmount = 1;
 
   const paymentMethods = [
     { name: 'PayPal', logo: '/paypal.png' },
@@ -19,7 +17,7 @@ const PaymentMethodSelector = ({ userId }) => {
     try {
       const response = await axios.post('/payment-methods', {
         name: method.name,
-        description: `Payment of ${totalAmount} made via ${method.name}`,
+        description: `Payment of ${amount} made via ${method.name}`,
       });
       console.log('Payment method added:', response.data);
       setSelectedMethod(method);
@@ -35,18 +33,20 @@ const PaymentMethodSelector = ({ userId }) => {
     setInputValue(e.target.value);
   };
 
-   const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (selectedMethod.name === 'M-Pesa') {
       try {
         const response = await axios.post('/mpesa-payment', {
           phone_number: inputValue,
-          amount: totalAmount,
+          amount: amount,
           user_id: userId,
         });
         console.log('M-Pesa payment initiated:', response.data);
         if (response.data.CheckoutRequestID) {
           setPaymentStatus('Payment initiated. Please check your phone for the M-Pesa prompt.');
+          setCheckoutRequestId(response.data.CheckoutRequestID);
+          onPaymentInitiated();
         } else {
           setPaymentStatus('Failed to initiate payment. Please try again.');
         }
@@ -195,7 +195,7 @@ const PaymentMethodSelector = ({ userId }) => {
             <img src={selectedMethod.logo} alt={selectedMethod.name} style={styles.selectedMethodLogo} />
             <h2 style={styles.title}>{selectedMethod.name}</h2>
           </div>
-          <p style={styles.amount}>Total Amount: {totalAmount}</p>
+          <p style={styles.amount}>Total Amount: {amount}</p>
           <form onSubmit={handleSubmit} style={styles.form}>
             <input
               type="text"
@@ -205,13 +205,14 @@ const PaymentMethodSelector = ({ userId }) => {
               required
               style={styles.input}
             />
-            <button type="submit" style={styles.button}>Pay {totalAmount}</button>
+            <button type="submit" style={styles.button}>Pay {amount}</button>
           </form>
           <button onClick={() => setSelectedMethod(null)} style={styles.backButton}>
             Back to Methods
           </button>
         </div>
       )}
+      {paymentStatus && <p>{paymentStatus}</p>}
     </div>
   );
 };

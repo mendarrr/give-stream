@@ -2,6 +2,7 @@
   "dependencies": {
     "firebase": "^10.12.5",
     "firebase-config": "^1.0.0",
+    "react-switch": "^7.0.0",
     "ui": "^0.2.4"
   }
 }

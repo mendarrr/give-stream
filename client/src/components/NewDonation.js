@@ -1,159 +1,188 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import './DonationForm.css'; // Make sure to create this CSS file
+import { Link } from 'react-router-dom';
+import Switch from 'react-switch';
+import PaymentMethodSelector from './PaymentMethod';
 
 const DonationForm = () => {
-  const [donationAmount, setDonationAmount] = useState(0);
-  const [isAnonymous, setIsAnonymous] = useState(false);
-  const [isRecurring, setIsRecurring] = useState(false);
-  const [recurringFrequency, setRecurringFrequency] = useState('monthly');
-  const [giveStreamTip, setGiveStreamTip] = useState(0);
-  const [totalDue, setTotalDue] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [selectedCharity, setSelectedCharity] = useState(null);
-  const navigate = useNavigate();
+  const [donationData, setDonationData] = useState({
+    donor_id: '',
+    charity_id: '',
+    amount: 0,
+    date: new Date().toISOString().split('T')[0],
+    is_anonymous: false,
+    is_recurring: false,
+    recurring_frequency: '',
+    payment_method_id: null
+  });
+  const [message, setMessage] = useState('');
+  const [paymentMethodSelected, setPaymentMethodSelected] = useState(false);
 
-  const donationAmounts = [500, 2500, 5000, 10000, 25000, 50000];
-
-  useEffect(() => {
-    //check if user is logged in and has selected a charity
-    const donor = JSON.parse(localStorage.getItem('donor'));
-    const charity = JSON.parse(localStorage.getItem('selectedCharity'));
-    if (!donor || !charity) {
-     navigate('/login');
-    } else {
-      setSelectedCharity(charity);
-   }
-  }, [navigate]);
-
-  const handleDonationAmount = (amount) => {
-    setDonationAmount(amount);
-    calculateTotalDue(amount);
+  const showMessage = (messageText, isError = false) => {
+    setMessage(messageText);
+    setTimeout(() => setMessage(''), 5000);
   };
 
-  const handleAnonymous = () => {
-    setIsAnonymous(!isAnonymous);
+  const handleChange = (event) => {
+    const { name, value, type, checked } = event.target;
+    setDonationData(prevData => ({
+      ...prevData,
+      [name]: type === 'checkbox' ? checked : value
+    }));
   };
 
-  const handleRecurring = () => {
-    setIsRecurring(!isRecurring);
+  const handleToggleAnonymous = () => {
+    setDonationData(prevData => ({ ...prevData, is_anonymous: !prevData.is_anonymous }));
   };
 
-  const handleRecurringFrequency = (e) => {
-    setRecurringFrequency(e.target.value);
+  const handleAmountChange = (amount) => {
+    setDonationData(prevData => ({ ...prevData, amount }));
   };
 
-  const handleGiveStreamTip = (e) => {
-    const tip = parseFloat(e.target.value) || 0;
-    setGiveStreamTip(tip);
-    calculateTotalDue(donationAmount, tip);
+  const handlePaymentMethodChange = (selectedPaymentMethod) => {
+    console.log('Selected payment method:', selectedPaymentMethod);
+    setDonationData(prevData => ({
+      ...prevData,
+      payment_method_id: selectedPaymentMethod.id
+    }));
+    setPaymentMethodSelected(true); // Indicate that a payment method has been selected
+    console.log('Updated donation data:', donationData);
   };
 
-  const calculateTotalDue = (amount, tip = giveStreamTip) => {
-    const total = amount + tip;
-    setTotalDue(total);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    
+    // Ensure that all required fields are filled and a payment method is selected
+    if (!donationData.donor_id || !donationData.charity_id || donationData.amount === 0 || !donationData.date || !donationData.payment_method_id) {
+      showMessage('Please fill in all required fields and select a payment method.', true);
+      return;
+    }
 
     try {
-      const donor = JSON.parse(localStorage.getItem('donor'));
-      const response = await axios.post('/donations', {
-        donor_id: donor.id,
-        charity_id: selectedCharity.id,
-        amount: donationAmount,
-        date: new Date().toISOString().split('T')[0],
-        is_anonymous: isAnonymous,
-        is_recurring: isRecurring,
-        recurring_frequency: recurringFrequency,
-      });
-
-      console.log('Donation successful:', response.data);
-      // Handle successful donation (e.g., show success message, redirect)
-    } catch (err) {
-      setError('An error occurred while processing your donation. Please try again.');
-      console.error('Donation error:', err);
-    } finally {
-      setIsLoading(false);
+      console.log('Submitting donation data:', donationData);
+      const response = await axios.post('/donations', donationData);
+      showMessage(`Donation submitted successfully! ${JSON.stringify(response.data)}`);
+    } catch (error) {
+      console.error('There was an error!', error.response ? error.response.data : error);
+      showMessage('An error occurred. Please try again.', true);
     }
   };
+  
 
-  if (!selectedCharity) {
-    return <p>Loading...</p>;
-  }
+  const handlePaymentSubmit = (event) => {
+    event.preventDefault();
+    if (!paymentMethodSelected) {
+      showMessage('Please select a payment method before proceeding.', true);
+      return;
+    }
+    handleSubmit(event); // Submit the form if a payment method is selected
+  };
 
   return (
-    <div className="donation-form">
-      <h2>Donate to {selectedCharity.name}</h2>
-      
-      <div className="donation-amounts">
-        {donationAmounts.map((amount) => (
-          <button
-            key={amount}
-            onClick={() => handleDonationAmount(amount)}
-            className={donationAmount === amount ? 'selected' : ''}
-          >
-            ${amount}
-          </button>
-        ))}
-      </div>
-
-      <form onSubmit={handleSubmit}>
-        <div className="donation-summary">
-          <h3>Your Donation</h3>
-          <p>Donation Amount: ${donationAmount}</p>
+    <>
+      {message && (
+        <div className={`message-container ${message.includes('error') ? 'error' : 'success'}`}>
+          {message}
+        </div>
+      )}
+      <form onSubmit={handlePaymentSubmit}>
+        <div>
+          <label htmlFor="donorId">Donor ID:</label>
+          <input
+            id="donorId"
+            name="donor_id"
+            type="text"
+            value={donationData.donor_id}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="charityId">Charity ID:</label>
+          <input
+            id="charityId"
+            name="charity_id"
+            type="text"
+            value={donationData.charity_id}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <h3>Select Donation Amount</h3>
+          {[500, 1000, 2000, 5000, 10000].map(amount => (
+            <button key={amount} type="button" onClick={() => handleAmountChange(amount)}>
+              Donate KSH {amount}
+            </button>
+          ))}
+        </div>
+        <div>
+          <label htmlFor="date">Date:</label>
+          <input
+            id="date"
+            name="date"
+            type="date"
+            value={donationData.date}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
           <label>
-            Give Stream Tip:
-            <input
-              type="number"
-              value={giveStreamTip}
-              onChange={handleGiveStreamTip}
-              min="0"
+            Anonymous?
+            <Switch
+              name="is_anonymous"
+              checked={donationData.is_anonymous}
+              onChange={handleToggleAnonymous}
+              color="default"
             />
           </label>
-          <p><strong>Total Due: ${totalDue}</strong></p>
         </div>
-
-        <div className="donor-options">
-          <div className="toggle-switch">
-            <label className="switch">
-              <input
-                type="checkbox"
-                checked={isAnonymous}
-                onChange={handleAnonymous}
-              />
-              <span className="slider round"></span>
-            </label>
-            <span>Donate Anonymously</span>
-          </div>
+        <div>
           <label>
+            Recurring Donation?
             <input
+              id="recurring"
+              name="is_recurring"
               type="checkbox"
-              checked={isRecurring}
-              onChange={handleRecurring}
+              checked={donationData.is_recurring}
+              onChange={handleChange}
             />
-            Make this a recurring donation
           </label>
-          {isRecurring && (
-            <select value={recurringFrequency} onChange={handleRecurringFrequency}>
-              <option value="monthly">Monthly</option>
-              <option value="quarterly">Quarterly</option>
-              <option value="annually">Annually</option>
-            </select>
-          )}
         </div>
+        {donationData.is_recurring && (
+          <div>
+            <label htmlFor="frequency">Recurring Frequency:</label>
+            <select
+              id="frequency"
+              name="recurring_frequency"
+              value={donationData.recurring_frequency}
+              onChange={handleChange}
+              required={donationData.is_recurring}
+            >
+              <option value="">Select...</option>
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+            </select>
+          </div>
+        )}
+        <div>
+          <h3>Your Donation</h3>
+          <p>Total Due: KSH {donationData.amount}</p>
+          <Link to="/payment" className='payment-btn'>Make Payment</Link>
+          <PaymentMethodSelector userId={donationData.donor_id} amount={donationData.amount} />
 
-        <button type="submit" disabled={isLoading || donationAmount === 0}>
-          {isLoading ? 'Processing...' : 'Donate Now'}
+        </div>
+        
+        <button 
+          type="submit" 
+          disabled={!donationData.donor_id || !donationData.charity_id || donationData.amount === 0 || !donationData.date || !donationData.payment_method_id}
+        >
+          Submit Donation
         </button>
-        {error && <p className="error">{error}</p>}
       </form>
-    </div>
+    </>
   );
 };
 
