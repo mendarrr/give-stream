@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './CharityApplications.css';
 import Navbar from './Navbar'; // Ensure this path is correct
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 
 const CharityApplications = () => {
     const [currentStep, setCurrentStep] = useState(1);
@@ -19,6 +20,8 @@ const CharityApplications = () => {
     });
     const [selectedCategory, setSelectedCategory] = useState(new Set());
     const [selectedDonation, setSelectedDonation] = useState(null);
+
+    const navigate = useNavigate(); // Initialize useNavigate
 
     const handleButtonClick = (option) => {
         setSelectedOptions(new Set([option]));
@@ -49,7 +52,9 @@ const CharityApplications = () => {
         } else if (currentStep === 3 && (selectedDonation || formData.target_amount)) {
             setCurrentStep(4);
         } else if (currentStep === 4 && formData.image && formData.summary) {
-            setCurrentStep(5);
+            setCurrentStep(6); // Move to the preview step
+        } else if (currentStep === 5) {
+            handleSubmit(); // Submit form when on the final confirmation step
         }
     };
 
@@ -100,8 +105,7 @@ const CharityApplications = () => {
                 if (result.emailExists) {
                     alert('Email already exists in the system.');
                 } else {
-                    alert('Application submitted successfully!');
-                    setCurrentStep(5); // Assuming step 5 is a confirmation step
+                    setCurrentStep(5); // Move to the confirmation step
                 }
             } else if (response.status === 409) {
                 alert('Email already exists in the system. Please use a different email.');
@@ -112,6 +116,14 @@ const CharityApplications = () => {
             console.error('Error:', error);
             alert('An unexpected error occurred. Please try again.');
         }
+    };
+
+    const handleExit = () => {
+        navigate('/'); // Navigate to the main page or any other route
+    };
+
+    const handlePreviewSubmit = () => {
+        handleSubmit();
     };
 
     return (
@@ -159,7 +171,7 @@ const CharityApplications = () => {
                 <div id="card2" className="card">
                     <img src="/GiveStreamLogo.png" alt="Logo" className="card-logo" />
                     <div className="card-content">
-                        <h3>Provide the Following Details</h3>
+                        <h3>Basic Information</h3>
                         <form>
                             {[
                                 { id: 'name', placeholder: 'Name', type: 'text' },
@@ -186,7 +198,7 @@ const CharityApplications = () => {
                         </form>
                         <h3 className="reason-title">What Best Describes Your Reason for Fundraising?</h3>
                         <div className="category-buttons">
-                            {['Medical', 'Education', 'Environment', 'Animal Welfare', 'Other'].map(category => (
+                            {['Medical', 'Education', 'Emergency', 'Welfare', 'Other'].map(category => (
                                 <button 
                                     key={category}
                                     className={`fundraising-button ${selectedCategory.has(category) ? 'selected' : ''}`}
@@ -215,15 +227,15 @@ const CharityApplications = () => {
                 <div id="card3" className="card">
                     <img src="/GiveStreamLogo.png" alt="Logo" className="card-logo" />
                     <div className="card-content">
-                        <h3>Set Your Donation Target and Amount</h3>
+                        <h3>Set Your Charity's Target Amount</h3>
                         <div className="donation-buttons">
-                            {[50, 100, 200, 500, 1000].map(amount => (
+                            {[50000, 100000, 200000, 500000, 1000000].map(amount => (
                                 <button 
                                     key={amount}
-                                    className={`donation-button ${selectedDonation === amount ? 'selected' : ''}`}
+                                    className={`donation-button {selectedDonation === amount ? 'selected' : ''}`}
                                     onClick={() => handleDonationClick(amount)}
                                 >
-                                    ${amount}
+                                    {amount}
                                 </button>
                             ))}
                         </div>
@@ -242,9 +254,9 @@ const CharityApplications = () => {
                         <div className="card-footer">
                             <button className="previous-button" onClick={handlePreviousClick}>Previous</button>
                             <button 
-                                className={`next-button ${selectedDonation === null && !formData.target_amount ? 'disabled' : ''}`}
+                                className={`next-button ${formData.target_amount || selectedDonation ? '' : 'disabled'}`}
                                 onClick={handleNextClick}
-                                disabled={selectedDonation === null && !formData.target_amount}
+                                disabled={!formData.target_amount && !selectedDonation}
                             >
                                 Next
                             </button>
@@ -258,39 +270,64 @@ const CharityApplications = () => {
                 <div id="card4" className="card">
                     <img src="/GiveStreamLogo.png" alt="Logo" className="card-logo" />
                     <div className="card-content">
-                        <h3>Upload an Image and Add a Summary</h3>
+                        <h3>Additional Details</h3>
                         <div className="input-group">
                             <div className="input-wrapper">
-                                <input 
-                                    type="text" 
-                                    id="image" 
-                                    name="image" 
-                                    value={formData.image} 
-                                    onChange={handleInputChange} 
-                                    placeholder="Image URL" 
+                                <input
+                                    type="text"
+                                    id="image"
+                                    name="image"
+                                    value={formData.image}
+                                    onChange={handleInputChange}
+                                    placeholder="Image URL"
                                 />
                             </div>
                         </div>
                         <div className="input-group">
                             <div className="input-wrapper">
-                                <textarea 
-                                    id="summary" 
-                                    name="summary" 
-                                    value={formData.summary} 
-                                    onChange={handleInputChange} 
-                                    placeholder="Summary of the cause"
+                                <textarea
+                                    id="summary"
+                                    name="summary"
+                                    value={formData.summary}
+                                    onChange={handleInputChange}
+                                    placeholder="Summary"
                                 />
                             </div>
                         </div>
                         <div className="card-footer">
                             <button className="previous-button" onClick={handlePreviousClick}>Previous</button>
                             <button 
-                                className={`submit-button ${formData.image === '' || formData.summary === '' ? 'disabled' : ''}`}
-                                onClick={handleSubmit}
-                                disabled={formData.image === '' || formData.summary === ''}
+                                className={`next-button ${!formData.image || !formData.summary ? 'disabled' : ''}`}
+                                onClick={handleNextClick}
+                                disabled={!formData.image || !formData.summary}
                             >
-                                Submit
+                                Next
                             </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Preview Card */}
+            {currentStep === 6 && (
+                <div id="preview-card" className="card">
+                    <img src="/GiveStreamLogo.png" alt="Logo" className="card-logo" />
+                    <div className="card-content">
+                        <h3>Preview Your Application Details</h3>
+                        <div className="preview-details">
+                            <p><strong>Name:</strong> {formData.name}</p>
+                            <p><strong>Email:</strong> {formData.email}</p>
+                            <p><strong>Description:</strong> {formData.description}</p>
+                            <p><strong>Country:</strong> {formData.country}</p>
+                            <p><strong>City:</strong> {formData.city}</p>
+                            <p><strong>Zip Code:</strong> {formData.zipcode}</p>
+                            <p><strong>Title:</strong> {formData.title}</p>
+                            <p><strong>Target Amount:</strong> {formData.target_amount}</p>
+                           
+                        </div>
+                        <div className="card-footer">
+                            <button className="previous-button" onClick={() => setCurrentStep(4)}>Previous</button>
+                            <button className="submit-button" onClick={handlePreviewSubmit}>Submit</button>
                         </div>
                     </div>
                 </div>
@@ -298,11 +335,12 @@ const CharityApplications = () => {
 
             {/* Confirmation Card */}
             {currentStep === 5 && (
-                <div id="card5" className="card">
+                <div id="confirmation-card" className="card">
                     <img src="/GiveStreamLogo.png" alt="Logo" className="card-logo" />
                     <div className="card-content">
-                        <h3>Thank You for Your Application!</h3>
-                        <p>Your charity application has been submitted successfully.</p>
+                        <h3>Thank You!</h3>
+                        <p>Your application has been submitted successfully. We will get back to you soon.</p>
+                        <button className="exit-button" onClick={handleExit}>Exit</button>
                     </div>
                 </div>
             )}
