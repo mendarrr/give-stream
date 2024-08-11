@@ -165,19 +165,19 @@ class Charities(Resource):
             charities = Charity.query.all()
             return jsonify([charity.to_dict_with_stats() for charity in charities])
 
-def to_dict_with_stats(self):
-    donations = Donation.query.filter_by(charity_id=self.id).all()
-    total_raised = sum(donation.amount for donation in donations)
-    donation_count = len(donations)
-    percentage_raised = (total_raised / self.needed_donation) * 100 if self.needed_donation else 0
+    def to_dict_with_stats(self):
+        donations = Donation.query.filter_by(charity_id=self.id).all()
+        total_raised = sum(donation.amount for donation in donations)
+        donation_count = len(donations)
+        percentage_raised = (total_raised / self.needed_donation) * 100 if self.needed_donation else 0
 
-    return {
-        'id': self.id,
-        'name': self.name,
-        'total_raised': total_raised,
-        'donation_count': donation_count,
-        'percentage_raised': percentage_raised,
-        'needed_donation': self.needed_donation
+        return {
+            'id': self.id,
+            'name': self.name,
+            'total_raised': total_raised,
+            'donation_count': donation_count,
+            'percentage_raised': percentage_raised,
+            'needed_donation': self.needed_donation
     }
 
     def post(self):
@@ -222,12 +222,12 @@ class CharityApplications(Resource):
         new_application = CharityApplication(
             name=data['name'],
             email=data['email'],
+            username=data.get('username'),
             description=data['description'],
             country=data.get('country'),
             city=data.get('city'),
             zipcode=data.get('zipcode'),
             fundraising_category=data.get('fundraising_category'),
-            title=data.get('title'),
             target_amount=data.get('target_amount')
         )
         db.session.add(new_application)
