@@ -91,6 +91,8 @@ function CharityDetails() {
 }
 
 function CharityInfo({ charity, donations, formatNumber, onDonateClick }) {
+  const topDonations = donations.slice(0, 10);
+
   return (
     <div className="charity-info">
       <div className="progress-card">
@@ -104,7 +106,7 @@ function CharityInfo({ charity, donations, formatNumber, onDonateClick }) {
           Donate Now
         </button>
         <RecentActivity recentDonationCount={charity.recentDonationCount} />
-        <RecentDonors donations={donations} formatNumber={formatNumber} />
+        <RecentDonors donations={topDonations} formatNumber={formatNumber} />
         <ShareFundraiser />
         <div className="see-buttons">
           <button className="see-all">See all</button>
