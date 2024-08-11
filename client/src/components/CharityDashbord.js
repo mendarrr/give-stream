@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "./CharityDashboard.css";
 
 function CharityDetails() {
   const [charity, setCharity] = useState(null);
   const [successStories, setSuccessStories] = useState([]);
-  const [donations, setDonations] = useState([]);    
+  const [donations, setDonations] = useState([]);
   const [error, setError] = useState(null);
   const { id } = useParams();
   const carouselRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async (url, setter, errorMessage) => {
@@ -25,8 +26,16 @@ function CharityDetails() {
       }
     };
 
-    fetchData(`http://127.0.0.1:5000/charities/${id}`, setCharity, "charity details");
-    fetchData("http://127.0.0.1:5000/stories", setSuccessStories, "success stories");
+    fetchData(
+      `http://127.0.0.1:5000/charities/${id}`,
+      setCharity,
+      "charity details"
+    );
+    fetchData(
+      "http://127.0.0.1:5000/stories",
+      setSuccessStories,
+      "success stories"
+    );
     fetchData("http://127.0.0.1:5000/donations", setDonations, "donations");
   }, [id]);
 
@@ -40,6 +49,19 @@ function CharityDetails() {
     }
   };
 
+  const checkUserLoginStatus = () => {
+    const token = localStorage.getItem("userToken");
+    return !!token;
+  };
+
+  const handleDonateClick = () => {
+    if (checkUserLoginStatus()) {
+      navigate("/payment");
+    } else {
+      navigate("/signin");
+    }
+  };
+
   if (error) return <div className="error-message">{error}</div>;
   if (!charity || donations.length === 0 || successStories.length === 0)
     return <div>Loading...</div>;
@@ -50,22 +72,37 @@ function CharityDetails() {
     <div className="charity-details">
       <h2>{charity.name}</h2>
       <div className="charity-content">
-        <CharityInfo charity={charity} donations={donations} formatNumber={formatNumber} />
-        <CharityDescription charity={charity} successStories={successStories} formatNumber={formatNumber} scrollCarousel={scrollCarousel} carouselRef={carouselRef} />
+        <CharityInfo
+          charity={charity}
+          donations={donations}
+          formatNumber={formatNumber}
+          onDonateClick={handleDonateClick}
+        />
+        <CharityDescription
+          charity={charity}
+          successStories={successStories}
+          formatNumber={formatNumber}
+          scrollCarousel={scrollCarousel}
+          carouselRef={carouselRef}
+        />
       </div>
     </div>
   );
 }
 
-function CharityInfo({ charity, donations, formatNumber }) {
+function CharityInfo({ charity, donations, formatNumber, onDonateClick }) {
   return (
     <div className="charity-info">
       <div className="progress-card">
         <h3>KES {formatNumber(charity.raisedAmount)}</h3>
         <p>raised of KES {formatNumber(charity.goalAmount)} goal</p>
-        <ProgressBar progress={(charity.raisedAmount / charity.goalAmount) * 100} />
+        <ProgressBar
+          progress={(charity.raisedAmount / charity.goalAmount) * 100}
+        />
         <p>{formatNumber(charity.donationCount)} donations</p>
-        <button className="donate-button">Donate Now</button>
+        <button className="donate-button" onClick={onDonateClick}>
+          Donate Now
+        </button>
         <RecentActivity recentDonationCount={charity.recentDonationCount} />
         <RecentDonors donations={donations} formatNumber={formatNumber} />
         <ShareFundraiser />
@@ -120,38 +157,70 @@ function ShareFundraiser() {
     <div className="share-fundraiser">
       <h4>Share this fundraiser</h4>
       <div className="share-buttons">
-        {['Copy link', 'Facebook', 'X', 'Email', 'More'].map((button, index) => (
-          <button key={index} className={`share-button ${button.toLowerCase()}`}>
-            <i className={`fas fa-${button === 'X' ? 'times' : button.toLowerCase()}`}></i>
-            <span>{button}</span>
-          </button>
-        ))}
+        {["Copy link", "Facebook", "X", "Email", "More"].map(
+          (button, index) => (
+            <button
+              key={index}
+              className={`share-button ${button.toLowerCase()}`}
+            >
+              <i
+                className={`fas fa-${
+                  button === "X" ? "times" : button.toLowerCase()
+                }`}
+              ></i>
+              <span>{button}</span>
+            </button>
+          )
+        )}
       </div>
     </div>
   );
 }
 
-function CharityDescription({ charity, successStories, formatNumber, scrollCarousel, carouselRef }) {
+function CharityDescription({
+  charity,
+  successStories,
+  formatNumber,
+  scrollCarousel,
+  carouselRef,
+}) {
   return (
     <div className="charity-description">
-      <img src={charity.imageUrl} alt={charity.name} className="charity-image" />
+      <img
+        src={charity.imageUrl}
+        alt={charity.name}
+        className="charity-image"
+      />
       <p>{charity.organizer} is organizing this fundraiser.</p>
       <div className="donation-protected">
         <span>Donation protected</span>
       </div>
       <h3>Support Malnourished School Children in Moyale</h3>
       <p>{charity.description}</p>
-      <SuccessStories stories={successStories} formatNumber={formatNumber} scrollCarousel={scrollCarousel} carouselRef={carouselRef} />
+      <SuccessStories
+        stories={successStories}
+        formatNumber={formatNumber}
+        scrollCarousel={scrollCarousel}
+        carouselRef={carouselRef}
+      />
     </div>
   );
 }
 
-function SuccessStories({ stories, formatNumber, scrollCarousel, carouselRef }) {
+function SuccessStories({
+  stories,
+  formatNumber,
+  scrollCarousel,
+  carouselRef,
+}) {
   return (
     <div className="success-stories">
       <h3>Success Stories</h3>
       <div className="stories-carousel-container">
-        <button className="carousel-arrow left" onClick={() => scrollCarousel("left")}>
+        <button
+          className="carousel-arrow left"
+          onClick={() => scrollCarousel("left")}
+        >
           <i className="fas fa-chevron-left"></i>
         </button>
         <div className="stories-carousel" ref={carouselRef}>
@@ -159,7 +228,10 @@ function SuccessStories({ stories, formatNumber, scrollCarousel, carouselRef }) 
             <StoryCard key={index} story={story} formatNumber={formatNumber} />
           ))}
         </div>
-        <button className="carousel-arrow right" onClick={() => scrollCarousel("right")}>
+        <button
+          className="carousel-arrow right"
+          onClick={() => scrollCarousel("right")}
+        >
           <i className="fas fa-chevron-right"></i>
         </button>
       </div>
@@ -194,13 +266,17 @@ function BeneficiaryStory({ story }) {
 
   const handleSaveClick = async () => {
     try {
-      const response = await fetch(`http://127.0.0.1:5000/api/stories/${story.id}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: editedTitle, content: editedContent }),
-      });
+      const response = await fetch(
+        `http://127.0.0.1:5000/api/stories/${story.id}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title: editedTitle, content: editedContent }),
+        }
+      );
 
-      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+      if (!response.ok)
+        throw new Error(`HTTP error! Status: ${response.status}`);
 
       const updatedStory = await response.json();
       setEditedTitle(updatedStory.title);
@@ -215,8 +291,16 @@ function BeneficiaryStory({ story }) {
     <div className="beneficiary-story">
       {isEditing ? (
         <>
-          <input value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} placeholder="Edit Title" />
-          <textarea value={editedContent} onChange={(e) => setEditedContent(e.target.value)} placeholder="Edit Content" />
+          <input
+            value={editedTitle}
+            onChange={(e) => setEditedTitle(e.target.value)}
+            placeholder="Edit Title"
+          />
+          <textarea
+            value={editedContent}
+            onChange={(e) => setEditedContent(e.target.value)}
+            placeholder="Edit Content"
+          />
           <div className="edit-buttons">
             <button onClick={handleSaveClick}>Save</button>
             <button onClick={handleCancelClick}>Cancel</button>
