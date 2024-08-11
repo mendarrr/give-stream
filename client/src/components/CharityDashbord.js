@@ -1,15 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./CharityDashboard.css";
 
 function CharityDetails() {
   const [charity, setCharity] = useState(null);
-  const [successStories, setSuccessStories] = useState([]);
+  const [stories, setStories] = useState([]);
   const [donations, setDonations] = useState([]);
   const [error, setError] = useState(null);
   const { id } = useParams();
-  const carouselRef = useRef(null);
   const navigate = useNavigate();
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
     const fetchData = async (url, setter, errorMessage) => {
@@ -31,22 +32,24 @@ function CharityDetails() {
       setCharity,
       "charity details"
     );
-    fetchData(
-      "http://127.0.0.1:5000/stories",
-      setSuccessStories,
-      "success stories"
-    );
+    fetchData("http://127.0.0.1:5000/stories", setStories, "success stories");
     fetchData("http://127.0.0.1:5000/donations", setDonations, "donations");
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [id]);
 
-  const scrollCarousel = (direction) => {
-    if (carouselRef.current) {
-      const scrollAmount = carouselRef.current.offsetWidth;
-      carouselRef.current.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth",
-      });
-    }
+  const moveLeft = () => {
+    setCurrentIndex((prev) => Math.max(prev - 1, 0));
+  };
+
+  const moveRight = () => {
+    setCurrentIndex((prev) =>
+      Math.min(prev + 1, stories.length - (isMobile ? 1 : 2))
+    );
   };
 
   const checkUserLoginStatus = () => {
@@ -63,10 +66,14 @@ function CharityDetails() {
   };
 
   if (error) return <div className="error-message">{error}</div>;
-  if (!charity || donations.length === 0 || successStories.length === 0)
+  if (!charity || donations.length === 0 || stories.length === 0)
     return <div>Loading...</div>;
 
   const formatNumber = (number) => (number ? number.toLocaleString() : "0");
+
+  const visibleStories = isMobile
+    ? stories.slice(currentIndex, currentIndex + 1)
+    : stories.slice(currentIndex, currentIndex + 2);
 
   return (
     <div className="charity-details">
@@ -80,10 +87,13 @@ function CharityDetails() {
         />
         <CharityDescription
           charity={charity}
-          successStories={successStories}
+          successStories={visibleStories}
           formatNumber={formatNumber}
-          scrollCarousel={scrollCarousel}
-          carouselRef={carouselRef}
+          moveLeft={moveLeft}
+          moveRight={moveRight}
+          currentIndex={currentIndex}
+          storiesLength={stories.length}
+          isMobile={isMobile}
         />
       </div>
     </div>
@@ -183,8 +193,11 @@ function CharityDescription({
   charity,
   successStories,
   formatNumber,
-  scrollCarousel,
-  carouselRef,
+  moveLeft,
+  moveRight,
+  currentIndex,
+  storiesLength,
+  isMobile,
 }) {
   return (
     <div className="charity-description">
@@ -202,18 +215,23 @@ function CharityDescription({
       <SuccessStories
         stories={successStories}
         formatNumber={formatNumber}
-        scrollCarousel={scrollCarousel}
-        carouselRef={carouselRef}
+        moveLeft={moveLeft}
+        moveRight={moveRight}
+        currentIndex={currentIndex}
+        storiesLength={storiesLength}
+        isMobile={isMobile}
       />
     </div>
   );
 }
-
 function SuccessStories({
   stories,
   formatNumber,
-  scrollCarousel,
-  carouselRef,
+  moveLeft,
+  moveRight,
+  currentIndex,
+  storiesLength,
+  isMobile,
 }) {
   return (
     <div className="success-stories">
@@ -221,18 +239,20 @@ function SuccessStories({
       <div className="stories-carousel-container">
         <button
           className="carousel-arrow left"
-          onClick={() => scrollCarousel("left")}
+          onClick={moveLeft}
+          disabled={currentIndex === 0}
         >
           <i className="fas fa-chevron-left"></i>
         </button>
-        <div className="stories-carousel" ref={carouselRef}>
+        <div className="stories-carousel">
           {stories.map((story, index) => (
             <StoryCard key={index} story={story} formatNumber={formatNumber} />
           ))}
         </div>
         <button
           className="carousel-arrow right"
-          onClick={() => scrollCarousel("right")}
+          onClick={moveRight}
+          disabled={currentIndex >= storiesLength - (isMobile ? 1 : 2)}
         >
           <i className="fas fa-chevron-right"></i>
         </button>
@@ -244,74 +264,40 @@ function SuccessStories({
 function StoryCard({ story, formatNumber }) {
   return (
     <div className="story-card">
-      <img src={story.image} alt={story.title} />
       <h4>{story.title}</h4>
-      <p>RAISED: KES {formatNumber(story.raised)}</p>
-      <p>Donations: {formatNumber(story.donations)}</p>
-      <ProgressBar progress={(story.raised / story.goal) * 100} />
-      <BeneficiaryStory story={story} />
+      <p>{story.content}</p>
+      <p>Date Posted: {new Date(story.date_posted).toLocaleDateString()}</p>
     </div>
   );
 }
 
 function BeneficiaryStory({ story }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedTitle, setEditedTitle] = useState(story.title);
-  const [editedContent, setEditedContent] = useState(story.content);
+  const [newStory, setNewStory] = useState(story.story);
 
-  const handleEditClick = () => setIsEditing(true);
-  const handleCancelClick = () => {
-    setIsEditing(false);
-    setEditedTitle(story.title);
-    setEditedContent(story.content);
+  const handleEditClick = () => {
+    setIsEditing(!isEditing);
   };
 
-  const handleSaveClick = async () => {
-    try {
-      const response = await fetch(
-        `http://127.0.0.1:5000/api/stories/${story.id}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ title: editedTitle, content: editedContent }),
-        }
-      );
-
-      if (!response.ok)
-        throw new Error(`HTTP error! Status: ${response.status}`);
-
-      const updatedStory = await response.json();
-      setEditedTitle(updatedStory.title);
-      setEditedContent(updatedStory.content);
-      setIsEditing(false);
-    } catch (error) {
-      console.error("Error updating story:", error);
-    }
+  const handleSaveClick = () => {
+    // Save logic
+    setIsEditing(false);
   };
 
   return (
     <div className="beneficiary-story">
+      <h5>Beneficiary Story</h5>
       {isEditing ? (
         <>
-          <input
-            value={editedTitle}
-            onChange={(e) => setEditedTitle(e.target.value)}
-            placeholder="Edit Title"
-          />
           <textarea
-            value={editedContent}
-            onChange={(e) => setEditedContent(e.target.value)}
-            placeholder="Edit Content"
+            value={newStory}
+            onChange={(e) => setNewStory(e.target.value)}
           />
-          <div className="edit-buttons">
-            <button onClick={handleSaveClick}>Save</button>
-            <button onClick={handleCancelClick}>Cancel</button>
-          </div>
+          <button onClick={handleSaveClick}>Save</button>
         </>
       ) : (
         <>
-          <h4>{story.title}</h4>
-          <p>{story.content}</p>
+          <p>{story.story}</p>
           <button onClick={handleEditClick}>Edit</button>
         </>
       )}
