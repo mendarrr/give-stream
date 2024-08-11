@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './CharityApplications.css';
-import Navbar from './Navbar'; // Ensure this path is correct
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import Navbar from './Navbar';
+import { useNavigate } from 'react-router-dom';
 
 const CharityApplications = () => {
     const [currentStep, setCurrentStep] = useState(1);
@@ -14,14 +14,15 @@ const CharityApplications = () => {
         city: '',
         zipcode: '',
         title: '',
-        target_amount: '', // Updated from donationTarget
-        image: '', // Updated field name
+        target_amount: '',
+        image: '',
         summary: ''
     });
     const [selectedCategory, setSelectedCategory] = useState(new Set());
     const [selectedDonation, setSelectedDonation] = useState(null);
+    const [errorMessages, setErrorMessages] = useState({});
 
-    const navigate = useNavigate(); // Initialize useNavigate
+    const navigate = useNavigate();
 
     const handleButtonClick = (option) => {
         setSelectedOptions(new Set([option]));
@@ -41,10 +42,47 @@ const CharityApplications = () => {
 
     const handleDonationClick = (amount) => {
         setSelectedDonation(amount);
-        setFormData(prevData => ({ ...prevData, target_amount: amount }));
+        setFormData(prevData => ({
+            ...prevData,
+            target_amount: '' // Clear the custom amount field
+        }));
     };
 
     const handleNextClick = () => {
+        let newErrorMessages = {};
+
+        if (currentStep === 1 && selectedOptions.size === 0) {
+            newErrorMessages.step1 = 'Please select an option.';
+        } else if (currentStep === 2) {
+            const requiredFields = [
+                'name',
+                'email',
+                'description',
+                'country',
+                'city',
+                'zipcode',
+                'title'
+            ];
+            requiredFields.forEach(field => {
+                if (!formData[field]) {
+                    newErrorMessages[field] = 'Please fill this field.';
+                }
+            });
+            if (selectedCategory.size === 0) {
+                newErrorMessages.step2 = 'Please select at least one category.';
+            }
+        } else if (currentStep === 3 && !formData.target_amount && !selectedDonation) {
+            newErrorMessages.target_amount = 'Please set a target amount.';
+        } else if (currentStep === 4 && (!formData.image || !formData.summary)) {
+            if (!formData.image) newErrorMessages.image = 'Please provide an image URL.';
+            if (!formData.summary) newErrorMessages.summary = 'Please provide a summary.';
+        }
+
+        if (Object.keys(newErrorMessages).length > 0) {
+            setErrorMessages(newErrorMessages);
+            return;
+        }
+
         if (currentStep === 1 && selectedOptions.size > 0) {
             setCurrentStep(2);
         } else if (currentStep === 2 && selectedCategory.size > 0) {
@@ -68,6 +106,11 @@ const CharityApplications = () => {
             ...prevData,
             [name]: value
         }));
+
+        // If custom target amount input field is changed, clear the predefined donation selection
+        if (name === 'target_amount') {
+            setSelectedDonation(null);
+        }
     };
 
     const handleSubmit = async () => {
@@ -83,14 +126,17 @@ const CharityApplications = () => {
             'image',
             'summary'
         ];
-
+    
         const isFormValid = requiredFields.every(field => formData[field] || (field === 'target_amount' && selectedDonation));
-
+    
         if (!isFormValid) {
-            alert('Please fill out all required fields.');
+            setErrorMessages(prev => ({
+                ...prev,
+                form: 'Please fill out all required fields.'
+            }));
             return;
         }
-
+    
         try {
             const response = await fetch('/charity-applications', {
                 method: 'POST',
@@ -99,25 +145,37 @@ const CharityApplications = () => {
                 },
                 body: JSON.stringify(formData)
             });
-
+    
             if (response.ok) {
                 const result = await response.json();
                 if (result.emailExists) {
-                    alert('Email already exists in the system.');
+                    setErrorMessages(prev => ({
+                        ...prev,
+                        submitError: 'Email already exists in the system.'
+                    }));
                 } else {
                     setCurrentStep(5); // Move to the confirmation step
                 }
             } else if (response.status === 409) {
-                alert('Email already exists in the system. Please use a different email.');
+                setErrorMessages(prev => ({
+                    ...prev,
+                    submitError: 'Email already exists in the system. Please use a different email.'
+                }));
             } else {
-                alert('There was an error submitting your application. Please try again.');
+                setErrorMessages(prev => ({
+                    ...prev,
+                    submitError: 'There was an error submitting your application. Please try again.'
+                }));
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An unexpected error occurred. Please try again.');
+            setErrorMessages(prev => ({
+                ...prev,
+                submitError: 'An unexpected error occurred. Please try again.'
+            }));
         }
     };
-
+    
     const handleExit = () => {
         navigate('/'); // Navigate to the main page or any other route
     };
@@ -153,6 +211,7 @@ const CharityApplications = () => {
                                 </div>
                             ))}
                         </div>
+                        {errorMessages.step1 && <div className="error-message">{errorMessages.step1}</div>}
                         <div className="card-footer">
                             <button 
                                 className={`next-button ${selectedOptions.size === 0 ? 'disabled' : ''}`}
@@ -192,6 +251,7 @@ const CharityApplications = () => {
                                             onChange={handleInputChange} 
                                             placeholder={placeholder} 
                                         />
+                                        {errorMessages[id] && <div className="error-message">{errorMessages[id]}</div>}
                                     </div>
                                 </div>
                             ))}
@@ -208,6 +268,7 @@ const CharityApplications = () => {
                                 </button>
                             ))}
                         </div>
+                        {errorMessages.step2 && <div className="error-message">{errorMessages.step2}</div>}
                         <div className="card-footer">
                             <button className="previous-button" onClick={handlePreviousClick}>Previous</button>
                             <button 
@@ -232,7 +293,7 @@ const CharityApplications = () => {
                             {[50000, 100000, 200000, 500000, 1000000].map(amount => (
                                 <button 
                                     key={amount}
-                                    className={`donation-button {selectedDonation === amount ? 'selected' : ''}`}
+                                    className={`donation-button ${selectedDonation === amount ? 'selected' : ''}`}
                                     onClick={() => handleDonationClick(amount)}
                                 >
                                     {amount}
@@ -249,6 +310,7 @@ const CharityApplications = () => {
                                     onChange={handleInputChange} 
                                     placeholder="Or enter a custom target" 
                                 />
+                                {errorMessages.target_amount && <div className="error-message">{errorMessages.target_amount}</div>}
                             </div>
                         </div>
                         <div className="card-footer">
@@ -270,7 +332,7 @@ const CharityApplications = () => {
                 <div id="card4" className="card">
                     <img src="/GiveStreamLogo.png" alt="Logo" className="card-logo" />
                     <div className="card-content">
-                        <h3>Additional Details</h3>
+                        <h3>Charity Profile Photo URL and Summary</h3>
                         <div className="input-group">
                             <div className="input-wrapper">
                                 <input
@@ -281,6 +343,7 @@ const CharityApplications = () => {
                                     onChange={handleInputChange}
                                     placeholder="Image URL"
                                 />
+                                {errorMessages.image && <div className="error-message">{errorMessages.image}</div>}
                             </div>
                         </div>
                         <div className="input-group">
@@ -290,8 +353,9 @@ const CharityApplications = () => {
                                     name="summary"
                                     value={formData.summary}
                                     onChange={handleInputChange}
-                                    placeholder="Summary"
+                                    placeholder="Summary of your application"
                                 />
+                                {errorMessages.summary && <div className="error-message">{errorMessages.summary}</div>}
                             </div>
                         </div>
                         <div className="card-footer">
@@ -313,7 +377,7 @@ const CharityApplications = () => {
                 <div id="preview-card" className="card">
                     <img src="/GiveStreamLogo.png" alt="Logo" className="card-logo" />
                     <div className="card-content">
-                        <h3>Preview Your Application Details</h3>
+                        <h3>Review the Details you Provided</h3>
                         <div className="preview-details">
                             <p><strong>Name:</strong> {formData.name}</p>
                             <p><strong>Email:</strong> {formData.email}</p>
@@ -322,12 +386,13 @@ const CharityApplications = () => {
                             <p><strong>City:</strong> {formData.city}</p>
                             <p><strong>Zip Code:</strong> {formData.zipcode}</p>
                             <p><strong>Title:</strong> {formData.title}</p>
-                            <p><strong>Target Amount:</strong> {formData.target_amount}</p>
-                           
+                            <p><strong>Target Amount:</strong> {formData.target_amount || selectedDonation}</p>
                         </div>
                         <div className="card-footer">
                             <button className="previous-button" onClick={() => setCurrentStep(4)}>Previous</button>
                             <button className="submit-button" onClick={handlePreviewSubmit}>Submit</button>
+                            {/* Unique Error Message Container for Submit Button */}
+                            {errorMessages.submitError && <div className="submit-error-message">{errorMessages.submitError}</div>}
                         </div>
                     </div>
                 </div>
@@ -340,7 +405,7 @@ const CharityApplications = () => {
                     <div className="card-content">
                         <h3>Thank You!</h3>
                         <p>Your application has been submitted successfully. We will get back to you soon.</p>
-                        <button className="exit-button" onClick={handleExit}>Exit</button>
+                        <button className="exit-button" onClick={handleExit}>Exit Page</button>
                     </div>
                 </div>
             )}

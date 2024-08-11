@@ -2,7 +2,6 @@
 .charity-applications {
     padding: 20px;
     font-family: Arial, sans-serif;
-    position: relative;
     background-color: white;
     display: flex;
     flex-direction: column;
@@ -14,23 +13,23 @@
 /* Card styles */
 .card {
     display: flex;
+    flex-direction: column;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 20px;
-    margin: 300px;
+    margin: 250px auto;
     background: linear-gradient(
         rgba(255, 255, 255, 0.8), 
         rgba(255, 255, 255, 0.8)
     ), url('../assets/photo.jpg');
     background-size: cover;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 110%;
-    height: 900px;
+    width: 100%;
     max-width: 1200px;
-    flex-direction: column;
+    height: 900px;
     overflow: hidden;
-    position: relative;
     color: #000;
+    position: relative;
 }
 
 /* Heading styles within cards */
@@ -44,19 +43,9 @@
     text-align: center;
 }
 
-/* Specific card styles */
-.card1, .card2, .card3, .card4, .preview-card, .confirmation-card {
-    margin-top: 250px; /* Adjusted top margin for visibility */
-    align-self: center;
-    position: relative;
-    padding: 20px;
-}
-
 /* Logo styling within cards */
 .card-logo {
     width: 300px;
-    height: auto;
-    margin-right: 20px;
     position: absolute;
     top: 40px;
     left: 20px;
@@ -68,9 +57,9 @@
     flex-direction: column;
     justify-content: center;
     flex-grow: 1;
-    margin-left: 180px;
-    margin-right: 20px;
+    margin: 0 20px;
     box-sizing: border-box;
+    padding-left: 180px; /* Adjusted from margin for better alignment */
 }
 
 /* Card footer styling */
@@ -120,17 +109,14 @@
     color: #000;
     border: 1px solid #000;
     margin-right: 10px;
-    white-space: nowrap;
 }
 
 .fundraising-button.selected {
     background-color: #d0f0fd;
-    color: #000;
 }
 
 .fundraising-button:hover:not(.selected) {
     background-color: #e0e0e0;
-    color: #000;
 }
 
 .previous-button,
@@ -142,7 +128,6 @@
 .previous-button:hover,
 .next-button:hover {
     background-color: #e74c3c;
-    color: #fff;
 }
 
 .previous-button:disabled,
@@ -151,7 +136,7 @@
     cursor: not-allowed;
 }
 
-/* Custom donation amount styling */
+/* Donation button styles */
 .donation-buttons {
     display: flex;
     flex-wrap: wrap;
@@ -164,13 +149,11 @@
     background-color: #f0f0f0;
     border: 1px solid #ccc;
     border-radius: 5px;
-    color: #333;
     font-size: 16px;
-    font-weight: bold;
     padding: 10px 20px;
     cursor: pointer;
-    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
     width: 220px;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
 }
 
 .donation-button:hover {
@@ -179,46 +162,68 @@
 }
 
 .donation-button.selected {
-    background-color: #d0f0fd; 
+    background-color: #d0f0fd;
     border-color: #4CAF50;
     color: #1a1616;
 }
 
 /* Custom amount input field styling */
-.custom-amount {
-    text-align: center;
-    margin: 20px 0;
-    width: 100%;
+.custom-amount,
+.custom-donation {
     display: flex;
     justify-content: center;
+    margin: 20px 0;
+    width: 100%;
 }
 
-.custom-amount input {
+.custom-amount input,
+.custom-donation input[type="number"] {
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 10px;
     font-size: 16px;
     width: 220px;
     box-sizing: border-box;
+    text-align: center;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.custom-donation input[type="number"] {
+    max-width: 300px;
+    border: 2px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+input::placeholder {
+    color: #888;
 }
 
 /* Input fields styling */
 .input-group {
-    margin-bottom: 15px;
-    width: 100%;
     display: flex;
-    justify-content: center;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 15px;
+    width: 100%;
 }
 
 .input-wrapper {
+    position: relative;
     width: 100%;
+    display: flex;
+    justify-content: center; /* Center the input fields horizontally */
 }
 
-input[type="text"],
-input[type="email"] {
-    width: 100%;
+.input-wrapper input,
+.input-wrapper textarea {
+    width: 80%; /* Adjust the width to be smaller, allowing it to center */
+    max-width: 300px; /* Optional: Limit the max width for better alignment */
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ddd;
@@ -228,15 +233,18 @@ input[type="email"] {
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-input[type="text"]:focus,
-input[type="email"]:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-input[type="text"]::placeholder,
-input[type="email"]::placeholder {
-    color: #888;
+.error-message {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    right: 0;
+    color: red;
+    font-size: 0.75rem;
+    text-align: center;
+    background: #fff;
+    padding: 15px;
+    border-radius: 3px;
+    pointer-events: none; /* Prevents error message from interfering with input */
 }
 
 /* Horizontal line styling */
@@ -248,39 +256,9 @@ hr {
     width: 100%;
 }
 
-/* Custom donation input field */
-.custom-donation {
-    text-align: center;
-    margin: 20px 0;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
 
-.custom-donation input[type="number"] {
-    width: 100%;
-    max-width: 300px;
-    padding: 10px;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.custom-donation input[type="number"]::placeholder {
-    color: #888;
-}
-
-.custom-donation input[type="number"]:focus {
-    border-color: #007bff;
-    outline: none;
-    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
-}
-
-.custom-donation input[type="number"]::-webkit-inner-spin-button,
-.custom-donation input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+.submit-error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
 }
