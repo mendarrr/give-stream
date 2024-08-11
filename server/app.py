@@ -14,7 +14,7 @@ import base64
 from json import JSONEncoder
 
 from config import app,db,api
-from models import db, Admin, Donor,Charity, PaymentMethod, Message
+from models import db, Admin, Donor,Charity, PaymentMethod, Message, Payment
 
 class CustomJSONEncoder(JSONEncoder):
     def default(self, obj):
