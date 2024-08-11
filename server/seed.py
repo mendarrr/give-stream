@@ -12,7 +12,8 @@ def seed_data():
         admin = Admin(username='admingivestream', email='admin@example.com')  # Add an email here
         admin.password_hash = 'admingivestream'
         db.session.add(admin)
-
+        
+        
         # Create sample donors
         donor1 = Donor(username='donor1', email='donor1@example.com')
         donor2 = Donor(username='donor2', email='donor2@example.com')
@@ -53,7 +54,7 @@ def seed_data():
                 needed_donation=25000.00,
                 raised_amount=12000.00,
                 goal_amount=50000.00,
-                donation_count=100,
+                donation_count=100.00,
                 image_url='https://images.pexels.com/photos/6472487/pexels-photo-6472487.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
                 organizer='Anna Lee'
             ),

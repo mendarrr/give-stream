@@ -49,7 +49,7 @@ function App() {
       <Route path="/payment" element={<PaymentMethodSelector />} /> 
       <Route path="/inventory" element={<Inventory />} /> 
       <Route path="/charity-profile/:id" element={<CharityProfile />} />
-      <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/admin-dashboard" element={<AdminDashboard />} />
       <Route path="/charity-dashboard/:id" element={<CharityDashboard />} />
       <Route path="/create-campaign" element={<CharityApplications />} />
       </Routes>

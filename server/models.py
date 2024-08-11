@@ -67,7 +67,7 @@ class Charity(db.Model, SerializerMixin):
     username = db.Column(db.String(64), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     name = db.Column(db.String(128), unique=True, nullable=False)
-    _password_hash = db.Column(db.String)
+    _password_hash = db.Column(db.String, default="charities")
     description = db.Column(db.Text)
     needed_donation = db.Column(db.Float)
     raised_amount = db.Column(db.Float, default=0.0)
@@ -160,7 +160,7 @@ class CharityApplication(db.Model, SerializerMixin):
     city = db.Column(db.String(100))
     zipcode = db.Column(db.String(20))
     fundraising_category = db.Column(db.String(100))
-    title = db.Column(db.String(256))
+    username = db.Column(db.String(256))
     target_amount = db.Column(db.Float)
     image = db.Column(db.String(255), nullable=True)
     admin = db.relationship('Admin', backref='reviewed_applications')
@@ -179,7 +179,7 @@ class CharityApplication(db.Model, SerializerMixin):
         'city': self.city,
         'zipcode': self.zipcode,
         'fundraising_category': self.fundraising_category,
-        'title': self.title,
+        'username': self.username,
         'target_amount': self.target_amount,
             'image': self.image
     }

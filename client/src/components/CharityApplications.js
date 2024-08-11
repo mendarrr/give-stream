@@ -13,7 +13,7 @@ const CharityApplications = () => {
         country: '',
         city: '',
         zipcode: '',
-        title: '',
+        username: '',
         target_amount: '',
         image: '',
         summary: ''
@@ -55,7 +55,7 @@ const CharityApplications = () => {
         if (currentStep === 1 && selectedOptions.size === 0) {
             newErrorMessages.step1 = 'Please select an option.';
         } else if (currentStep === 2) {
-            const requiredFields = ['name', 'email', 'description', 'country', 'city', 'zipcode', 'title'];
+            const requiredFields = ['name', 'email', 'description', 'country', 'city', 'zipcode', 'username'];
             requiredFields.forEach(field => {
                 if (!formData[field]) {
                     newErrorMessages[field] = 'Please fill this field.';
@@ -102,7 +102,7 @@ const CharityApplications = () => {
     };
 
     const handleSubmit = async () => {
-        const requiredFields = ['name', 'email', 'description', 'country', 'city', 'zipcode', 'title', 'target_amount', 'image', 'summary'];
+        const requiredFields = ['name', 'email', 'description', 'country', 'city', 'zipcode', 'username', 'target_amount', 'image', 'summary'];
         const isFormValid = requiredFields.every(field => formData[field] || (field === 'target_amount' && selectedDonation));
 
         if (!isFormValid) {
@@ -199,7 +199,7 @@ const CharityApplications = () => {
                                 { id: 'country', placeholder: 'Country', type: 'text' },
                                 { id: 'city', placeholder: 'City/Town', type: 'text' },
                                 { id: 'zipcode', placeholder: 'Zip Code', type: 'text' },
-                                { id: 'title', placeholder: 'Title', type: 'text' }
+                                { id: 'username', placeholder: 'username', type: 'text' }
                             ].map(({ id, placeholder, type }) => (
                                 <div key={id} className="input-group">
                                     <div className="input-wrapper">
@@ -345,7 +345,7 @@ const CharityApplications = () => {
                             <p><strong>Country:</strong> {formData.country}</p>
                             <p><strong>City:</strong> {formData.city}</p>
                             <p><strong>Zip Code:</strong> {formData.zipcode}</p>
-                            <p><strong>Title:</strong> {formData.title}</p>
+                            <p><strong>User name:</strong> {formData.username}</p>
                             <p><strong>Target Amount:</strong> {formData.target_amount}</p>
                         </div>
                         <div className="card-footer">

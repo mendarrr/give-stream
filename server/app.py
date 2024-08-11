@@ -258,7 +258,7 @@ class CharityApplications(Resource):
             city=data.get('city'),
             zipcode=data.get('zipcode'),
             fundraising_category=data.get('fundraising_category'),
-            title=data.get('title'),
+            username=data.get('username'),
             target_amount=data.get('target_amount'),
             image=data.get('image')  # Include image field
         )
@@ -290,7 +290,7 @@ class CharityApplications(Resource):
         application.city = data.get('city', application.city)
         application.zipcode = data.get('zipcode', application.zipcode)
         application.fundraising_category = data.get('fundraising_category', application.fundraising_category)
-        application.title = data.get('title', application.title)
+        application.username = data.get('username', application.username)
         application.target_amount = data.get('target_amount', application.target_amount)
 
         db.session.commit()
