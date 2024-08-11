@@ -21,7 +21,6 @@ import Inventory from "./components/Inventory";
 import CharityProfile from "./components/CharityProfile";
 import AdminDashboard from "./components/AdminDashboard";
 import CharityDashboard from "./components/AdminDashboard";
-import CharitiesPage from "./components/CharitiesPage";
 import CharityList from "./components/CharityList";
 import PaymentMethodSelector from "./components/PaymentMethod";
 import CharityApplications from "./components/CharityApplications";
@@ -49,7 +48,12 @@ function App() {
           <Route path="/donor" element={<NewDonorForm />} />
           <Route path="/charities" element={<CharityList />} />
           <Route path="/donation" element={<DonationForm />} />
+          <Route path="/payment" element={<PaymentMethodSelector />} />
           <Route path="/inventory" element={<Inventory />} />
+          <Route path="/charity-profile/:id" element={<CharityProfile />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/charity-dashboard/:id" element={<CharityDashboard />} />
+          <Route path="/create-campaign" element={<CharityApplications />} />
         </Routes>
         <Footer />
       </BrowserRouter>
