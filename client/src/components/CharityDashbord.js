@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useParams } from "react-router-dom";
-import Login from "./components/Login";
+import Login from "./Login";
 import "./CharityDetails.css";
 
 function CharityDashboard() {
@@ -8,7 +8,36 @@ function CharityDashboard() {
   const [successStories, setSuccessStories] = useState([]);
   const [donations, setDonations] = useState([]);
   const [comments, setComments] = useState([
-    // ... (comments data remains the same)
+    {
+      name: "Jane Doe",
+      amount: 5000,
+      time: "2 hours ago",
+      comment: "This is a great cause!",
+    },
+    {
+      name: "John Smith",
+      amount: 2000,
+      time: "1 day ago",
+      comment: "Happy to contribute!",
+    },
+    {
+      name: "Emily Johnson",
+      amount: 750,
+      time: "3 hours ago",
+      comment: "Glad to support this charity. Keep up the great work!",
+    },
+    {
+      name: "Lucas Wilson",
+      amount: 800,
+      time: "2 days ago",
+      comment: "Every little bit helps. Keep making a difference!",
+    },
+    {
+      name: "Olivia Martinez",
+      amount: 1200,
+      time: "3 days ago",
+      comment: "Inspired by your mission. Happy to contribute!",
+    },
   ]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -37,7 +66,7 @@ function CharityDashboard() {
       await Promise.all([
         fetchData(`http://127.0.0.1:5000/charities/${id}`, setCharity),
         fetchData("http://127.0.0.1:5000/stories", setSuccessStories),
-        fetchData("http://127.0.0.1:5000/donations", setDonations)
+        fetchData("http://127.0.0.1:5000/donations", setDonations),
       ]);
       setLoading(false);
     };
@@ -71,9 +100,9 @@ function CharityDashboard() {
     <div className="charity-details">
       <h2>{charity.name}</h2>
       <div className="charity-content">
-        <CharityInfo 
-          charity={charity} 
-          donations={donations} 
+        <CharityInfo
+          charity={charity}
+          donations={donations}
           formatNumber={formatNumber}
           isLoggedIn={isLoggedIn}
           setShowLogin={setShowLogin}
@@ -90,7 +119,12 @@ function CharityDashboard() {
       {showLogin && (
         <div className="modal">
           <div className="modal-content">
-            <button className="close-button" onClick={() => setShowLogin(false)}>×</button>
+            <button
+              className="close-button"
+              onClick={() => setShowLogin(false)}
+            >
+              ×
+            </button>
             <Login onLogin={handleLogin} />
           </div>
         </div>
@@ -99,7 +133,13 @@ function CharityDashboard() {
   );
 }
 
-function CharityInfo({ charity, donations, formatNumber, isLoggedIn, setShowLogin }) {
+function CharityInfo({
+  charity,
+  donations,
+  formatNumber,
+  isLoggedIn,
+  setShowLogin,
+}) {
   return (
     <div className="charity-info">
       <div className="progress-card">
@@ -119,8 +159,15 @@ function CharityInfo({ charity, donations, formatNumber, isLoggedIn, setShowLogi
         ) : (
           <div className="signup-prompt">
             <p>Sign up to donate and make a difference!</p>
-            <button className="signup-button" onClick={() => setShowLogin(true)}>Sign Up</button>
-            <button className="login-button" onClick={() => setShowLogin(true)}>Log In</button>
+            <button
+              className="signup-button"
+              onClick={() => setShowLogin(true)}
+            >
+              Sign Up
+            </button>
+            <button className="login-button" onClick={() => setShowLogin(true)}>
+              Log In
+            </button>
           </div>
         )}
         <div className="recent-activity">
@@ -128,7 +175,11 @@ function CharityInfo({ charity, donations, formatNumber, isLoggedIn, setShowLogi
         </div>
         <div className="recent-donors">
           {donations.map((donation, index) => (
-            <DonorInfo key={index} donation={donation} formatNumber={formatNumber} />
+            <DonorInfo
+              key={index}
+              donation={donation}
+              formatNumber={formatNumber}
+            />
           ))}
         </div>
         <ShareFundraiser />
@@ -159,7 +210,7 @@ function ShareFundraiser() {
     <div className="share-fundraiser">
       <h4>Share this fundraiser</h4>
       <div className="share-buttons">
-        {['copy-link', 'facebook', 'twitter', 'email', 'more'].map((type) => (
+        {["copy-link", "facebook", "twitter", "email", "more"].map((type) => (
           <ShareButton key={type} type={type} />
         ))}
       </div>
@@ -169,18 +220,18 @@ function ShareFundraiser() {
 
 function ShareButton({ type }) {
   const icons = {
-    'copy-link': 'fas fa-link',
-    'facebook': 'fab fa-facebook-f',
-    'twitter': 'fab fa-twitter',
-    'email': 'fas fa-envelope',
-    'more': 'fas fa-ellipsis-h'
+    "copy-link": "fas fa-link",
+    facebook: "fab fa-facebook-f",
+    twitter: "fab fa-twitter",
+    email: "fas fa-envelope",
+    more: "fas fa-ellipsis-h",
   };
   const labels = {
-    'copy-link': 'Copy link',
-    'facebook': 'Facebook',
-    'twitter': 'X',
-    'email': 'Email',
-    'more': 'More'
+    "copy-link": "Copy link",
+    facebook: "Facebook",
+    twitter: "X",
+    email: "Email",
+    more: "More",
   };
 
   return (
@@ -191,10 +242,21 @@ function ShareButton({ type }) {
   );
 }
 
-function CharityDescription({ charity, successStories, comments, formatNumber, scrollCarousel, carouselRef }) {
+function CharityDescription({
+  charity,
+  successStories,
+  comments,
+  formatNumber,
+  scrollCarousel,
+  carouselRef,
+}) {
   return (
     <div className="charity-description">
-      <img src={charity.imageUrl} alt={charity.name} className="charity-image" />
+      <img
+        src={charity.imageUrl}
+        alt={charity.name}
+        className="charity-image"
+      />
       <p>{charity.organizer} is organizing this fundraiser.</p>
       <div className="donation-protected">
         <span>Donation protected</span>
@@ -211,12 +273,20 @@ function CharityDescription({ charity, successStories, comments, formatNumber, s
     </div>
   );
 }
-function SuccessStories({ stories, formatNumber, scrollCarousel, carouselRef }) {
+function SuccessStories({
+  stories,
+  formatNumber,
+  scrollCarousel,
+  carouselRef,
+}) {
   return (
     <div className="success-stories">
       <h3>Success Stories</h3>
       <div className="stories-carousel-container">
-        <button className="carousel-arrow left" onClick={() => scrollCarousel("left")}>
+        <button
+          className="carousel-arrow left"
+          onClick={() => scrollCarousel("left")}
+        >
           <i className="fas fa-chevron-left"></i>
         </button>
         <div className="stories-carousel" ref={carouselRef}>
@@ -224,7 +294,10 @@ function SuccessStories({ stories, formatNumber, scrollCarousel, carouselRef }) 
             <StoryCard key={index} story={story} formatNumber={formatNumber} />
           ))}
         </div>
-        <button className="carousel-arrow right" onClick={() => scrollCarousel("right")}>
+        <button
+          className="carousel-arrow right"
+          onClick={() => scrollCarousel("right")}
+        >
           <i className="fas fa-chevron-right"></i>
         </button>
       </div>
