@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Login from "./Login";
 import "./CharityDetails.css";
 
@@ -42,9 +42,9 @@ function CharityDashboard() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
   const { id } = useParams();
   const carouselRef = useRef(null);
+  const navigate = useNavigate();
 
   const fetchData = useCallback(async (url, setter) => {
     try {
@@ -84,10 +84,11 @@ function CharityDashboard() {
     }
   }, []);
 
-  const handleLogin = (success) => {
-    if (success) {
-      setIsLoggedIn(true);
-      setShowLogin(false);
+  const handleDonateClick = () => {
+    if (isLoggedIn) {
+      navigate("/payment"); // Redirect to payment page
+    } else {
+      navigate("/login"); // Redirect to login/signup page
     }
   };
 
@@ -104,8 +105,7 @@ function CharityDashboard() {
           charity={charity}
           donations={donations}
           formatNumber={formatNumber}
-          isLoggedIn={isLoggedIn}
-          setShowLogin={setShowLogin}
+          onDonateClick={handleDonateClick}
         />
         <CharityDescription
           charity={charity}
@@ -116,30 +116,11 @@ function CharityDashboard() {
           carouselRef={carouselRef}
         />
       </div>
-      {showLogin && (
-        <div className="modal">
-          <div className="modal-content">
-            <button
-              className="close-button"
-              onClick={() => setShowLogin(false)}
-            >
-              ×
-            </button>
-            <Login onLogin={handleLogin} />
-          </div>
-        </div>
-      )}
     </div>
   );
 }
 
-function CharityInfo({
-  charity,
-  donations,
-  formatNumber,
-  isLoggedIn,
-  setShowLogin,
-}) {
+function CharityInfo({ charity, donations, formatNumber, onDonateClick }) {
   return (
     <div className="charity-info">
       <div className="progress-card">
@@ -154,27 +135,14 @@ function CharityInfo({
           ></div>
         </div>
         <p>{formatNumber(charity.donationCount)} donations</p>
-        {isLoggedIn ? (
-          <button className="donate-button">Donate Now</button>
-        ) : (
-          <div className="signup-prompt">
-            <p>Sign up to donate and make a difference!</p>
-            <button
-              className="signup-button"
-              onClick={() => setShowLogin(true)}
-            >
-              Sign Up
-            </button>
-            <button className="login-button" onClick={() => setShowLogin(true)}>
-              Log In
-            </button>
-          </div>
-        )}
+        <button className="donate-button" onClick={onDonateClick}>
+          Donate Now
+        </button>
         <div className="recent-activity">
           <p>{charity.recentDonationCount} people just donated</p>
         </div>
         <div className="recent-donors">
-          {donations.map((donation, index) => (
+          {donations.slice(0, 3).map((donation, index) => (
             <DonorInfo
               key={index}
               donation={donation}
@@ -273,6 +241,7 @@ function CharityDescription({
     </div>
   );
 }
+
 function SuccessStories({
   stories,
   formatNumber,
@@ -304,57 +273,33 @@ function SuccessStories({
     </div>
   );
 }
+
 function StoryCard({ story, formatNumber }) {
   return (
     <div className="story-card">
-      <img src={story.image} alt={story.title} />
-      <h4>{story.title}</h4>
-      <p>RAISED: KES {formatNumber(story.raised)}</p>
-      <p>Donations: {formatNumber(story.donations)}</p>
-      <div className="progress-bar">
-        <div
-          className="progress"
-          style={{
-            width: `${(story.raised / story.goal) * 100}%`,
-          }}
-        ></div>
+      <img src={story.imageUrl} alt={story.title} />
+      <div className="story-content">
+        <h4>{story.title}</h4>
+        <p>{story.description}</p>
       </div>
-      <p>
-        KES {formatNumber(story.raised)} funds raised of KES{" "}
-        {formatNumber(story.goal)} goal
-      </p>
-      <button className="donate-button">DONATE</button>
     </div>
   );
 }
+
 function CommentsSection({ comments, formatNumber }) {
   return (
     <div className="comments-section">
-      <h3>Comments and Insights ({comments.length})</h3>
+      <h3>Recent Comments</h3>
       {comments.map((comment, index) => (
-        <Comment key={index} comment={comment} formatNumber={formatNumber} />
+        <div key={index} className="comment">
+          <span className="commenter-name">{comment.name}</span>
+          <span className="comment-amount">
+            KES {formatNumber(comment.amount)}
+          </span>
+          <span className="comment-time">{comment.time}</span>
+          <p className="comment-text">{comment.comment}</p>
+        </div>
       ))}
-      <button className="report-button">
-        <i className="fas fa-flag"></i> Report Fundraiser
-      </button>
-      <p className="created-info">
-        Created 5 d ago · <i className="fas fa-tag"></i> Humanitarian
-      </p>
-    </div>
-  );
-}
-function Comment({ comment, formatNumber }) {
-  return (
-    <div className="comment">
-      <div className="comment-header">
-        <span className="commenter-initial">{comment.name[0]}</span>
-        <span className="commenter-name">{comment.name}</span>
-        <span className="comment-amount">
-          KES {formatNumber(comment.amount)}
-        </span>
-        <span className="comment-time">{comment.time}</span>
-      </div>
-      <p className="comment-text">{comment.comment}</p>
     </div>
   );
 }

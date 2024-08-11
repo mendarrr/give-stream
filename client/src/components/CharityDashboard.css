@@ -1,312 +1,320 @@
 .charity-details {
-    font-family: Arial, sans-serif;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .charity-details h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
-  .charity-content {
-    display: flex;
-    gap: 30px;
-  }
-  
-  .charity-info {
-    flex: 1;
-    max-width: 400px;
-  }
-  
-  .progress-card {
-    background-color: #008080;
-    color: white;
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-  }
-  
-  .progress-card h3 {
-    font-size: 28px;
-    margin: 0;
-  }
-  
-  .progress-card p {
-    margin: 10px 0;
-  }
-  
-  .progress-bar {
-    background-color: rgba(255, 255, 255, 0.3);
-    height: 10px;
-    border-radius: 5px;
-    margin: 10px 0;
-  }
-  
-  .progress {
-    background-color: white;
-    height: 100%;
-    border-radius: 5px;
-  }
-  
-  .donate-button {
-    background-color: #ff6347;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 18px;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%;
-    margin-top: 10px;
-  }
-  
-  .recent-activity {
-    font-size: 14px;
-    margin-top: 10px;
-  }
-  
-  .recent-donors {
-    margin-top: 20px;
-  }
-  
-  .donor {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .donor-initial {
-    background-color: white;
-    color: #008080;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 10px;
-  }
-  
-  .donor-name {
-    font-weight: bold;
-    margin-right: 10px;
-  }
-  
-  .donor-amount {
-    color: #e0e0e0;
-  }
-  
-  .donation-type {
-    font-size: 12px;
-    color: #e0e0e0;
-    margin-left: auto;
-  }
-  
-  .share-fundraiser {
-    margin-top: 20px;
-  }
-  
-  .share-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  
-  .share-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 12px;
-    border-radius: 5px;
-    border: none;
-    background-color: rgba(255, 255, 255, 0.2);
-    color: white;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  
-  .share-button i {
-    margin-right: 5px;
-  }
-  
-  .see-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  
-  .see-all,
-  .see-top {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: rgba(255, 255, 255, 0.2);
-    color: white;
-    cursor: pointer;
-  }
-  
-  .charity-description {
-    flex: 2;
-  }
-  
-  .charity-image {
-    width: 25%;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    float: left;
-    margin-right: 20px;
-  }
-  
-  .donation-protected {
-    background-color: #e6f3ff;
-    color: #0066cc;
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 14px;
-    margin-bottom: 10px;
-  }
-  
-  .charity-description h3 {
-    font-size: 20px;
-    margin-bottom: 10px;
-  }
-  
-  .charity-description p {
-    line-height: 1.6;
-    color: #333;
-  }
-  
-  .success-stories {
-    margin-top: 40px;
-    position: relative;
-  }
-  
-  .stories-carousel-container {
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .stories-carousel {
-    display: flex;
-    transition: transform 0.3s ease;
-  }
-  
-  .story-card {
-    min-width: 250px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    padding: 15px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-right: 20px;
-  }
-  
-  .story-card img {
-    width: 100%;
-    border-radius: 5px;
-    margin-bottom: 10px;
-  }
-  
-  .story-card h4 {
-    margin: 10px 0;
-  }
-  
-  .carousel-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-    cursor: pointer;
-    z-index: 10;
-  }
-  
-  .carousel-arrow.left {
-    left: 10px;
-  }
-  
-  .carousel-arrow.right {
-    right: 10px;
-  }
-  
-  .comments-section {
-    margin-top: 40px;
-  }
-  
-  .comment {
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 15px;
-  }
-  
-  .comment-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .commenter-initial {
-    background-color: #e0e0e0;
-    color: #333;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 10px;
-  }
-  
-  .commenter-name {
-    font-weight: bold;
-    margin-right: 10px;
-  }
-  
-  .comment-amount {
-    color: #666;
-    margin-right: 10px;
-  }
-  
-  .comment-time {
-    color: #888;
-    font-size: 12px;
-  }
-  
-  .comment-text {
-    line-height: 1.4;
-  }
-  
-  .report-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 10px;
-    background-color: #f0f0f0;
-    border: none;
-    border-radius: 5px;
-    color: #333;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 20px;
-  }
-  
-  .report-button i {
-    margin-right: 10px;
-  }
-  
-  .created-info {
-    text-align: center;
-    color: #888;
-    font-size: 14px;
-    margin-top: 10px;
-  }
+  font-family: Arial, sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.charity-content {
+  display: flex;
+  gap: 30px;
+}
+
+.charity-info {
+  flex: 1;
+  max-width: 400px;
+}
+
+.progress-card {
+  background-color: #008080;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.progress-card h3 {
+  font-size: 28px;
+  margin: 0;
+}
+
+.progress-card p {
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.progress-bar {
+  background-color: rgba(255, 255, 255, 0.3);
+  height: 10px;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+.progress {
+  background-color: white;
+  height: 100%;
+  border-radius: 5px;
+}
+
+.donate-button {
+  background-color: #ff6347;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.recent-activity {
+  font-size: 14px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.recent-activity i {
+  margin-right: 5px;
+  font-size: 18px;
+}
+
+.recent-donors {
+  margin-top: 20px;
+}
+
+.donor {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.donor-initial {
+  background-color: #e0e0e0;
+  color: #008080;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.donor-name {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.donor-amount {
+  color: #e0e0e0;
+}
+
+.donation-type {
+  font-size: 12px;
+  color: #e0e0e0;
+  margin-left: auto;
+}
+
+.share-fundraiser {
+  margin-top: 20px;
+  background-color: white;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.share-fundraiser h4 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.share-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.share-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #666;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.share-button i {
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.see-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.see-all,
+.see-top {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  cursor: pointer;
+}
+
+.charity-description {
+  flex: 2;
+}
+
+.charity-image {
+  width: 25%;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  float: left;
+  margin-right: 20px;
+}
+
+.donation-protected {
+  background-color: #e6f3ff;
+  color: #0066cc;
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.charity-description h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.charity-description p {
+  line-height: 1.6;
+  color: #333;
+}
+
+.success-stories {
+  margin-top: 40px;
+  position: relative;
+}
+
+.stories-carousel-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.stories-carousel {
+  display: flex;
+  transition: transform 0.3s ease;
+}
+
+.story-card {
+  min-width: 250px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-right: 20px;
+}
+
+.story-card img {
+  width: 100%;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.story-card h4 {
+  margin: 10px 0;
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.carousel-arrow.left {
+  left: 10px;
+}
+
+.carousel-arrow.right {
+  right: 10px;
+}
+
+.comments-section {
+  margin-top: 40px;
+}
+
+.comment {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.commenter-initial {
+  background-color: #e0e0e0;
+  color: #333;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+.commenter-name {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.comment-amount {
+  color: #666;
+  margin-right: 10px;
+}
+
+.comment-time {
+  color: #888;
+  font-size: 12px;
+}
+
+.comment-text {
+  line-height: 1.4;
+}
+
+.report-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 5px;
+  color: #333;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.report-button i {
+  margin-right: 10px;
+}
+
+.created-info {
+  text-align: center;
+  color: #888;
+  font-size: 14px;
+  margin-top: 10px;
+}
