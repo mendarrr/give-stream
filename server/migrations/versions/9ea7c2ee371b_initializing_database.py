@@ -1,8 +1,8 @@
-"""initializing databse
+"""initializing database
 
-Revision ID: fe58aa75b233
+Revision ID: 9ea7c2ee371b
 Revises: 
-Create Date: 2024-08-11 13:13:05.586876
+Create Date: 2024-08-11 20:20:29.937995
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'fe58aa75b233'
+revision = '9ea7c2ee371b'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -62,8 +62,10 @@ def upgrade():
     sa.Column('transaction_id', sa.String(length=100), nullable=False),
     sa.Column('status', sa.String(length=20), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('checkout_request_id', sa.String(length=255), nullable=False),
     sa.Column('timestamp', sa.DateTime(), nullable=True),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('checkout_request_id')
     )
     op.create_table('payment_methods',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -92,7 +94,7 @@ def upgrade():
     sa.Column('city', sa.String(length=100), nullable=True),
     sa.Column('zipcode', sa.String(length=20), nullable=True),
     sa.Column('fundraising_category', sa.String(length=100), nullable=True),
-    sa.Column('title', sa.String(length=256), nullable=True),
+    sa.Column('username', sa.String(length=256), nullable=True),
     sa.Column('target_amount', sa.Float(), nullable=True),
     sa.Column('image', sa.String(length=255), nullable=True),
     sa.ForeignKeyConstraint(['reviewed_by'], ['admins.id'], name=op.f('fk_charity_applications_reviewed_by_admins')),

@@ -26,13 +26,16 @@ const LoginPage = () => {
       localStorage.setItem('token', access_token);
       localStorage.setItem('role', role);
 
+      console.log('Response data:', response.data);
+      console.log('Extracted role:', role);
+
       // Redirect based on the user role
       switch (role) {
         case 'admin':
           navigate('/admin-dashboard');
           break;
         case 'donor':
-          navigate('/charity-dashboard');
+          navigate('/donation-form');
           break;
         case 'charity':
           navigate('/charity-profile');

@@ -45,7 +45,7 @@ function App() {
       <Route path="/signin" element={< LoginPage/>} />
       <Route path="/donor" element={<NewDonorForm/>} />
       <Route path="/charities" element={<CharityList/>} />
-      <Route path="/donation" element={<DonationForm />} />
+      <Route path="/donation-form" element={<DonationForm />} />
       <Route path="/payment" element={<PaymentMethodSelector />} /> 
       <Route path="/inventory" element={<Inventory />} /> 
       <Route path="/charity-profile/:id" element={<CharityProfile />} />
