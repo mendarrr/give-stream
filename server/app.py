@@ -237,20 +237,36 @@ class CharityApplications(Resource):
 
     def post(self):
         data = request.get_json()
+
+        email = data.get('email')
+        
+        # Check if the email already exists
+        existing_application = CharityApplication.query.filter_by(email=email).first()
+        
+        if existing_application:
+            return make_response(jsonify({"error": "Email already exists"}), 409)  # 409 Conflict
+        
         new_application = CharityApplication(
-            name=data['name'],
-            email=data['email'],
-            description=data['description'],
+            name=data.get('name'),
+            email=email,
+            description=data.get('description'),
+            status=data.get('status', 'pending'),  # Default to 'pending' if not provided
+            submission_date=data.get('submission_date'),
+            reviewed_by=data.get('reviewed_by'),
+            review_date=data.get('review_date'),
             country=data.get('country'),
             city=data.get('city'),
             zipcode=data.get('zipcode'),
             fundraising_category=data.get('fundraising_category'),
             title=data.get('title'),
-            target_amount=data.get('target_amount')
+            target_amount=data.get('target_amount'),
+            image=data.get('image')  # Include image field
         )
+        
         db.session.add(new_application)
         db.session.commit()
-        return new_application.to_dict(), 201
+        
+        return make_response(jsonify(new_application.to_dict()), 201)  # 201 Created
 
     def put(self, id):
         application = CharityApplication.query.get_or_404(id)
