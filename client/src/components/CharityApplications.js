@@ -16,7 +16,8 @@ const CharityApplications = () => {
         username: '',
         target_amount: '',
         image: '',
-        summary: ''
+        summary: '',
+        password: '',
     });
     const [selectedCategory, setSelectedCategory] = useState(new Set());
     const [selectedDonation, setSelectedDonation] = useState(null);
@@ -49,9 +50,40 @@ const CharityApplications = () => {
         }));
     };
 
+    const validateEmail = (email) => {
+        const emailRegex = /\S+@\S+\.\S+/;
+        if (!emailRegex.test(email)) {
+            setErrorMessages(prev => ({ ...prev, email: 'Please enter a valid email address.' }));
+        } else {
+            setErrorMessages(prev => {
+                const { email, ...rest } = prev;
+                return rest;
+            });
+        }
+    };
+
+    const validatePassword = (password) => {
+        if (password.length < 6) {
+            setErrorMessages(prev => ({ ...prev, password: 'Password must be at least 6 characters long.' }));
+        } else {
+            setErrorMessages(prev => {
+                const { password, ...rest } = prev;
+                return rest;
+            });
+        }
+    };
+
+    const handleEmailBlur = () => {
+        validateEmail(formData.email);
+    };
+
+    const handlePasswordBlur = () => {
+        validatePassword(formData.password);
+    };
+
     const handleNextClick = () => {
         let newErrorMessages = {};
-
+    
         if (currentStep === 1 && selectedOptions.size === 0) {
             newErrorMessages.step1 = 'Please select an option.';
         } else if (currentStep === 2) {
@@ -61,6 +93,9 @@ const CharityApplications = () => {
                     newErrorMessages[field] = 'Please fill this field.';
                 }
             });
+            if (!/\S+@\S+\.\S+/.test(formData.email)) {
+                newErrorMessages.email = 'Please enter a valid email address.';
+            }
             if (selectedCategory.size === 0) {
                 newErrorMessages.step2 = 'Please select at least one category.';
             }
@@ -70,12 +105,12 @@ const CharityApplications = () => {
             if (!formData.image) newErrorMessages.image = 'Please provide an image URL.';
             if (!formData.summary) newErrorMessages.summary = 'Please provide a summary.';
         }
-
+    
         if (Object.keys(newErrorMessages).length > 0) {
             setErrorMessages(newErrorMessages);
             return;
         }
-
+    
         switch (currentStep) {
             case 1:
                 if (selectedOptions.size > 0) setCurrentStep(2);
@@ -102,21 +137,21 @@ const CharityApplications = () => {
     };
 
     const handleSubmit = async () => {
-        const requiredFields = ['name', 'email', 'description', 'country', 'city', 'zipcode', 'username', 'target_amount', 'image', 'summary'];
+        const requiredFields = ['name', 'email', 'description', 'country', 'city', 'zipcode', 'username', 'target_amount', 'image', 'summary', 'password'];
         const isFormValid = requiredFields.every(field => formData[field] || (field === 'target_amount' && selectedDonation));
-
+    
         if (!isFormValid) {
             setErrorMessages(prev => ({ ...prev, form: 'Please fill out all required fields.' }));
             return;
         }
-
+    
         try {
             const response = await fetch('/charity-applications', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             });
-
+    
             if (response.ok) {
                 const result = await response.json();
                 if (result.emailExists) {
@@ -199,7 +234,8 @@ const CharityApplications = () => {
                                 { id: 'country', placeholder: 'Country', type: 'text' },
                                 { id: 'city', placeholder: 'City/Town', type: 'text' },
                                 { id: 'zipcode', placeholder: 'Zip Code', type: 'text' },
-                                { id: 'username', placeholder: 'username', type: 'text' }
+                                { id: 'username', placeholder: 'Username', type: 'text' },
+                                { id: 'password', placeholder: 'Password', type: 'password' }
                             ].map(({ id, placeholder, type }) => (
                                 <div key={id} className="input-group">
                                     <div className="input-wrapper">
@@ -209,6 +245,7 @@ const CharityApplications = () => {
                                             name={id} 
                                             value={formData[id]} 
                                             onChange={handleInputChange} 
+                                            onBlur={id === 'email' ? handleEmailBlur : id === 'password' ? handlePasswordBlur : undefined}
                                             placeholder={placeholder} 
                                         />
                                         {errorMessages[id] && <div className="error-message">{errorMessages[id]}</div>}
