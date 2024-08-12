@@ -1,6 +1,8 @@
 import React from 'react';
 import './CharityCard.css';
 import defaultProfile from '../assets/defaultProfile.png'
+import CharityDetails from './CharityDashbord';
+import { Link } from 'react-router-dom';
 
 const CharityCard = ({ charity }) => {
     const progressPercentage = (charity.total_raised / charity.goal_amount) * 100;
@@ -26,7 +28,7 @@ const CharityCard = ({ charity }) => {
                 </div>
                 <p className='goal'><span className='money'>KES {charity.total_raised}</span> funds raised of <span className='money'>KES {charity.goal_amount}</span> goal</p>
                 <div className='donate-btn'>
-                    <button>Donate</button>
+                    <button className="button" style={{ backgroundColor: "#00008B", color: "white" }}> <Link to="/charity-dashboard/:id" >Donate</Link></button>
                 </div>
             </div>
         </div>
