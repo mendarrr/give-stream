@@ -1,4 +1,50 @@
-/* General Container Styles */
+
+
+
+/* Styling the main container for the Inventory Management */
+.inventory-container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 
 .inventory-container {
     background-color: white;
     color: black;
@@ -9,10 +55,8 @@
     max-width: 800px;
     margin: 20px auto;
 }
-
-/* Error Message Styles */
 .error {
     color: red;
     font-size: 14px;
     margin-top: 10px;
-}
+} */
