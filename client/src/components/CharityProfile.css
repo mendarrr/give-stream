@@ -1,210 +1,204 @@
-body {
-  background-color: #e3e3e3;
-  margin: 0;
-  padding: 0;
-}
-
-.charity-profile {
+.charity-profile-container {
+  background-color: #f5f5f5;
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "info info"
+    "stories beneficiaries"
+    "inventory inventory";
+  gap: 2rem;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .charity-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  grid-area: info;
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
-  margin-bottom: 40px;
-  color: #318e8d;
-}
-
-.charity-info img {
+  justify-self: center;
+  align-self: center;
   width: 100%;
-  max-width: 800px;
-  border-radius: 10px;
-  margin-bottom: 20px;
 }
 
-.charity-content-wrapper {
+.donation-info {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
+  justify-content: space-around;
+  margin-top: 1rem;
 }
 
-.fundraising-card {
-  width: 30%;
-  background-color: #019091;
-  color: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-}
-
-.fundraising-progress {
-  width: 100%;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.progress-bar {
-  width: 100%;
-  height: 12px;
-  background-color: #e0e0e0;
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.progress {
-  height: 100%;
-  background-color: #0f9d58;
-  transition: width 0.3s ease-in-out;
-}
-
-.donate-button {
-  background-color: #ff5722;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  font-size: 18px;
+.stories-section {
+  grid-area: stories;
+  background-color: #fff;
+  padding: 2rem;
   border-radius: 8px;
-  cursor: pointer;
-  margin-top: 20px;
-  width: 100%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.recent-donors {
-  width: 100%;
-  margin-top: 20px;
-}
-
-.donor {
+.story-container {
   display: flex;
   align-items: center;
-  margin-bottom: 12px;
-}
-
-.donor-initials {
-  width: 45px;
-  height: 45px;
-  background-color: #4285f4;
-  color: white;
-  border-radius: 50%;
-  display: flex;
   justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  margin-right: 12px;
-  font-size: 20px;
-}
-.share-fundraiser {
-  margin-top: 20px;
+  margin-bottom: 1rem;
 }
 
-.share-buttons {
-  display: flex;
-  justify-content: space-between;
-  background-color: white;
+.story-card {
+  flex: 1;
+  padding: 1rem;
+  background-color: #318e8d;
+  color: #83732c;
   border-radius: 8px;
-  padding: 10px;
-  margin-top: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.share-button {
-  background: none;
+.story-nav-btn {
+  background-color: #e66e4e;
+  color: #fff;
   border: none;
-  cursor: pointer;
-  font-size: 20px;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-}
-
-.share-button:nth-child(1) {
-  color: #019091;
-}
-
-.share-button:nth-child(2) {
-  color: #1877f2;
-}
-
-.share-button:nth-child(3) {
-  color: #000000;
-}
-
-.share-button:nth-child(4) {
-  color: #d44638;
-}
-
-.share-button:nth-child(5) {
-  color: #019091;
-}
-.view-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-.view-button {
-  background-color: #017e7e;
-  color: white;
-  border: none;
-  padding: 10px 20px;
+  padding: 0.5rem 1rem;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
+  margin: 0 0.5rem;
 }
 
-.charity-content {
-  width: 65%;
+.story-form {
+  margin-top: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 0.5rem;
 }
 
-.stories,
-.inventories,
-.beneficiaries {
-  background-color: #f5f5f5;
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.beneficiaries-section {
+  grid-area: beneficiaries;
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-form {
+.beneficiary-form {
+  margin-top: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 20px;
+  gap: 0.5rem;
+}
+
+.inventory-section {
+  grid-area: inventory;
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.inventory-form {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th,
+td {
+  padding: 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #318e8d;
+  color: #fff;
 }
 
 input,
+textarea,
+button {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
 textarea {
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 16px;
+  resize: vertical;
+  min-height: 100px;
 }
 
-button[type="submit"] {
-  background-color: #318e8d;
-  color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-button[type="submit"]:hover {
+button {
   background-color: #e66e4e;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #c05439;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.pagination button {
+  margin: 0 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background-color: #318e8d;
+}
+
+.pagination button.active {
+  background-color: #e66e4e;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-top: 2rem;
+}
+
+.error-message {
+  color: #e66e4e;
+  text-align: center;
+  font-size: 1.2rem;
+  margin-top: 2rem;
+}
+
+.story-date {
+  font-size: 0.9rem;
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .charity-profile-container {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "info"
+      "stories"
+      "beneficiaries"
+      "inventory";
+  }
+
+  .donation-info {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .donation-item {
+    margin: 0;
+  }
+
+  .inventory-form {
+    flex-direction: column;
+  }
 }

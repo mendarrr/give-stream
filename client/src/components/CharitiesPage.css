@@ -1,0 +1,71 @@
+.charity-list-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.h1 {
+  color: #318e8d;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.charity-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.charity-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.charity-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.charity-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.h2 {
+  color: #318e8d;
+  padding: 1rem;
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.progress-bar {
+  background-color: #e0e0e0;
+  height: 10px;
+  margin: 0 1rem;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress {
+  background-color: #e66e4e;
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.funds-info {
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.raised-amount,
+.goal-amount {
+  font-weight: bold;
+  color: #318e8d;
+}
