@@ -245,26 +245,39 @@ class CharityApplications(Resource):
 
     def post(self):
         data = request.get_json()
+        if isinstance(data, tuple):  # Check if data is a tuple
+            data = data[0]  # Extract the dictionary from the tuple
+
+        if 'password' not in data:
+            return make_response(jsonify({"error": "Password is required"}), 400)
+    
+        password_hash =data.get('password')
+    
         new_application = CharityApplication(
-            name=data['name'],
-            email=data['email'],
+            name=data.get('name'),
+            email=data.get('email'),
             username=data.get('username'),
-            description=data['description'],
+            description=data.get('description'),
             country=data.get('country'),
             city=data.get('city'),
             zipcode=data.get('zipcode'),
             fundraising_category=data.get('fundraising_category'),
             target_amount=data.get('target_amount'),
-            
-        )
+            image=data.get('image'),  # Assuming you're storing the image URL here
+    )
+        new_application.password_hash = password_hash
         db.session.add(new_application)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            return make_response(jsonify({"error": str(e)}), 500)
         return new_application.to_dict(), 201
-
+    
     def put(self, id):
         application = CharityApplication.query.get_or_404(id)
         data = request.get_json()
-        application.status = data['status']
+        application.status = data('status')
 
         if data['status'] == 'approved':
             existing_charity = Charity.query.filter_by(name=application.name).first()
@@ -275,8 +288,12 @@ class CharityApplications(Resource):
                 username=application.name.lower().replace(' ', '_'),
                 email=application.email,
                 name=application.name,
-                description=application.description
+                description=application.description,
+                image=data.get('image'),
+                password_hash=data.get('password')
             )
+            new_charity.password_hash = data('password')
+
             db.session.add(new_charity)
         
         application.country = data.get('country', application.country)
