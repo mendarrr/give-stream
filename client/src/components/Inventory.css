@@ -28,6 +28,30 @@
     margin-bottom: 10px;
 }
 
+.inventory-container input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Styling the buttons within the forms */
+.inventory-container button {
+    background-color: #ff6b35;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.inventory-container button:hover {
+    background-color: #ff5722;
+}
+
+
 
 
 
