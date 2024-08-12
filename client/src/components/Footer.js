@@ -65,17 +65,17 @@ function Footer() {
                 <Link to="/faq">FAQ</Link>
               </li>
               <li>
-                <Link to="/communities">Communities</Link>
-              </li>
-              <li>
-                <Link to="/givestream-communities">
+                <Link to="/communities">
                   Give Stream communities
                 </Link>
               </li>
               <li>
-                <Link to="/givestream-fundraisers">
+                <Link to="/communities">
                   Give Stream Administered Fundraisers
                 </Link>
+              </li>
+              <li>
+                <Link to="/404">404 Error</Link>
               </li>
             </ul>
           </nav>

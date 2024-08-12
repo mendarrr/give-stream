@@ -15,7 +15,7 @@ function CharityDetails() {
   useEffect(() => {
     const fetchData = async (url, setter, errorMessage) => {
       try {
-        const response = await fetch(url);
+        const response = await fetch(`/charities/${id}`);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }

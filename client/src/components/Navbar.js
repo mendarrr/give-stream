@@ -53,10 +53,10 @@ function Navbar({ isSticky, isLoggedIn }) {
                     <Link to="/faq">FAQ</Link>
                   </li>
                   <li>
-                    <Link to="/completed-charities">Communities</Link>
+                    <Link to="/communities">Communities</Link>
                   </li>
                   <li>
-                    <Link to="/givestream-communities">
+                    <Link to="/communities">
                       Give Stream communities
                     </Link>
                   </li>

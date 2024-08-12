@@ -1,8 +1,8 @@
-"""initializing databse
+"""Initial migration
 
-Revision ID: fe58aa75b233
+Revision ID: aef696a78019
 Revises: 
-Create Date: 2024-08-11 13:13:05.586876
+Create Date: 2024-08-11 22:27:15.397174
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'fe58aa75b233'
+revision = 'aef696a78019'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -46,6 +46,17 @@ def upgrade():
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('name'),
     sa.UniqueConstraint('username')
+    )
+    op.create_table('community',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=100), nullable=False),
+    sa.Column('description', sa.String(length=255), nullable=False),
+    sa.Column('members', sa.Integer(), nullable=False),
+    sa.Column('impact_stories', sa.Text(), nullable=False),
+    sa.Column('events', sa.Text(), nullable=False),
+    sa.Column('banner', sa.String(length=255), nullable=False),
+    sa.Column('category', sa.String(length=255), nullable=False),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('message',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -83,6 +94,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=128), nullable=False),
     sa.Column('email', sa.String(length=120), nullable=False),
+    sa.Column('_password_hash', sa.String(), nullable=True),
     sa.Column('description', sa.Text(), nullable=False),
     sa.Column('status', sa.String(length=20), nullable=True),
     sa.Column('submission_date', sa.DateTime(), nullable=True),
@@ -92,7 +104,7 @@ def upgrade():
     sa.Column('city', sa.String(length=100), nullable=True),
     sa.Column('zipcode', sa.String(length=20), nullable=True),
     sa.Column('fundraising_category', sa.String(length=100), nullable=True),
-    sa.Column('title', sa.String(length=256), nullable=True),
+    sa.Column('username', sa.String(length=256), nullable=True),
     sa.Column('target_amount', sa.Float(), nullable=True),
     sa.Column('image', sa.String(length=255), nullable=True),
     sa.ForeignKeyConstraint(['reviewed_by'], ['admins.id'], name=op.f('fk_charity_applications_reviewed_by_admins')),
@@ -160,6 +172,7 @@ def downgrade():
     op.drop_table('payment_methods')
     op.drop_table('payment')
     op.drop_table('message')
+    op.drop_table('community')
     op.drop_table('charities')
     op.drop_table('admins')
     # ### end Alembic commands ###
