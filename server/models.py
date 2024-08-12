@@ -186,7 +186,7 @@ class CharityApplication(db.Model, SerializerMixin):
         'fundraising_category': self.fundraising_category,
         'username': self.username,
         'target_amount': self.target_amount,
-            'image': self.image
+        'image': self.image
     }
 
     
