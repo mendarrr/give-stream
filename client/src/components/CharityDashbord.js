@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./CharityDashboard.css";
 
 function CharityDetails() {
   const [charity, setCharity] = useState(null);
-  const [stories, setStories] = useState([]);
+  const [successStories, setSuccessStories] = useState([]);
   const [donations, setDonations] = useState([]);
   const [error, setError] = useState(null);
   const { id } = useParams();
+  const carouselRef = useRef(null);
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -20,7 +21,7 @@ function CharityDetails() {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        setter(Array.isArray(data) ? data : []);
+        setter(data);
       } catch (error) {
         console.error(`Error fetching ${errorMessage}:`, error);
         setError(`Failed to fetch ${errorMessage}. Please try again later.`);
@@ -32,7 +33,11 @@ function CharityDetails() {
       setCharity,
       "charity details"
     );
-    fetchData("http://127.0.0.1:5000/stories", setStories, "success stories");
+    fetchData(
+      "http://127.0.0.1:5000/stories",
+      setSuccessStories,
+      "success stories"
+    );
     fetchData("http://127.0.0.1:5000/donations", setDonations, "donations");
 
     const handleResize = () => {
@@ -48,7 +53,7 @@ function CharityDetails() {
 
   const moveRight = () => {
     setCurrentIndex((prev) =>
-      Math.min(prev + 1, stories.length - (isMobile ? 1 : 2))
+      Math.min(prev + 1, successStories.length - (isMobile ? 1 : 3))
     );
   };
 
@@ -66,16 +71,14 @@ function CharityDetails() {
   };
 
   if (error) return <div className="error-message">{error}</div>;
-  if (!charity || donations.length === 0 || stories.length === 0)
+  if (!charity || donations.length === 0 || successStories.length === 0)
     return <div>Loading...</div>;
 
   const formatNumber = (number) => (number ? number.toLocaleString() : "0");
 
-  const visibleStories = Array.isArray(stories)
-    ? isMobile
-      ? stories.slice(currentIndex, currentIndex + 1)
-      : stories.slice(currentIndex, currentIndex + 2)
-    : [];
+  const visibleStories = isMobile
+    ? successStories.slice(currentIndex, currentIndex + 1)
+    : successStories.slice(currentIndex, currentIndex + 3);
 
   return (
     <div className="charity-details">
@@ -94,7 +97,7 @@ function CharityDetails() {
           moveLeft={moveLeft}
           moveRight={moveRight}
           currentIndex={currentIndex}
-          storiesLength={stories.length}
+          storiesLength={successStories.length}
           isMobile={isMobile}
         />
       </div>
@@ -214,19 +217,15 @@ function CharityDescription({
       </div>
       <h3>Support Malnourished School Children in Moyale</h3>
       <p>{charity.description}</p>
-      {successStories.length > 0 ? (
-        <SuccessStories
-          stories={successStories}
-          formatNumber={formatNumber}
-          moveLeft={moveLeft}
-          moveRight={moveRight}
-          currentIndex={currentIndex}
-          storiesLength={storiesLength}
-          isMobile={isMobile}
-        />
-      ) : (
-        <p>No success stories available.</p>
-      )}
+      <SuccessStories
+        stories={successStories}
+        formatNumber={formatNumber}
+        moveLeft={moveLeft}
+        moveRight={moveRight}
+        currentIndex={currentIndex}
+        storiesLength={storiesLength}
+        isMobile={isMobile}
+      />
     </div>
   );
 }
@@ -245,7 +244,7 @@ function SuccessStories({
       <h3>Success Stories</h3>
       <div className="stories-carousel-container">
         <button
-          className="carousel-arrow left"
+          className="admin-dashboard__nav-button left"
           onClick={moveLeft}
           disabled={currentIndex === 0}
         >
@@ -257,7 +256,7 @@ function SuccessStories({
           ))}
         </div>
         <button
-          className="carousel-arrow right"
+          className="admin-dashboard__nav-button right"
           onClick={moveRight}
           disabled={currentIndex >= storiesLength - (isMobile ? 1 : 2)}
         >
@@ -274,40 +273,6 @@ function StoryCard({ story, formatNumber }) {
       <h4>{story.title}</h4>
       <p>{story.content}</p>
       <p>Date Posted: {new Date(story.date_posted).toLocaleDateString()}</p>
-    </div>
-  );
-}
-
-function BeneficiaryStory({ story }) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [newStory, setNewStory] = useState(story.story);
-
-  const handleEditClick = () => {
-    setIsEditing(!isEditing);
-  };
-
-  const handleSaveClick = () => {
-    // Save logic
-    setIsEditing(false);
-  };
-
-  return (
-    <div className="beneficiary-story">
-      <h5>Beneficiary Story</h5>
-      {isEditing ? (
-        <>
-          <textarea
-            value={newStory}
-            onChange={(e) => setNewStory(e.target.value)}
-          />
-          <button onClick={handleSaveClick}>Save</button>
-        </>
-      ) : (
-        <>
-          <p>{story.story}</p>
-          <button onClick={handleEditClick}>Edit</button>
-        </>
-      )}
     </div>
   );
 }
