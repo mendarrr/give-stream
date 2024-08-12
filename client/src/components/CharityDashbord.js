@@ -301,7 +301,6 @@ function StoryCard({ story, formatNumber }) {
     </div>
   );
 }
-
 function BeneficiariesSection({
   beneficiaries,
   beneficiariesPerPage,
@@ -309,6 +308,10 @@ function BeneficiariesSection({
   paginate,
   currentPage,
 }) {
+  if (!beneficiaries || beneficiaries.length === 0) {
+    return <div className="beneficiaries-section">No beneficiaries found.</div>;
+  }
+
   return (
     <div className="beneficiaries-section">
       <h3>Beneficiaries</h3>
