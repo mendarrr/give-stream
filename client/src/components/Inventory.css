@@ -102,6 +102,30 @@
 }
 
 
+Copy code
+
+/* Ensuring responsive layout for forms */
+.add-item-form,
+.edit-item-form {
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .inventory-container {
+        width: 95%;
+        padding: 15px;
+    }
+
+    .inventory-list li {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .inventory-list li button {
+        margin-top: 5px;
+    }
+}
+
 
 
 
