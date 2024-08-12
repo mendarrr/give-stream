@@ -48,7 +48,7 @@ class checkSession(Resource):
         else:
             return {"message": "Invalid token user not logged in"}, 401
         
-from models import db, Admin, Donor, Donation,Charity,CharityApplication,Beneficiary,Inventory,Story
+from models import db, Admin, Donor, Donation,Charity,CharityApplication,Beneficiary,Inventory,Story, Payment
 
 def admin_required():
     def wrapper(fn):
@@ -123,7 +123,7 @@ class Login(Resource):
                     expires_delta=timedelta(days=4)
                 )
                 session['id'] = donor.id
-                return {'access_token': access_token}, 200
+                return {'access_token': access_token, 'role': 'donor'}, 200
             else:
                 return {'message': 'Invalid password for donor'}, 401
         elif charity:
@@ -133,7 +133,7 @@ class Login(Resource):
                     expires_delta=timedelta(days=4)
                 )
                 session['id'] = charity.id
-                return {'access_token': access_token}, 200
+                return {'access_token': access_token, 'role': 'charity'}, 200
             else:
                 return {'message': 'Invalid password for charity'}, 401    
         elif admin:
@@ -595,6 +595,7 @@ class DonorResource(Resource):
             email=email,
             is_anonymous=is_anonymous
         )
+        
         new_donor.password_hash = password
 
         db.session.add(new_donor)
@@ -986,6 +987,7 @@ def initiate_payment(phone_number, amount):
         if e.response:
             logging.error(f"Response content: {e.response.content}")
         return {'error': 'Failed to initiate payment'}
+    
 
 class MpesaPaymentResource(Resource):
     def post(self):
