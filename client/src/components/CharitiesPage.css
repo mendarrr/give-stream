@@ -1,116 +1,71 @@
-.charities-page {
+.charity-list-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 2rem;
 }
 
-.charities-page h1 {
+.h1 {
+  color: #318e8d;
   text-align: center;
-  color: #333;
-  margin-bottom: 30px;
-  font-size: 2.5rem;
+  margin-bottom: 2rem;
 }
 
-.charities-grid {
+.charity-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
 }
 
 .charity-card {
   background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: all 0.3s ease;
-  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
 }
 
 .charity-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-}
-
-.charity-image-container {
-  height: 200px;
-  overflow: hidden;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .charity-image {
   width: 100%;
-  height: 100%;
+  height: 200px;
   object-fit: cover;
-  transition: transform 0.3s ease;
 }
 
-.charity-card:hover .charity-image {
-  transform: scale(1.05);
-}
-
-.charity-info {
-  padding: 20px;
-}
-
-.charity-name {
+.h2 {
+  color: #318e8d;
+  padding: 1rem;
+  margin: 0;
   font-size: 1.2rem;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 15px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-.donation-bar-container {
+.progress-bar {
   background-color: #e0e0e0;
-  height: 8px;
-  border-radius: 4px;
+  height: 10px;
+  margin: 0 1rem;
+  border-radius: 5px;
   overflow: hidden;
-  margin-bottom: 10px;
 }
 
-.donation-bar {
-  background-color: #4caf50;
+.progress {
+  background-color: #e66e4e;
   height: 100%;
   transition: width 0.3s ease;
 }
 
-.funds-raised {
+.funds-info {
+  padding: 1rem;
   font-size: 0.9rem;
-  color: #666;
+  color: #555;
 }
 
-.error-message {
-  color: #721c24;
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
-  border-radius: 4px;
-  padding: 15px;
-  margin-bottom: 20px;
-}
-
-.loading-spinner {
-  text-align: center;
-  font-size: 1.2rem;
-  color: #666;
-  margin-top: 50px;
-}
-
-.no-charities {
-  text-align: center;
-  font-size: 1.2rem;
-  color: #666;
-  margin-top: 50px;
-}
-
-@media (max-width: 768px) {
-  .charities-grid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  }
-}
-
-@media (max-width: 480px) {
-  .charities-grid {
-    grid-template-columns: 1fr;
-  }
+.raised-amount,
+.goal-amount {
+  font-weight: bold;
+  color: #318e8d;
 }
