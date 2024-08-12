@@ -24,6 +24,7 @@ import CharityDashboard from "./components/CharityDashbord";
 import CharityList from "./components/CharityList";
 import PaymentMethodSelector from "./components/PaymentMethod";
 import CharityApplications from "./components/CharityApplications";
+import CharitiesPage from "./components/CharitiesPage";
 
 function App() {
   return (
@@ -54,6 +55,7 @@ function App() {
           <Route path="/charity-dashboard/:id" element={<CharityDashboard />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/create-campaign" element={<CharityApplications />} />
+          <Route path="/charity-page" element={<CharitiesPage />} />
         </Routes>
         <Footer />
       </BrowserRouter>
