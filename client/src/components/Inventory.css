@@ -11,6 +11,24 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Styling the primary header for the Inventory Management */
+.inventory-container h2 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Styling secondary headers within the forms */
+.inventory-container h3 {
+    font-size: 22px;
+    font-weight: 500;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+
 
 
 
