@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './CharityApplications.css';
+import './Form.css';
 import Navbar from './Navbar';
 import { useNavigate } from 'react-router-dom';
 
