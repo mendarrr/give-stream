@@ -378,9 +378,12 @@ class CharityApplications(Resource):
         application = CharityApplication.query.get_or_404(id)
         data = request.get_json()
         application.status = data['status']
-        # application.reviewed_by = get_jwt_identity()['id']  # Comment out this line
 
         if data['status'] == 'approved':
+            existing_charity = Charity.query.filter_by(name=application.name).first()
+            if existing_charity:
+                return {'message': 'A charity with this name already exists'}, 400
+            
             new_charity = Charity(
                 username=application.name.lower().replace(' ', '_'),
                 email=application.email,
@@ -388,17 +391,18 @@ class CharityApplications(Resource):
                 description=application.description
             )
             db.session.add(new_charity)
-            
+        
         application.country = data.get('country', application.country)
         application.city = data.get('city', application.city)
         application.zipcode = data.get('zipcode', application.zipcode)
         application.fundraising_category = data.get('fundraising_category', application.fundraising_category)
-        application.title = data.get('title', application.title)
+        application.username = data.get('username', application.username)
         application.target_amount = data.get('target_amount', application.target_amount)
 
         db.session.commit()
         return application.to_dict(), 200
     
+
 class CommonDashboard(Resource):
     def get(self):
         return {

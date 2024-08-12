@@ -72,7 +72,18 @@ const AdminDashboard = () => {
       const response = await fetch(`/charity-applications/${application.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "approved" }),
+        body: JSON.stringify({
+          status: "approved",
+          name: application.name,
+          email: application.email,
+          description: application.description,
+          country: application.country,
+          city: application.city,
+          zipcode: application.zipcode,
+          fundraising_category: application.fundraising_category,
+          username: application.username,
+          target_amount: application.target_amount,
+        }),
       });
 
       if (response.ok) {
@@ -105,7 +116,18 @@ const AdminDashboard = () => {
       const response = await fetch(`/charity-applications/${application.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "rejected" }),
+        body: JSON.stringify({
+          status: "rejected",
+          name: application.name,
+          email: application.email,
+          description: application.description,
+          country: application.country,
+          city: application.city,
+          zipcode: application.zipcode,
+          fundraising_category: application.fundraising_category,
+          username: application.username,
+          target_amount: application.target_amount,
+        }),
       });
 
       if (response.ok) {
