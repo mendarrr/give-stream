@@ -6,7 +6,10 @@ function CharityDetails() {
   const [charity, setCharity] = useState(null);
   const [successStories, setSuccessStories] = useState([]);
   const [donations, setDonations] = useState([]);
+  const [beneficiaries, setBeneficiaries] = useState([]);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [beneficiariesPerPage] = useState(5);
   const { id } = useParams();
   const carouselRef = useRef(null);
   const navigate = useNavigate();
@@ -39,6 +42,11 @@ function CharityDetails() {
       "success stories"
     );
     fetchData("http://127.0.0.1:5000/donations", setDonations, "donations");
+    fetchData(
+      "http://127.0.0.1:5000/beneficiaries",
+      setBeneficiaries,
+      "beneficiaries"
+    );
 
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -80,6 +88,16 @@ function CharityDetails() {
     ? successStories.slice(currentIndex, currentIndex + 1)
     : successStories.slice(currentIndex, currentIndex + 3);
 
+  // Pagination logic for beneficiaries
+  const indexOfLastBeneficiary = currentPage * beneficiariesPerPage;
+  const indexOfFirstBeneficiary = indexOfLastBeneficiary - beneficiariesPerPage;
+  const currentBeneficiaries = beneficiaries.slice(
+    indexOfFirstBeneficiary,
+    indexOfLastBeneficiary
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div className="charity-details">
       <h2>{charity.name}</h2>
@@ -101,6 +119,13 @@ function CharityDetails() {
           isMobile={isMobile}
         />
       </div>
+      <BeneficiariesSection
+        beneficiaries={currentBeneficiaries}
+        beneficiariesPerPage={beneficiariesPerPage}
+        totalBeneficiaries={beneficiaries.length}
+        paginate={paginate}
+        currentPage={currentPage}
+      />
     </div>
   );
 }
@@ -274,6 +299,74 @@ function StoryCard({ story, formatNumber }) {
       <p>{story.content}</p>
       <p>Date Posted: {new Date(story.date_posted).toLocaleDateString()}</p>
     </div>
+  );
+}
+
+function BeneficiariesSection({
+  beneficiaries,
+  beneficiariesPerPage,
+  totalBeneficiaries,
+  paginate,
+  currentPage,
+}) {
+  return (
+    <div className="beneficiaries-section">
+      <h3>Beneficiaries</h3>
+      <ul className="beneficiaries-list">
+        {beneficiaries.map((beneficiary) => (
+          <li key={beneficiary.id} className="beneficiary-item">
+            <h4>{beneficiary.name}</h4>
+            <p>{beneficiary.description}</p>
+          </li>
+        ))}
+      </ul>
+      <Pagination
+        beneficiariesPerPage={beneficiariesPerPage}
+        totalBeneficiaries={totalBeneficiaries}
+        paginate={paginate}
+        currentPage={currentPage}
+      />
+    </div>
+  );
+}
+
+function Pagination({
+  beneficiariesPerPage,
+  totalBeneficiaries,
+  paginate,
+  currentPage,
+}) {
+  const pageNumbers = [];
+
+  if (beneficiariesPerPage && totalBeneficiaries) {
+    for (
+      let i = 1;
+      i <= Math.ceil(totalBeneficiaries / beneficiariesPerPage);
+      i++
+    ) {
+      pageNumbers.push(i);
+    }
+  }
+
+  if (pageNumbers.length <= 1) {
+    return null; // Don't render pagination if there's only one page or less
+  }
+
+  return (
+    <nav>
+      <ul className="pagination">
+        {pageNumbers.map((number) => (
+          <li
+            key={number}
+            className={`page-item ${currentPage === number ? "active" : ""}`}
+          >
+            <button onClick={() => paginate(number)} className="page-link">
+              {number}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 }
 

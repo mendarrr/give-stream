@@ -319,3 +319,47 @@
   font-size: 14px;
   margin-top: 10px;
 }
+.beneficiaries-section {
+  margin-top: 40px;
+}
+
+.beneficiaries-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.beneficiary-item {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.beneficiary-item h4 {
+  margin: 0 0 10px 0;
+}
+
+.pagination {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.page-item {
+  margin: 0 5px;
+}
+
+.page-link {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.page-item.active .page-link {
+  background-color: #008080;
+  color: #fff;
+}
