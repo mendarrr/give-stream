@@ -22,10 +22,11 @@ const CharityProfile = () => {
   });
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
   const [currentBeneficiaryPage, setCurrentBeneficiaryPage] = useState(1);
+  const [currentInventoryPage, setCurrentInventoryPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const beneficiariesPerPage = 5;
+  const itemsPerPage = 5;
 
   useEffect(() => {
     const fetchCharityData = async () => {
@@ -153,14 +154,23 @@ const CharityProfile = () => {
     );
   };
 
-  const indexOfLastBeneficiary = currentBeneficiaryPage * beneficiariesPerPage;
-  const indexOfFirstBeneficiary = indexOfLastBeneficiary - beneficiariesPerPage;
+  const indexOfLastBeneficiary = currentBeneficiaryPage * itemsPerPage;
+  const indexOfFirstBeneficiary = indexOfLastBeneficiary - itemsPerPage;
   const currentBeneficiaries = beneficiaries.slice(
     indexOfFirstBeneficiary,
     indexOfLastBeneficiary
   );
 
-  const paginate = (pageNumber) => setCurrentBeneficiaryPage(pageNumber);
+  const indexOfLastInventoryItem = currentInventoryPage * itemsPerPage;
+  const indexOfFirstInventoryItem = indexOfLastInventoryItem - itemsPerPage;
+  const currentInventoryItems = inventory.slice(
+    indexOfFirstInventoryItem,
+    indexOfLastInventoryItem
+  );
+
+  const paginateBeneficiaries = (pageNumber) =>
+    setCurrentBeneficiaryPage(pageNumber);
+  const paginateInventory = (pageNumber) => setCurrentInventoryPage(pageNumber);
 
   if (loading) return <div className="loading">Loading...</div>;
   if (error) return <div className="error-message">{error}</div>;
@@ -253,11 +263,11 @@ const CharityProfile = () => {
         </table>
         <div className="pagination">
           {Array.from(
-            { length: Math.ceil(beneficiaries.length / beneficiariesPerPage) },
+            { length: Math.ceil(beneficiaries.length / itemsPerPage) },
             (_, i) => (
               <button
                 key={i}
-                onClick={() => paginate(i + 1)}
+                onClick={() => paginateBeneficiaries(i + 1)}
                 className={currentBeneficiaryPage === i + 1 ? "active" : ""}
               >
                 {i + 1}
@@ -299,7 +309,7 @@ const CharityProfile = () => {
             </tr>
           </thead>
           <tbody>
-            {inventory.map((item) => (
+            {currentInventoryItems.map((item) => (
               <tr key={item.id}>
                 <td>{item.item_name}</td>
                 <td>{item.quantity}</td>
@@ -308,6 +318,20 @@ const CharityProfile = () => {
             ))}
           </tbody>
         </table>
+        <div className="pagination">
+          {Array.from(
+            { length: Math.ceil(inventory.length / itemsPerPage) },
+            (_, i) => (
+              <button
+                key={i}
+                onClick={() => paginateInventory(i + 1)}
+                className={currentInventoryPage === i + 1 ? "active" : ""}
+              >
+                {i + 1}
+              </button>
+            )
+          )}
+        </div>
         <form onSubmit={handleInventorySubmit} className="inventory-form">
           <input
             type="text"
