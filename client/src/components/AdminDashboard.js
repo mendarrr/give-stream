@@ -76,7 +76,9 @@ const AdminDashboard = () => {
       });
 
       if (response.ok) {
-        fetchCharityApplications();
+        setCharityApplications(
+          charityApplications.filter((app) => app.id !== application.id)
+        );
         fetchCharities();
         setMessage({
           type: "success",
@@ -107,7 +109,9 @@ const AdminDashboard = () => {
       });
 
       if (response.ok) {
-        fetchCharityApplications();
+        setCharityApplications(
+          charityApplications.filter((app) => app.id !== application.id)
+        );
         fetchRejectedApplications();
         setMessage({
           type: "success",
@@ -192,78 +196,94 @@ const AdminDashboard = () => {
 
       <section className="admin-dashboard__applications">
         <h2 className="admin-dashboard__section-title">Charity Applications</h2>
-        <ul className="admin-dashboard__application-list">
-          {currentApplications.map((application) => (
-            <li
-              key={application.id}
-              className="admin-dashboard__application-item"
-            >
-              <h3 className="admin-dashboard__application-name">
-                {application.name}
-              </h3>
-              <p className="admin-dashboard__application-description">
-                {application.description}
-              </p>
-              <div className="admin-dashboard__application-actions">
-                <button
-                  className="admin-dashboard__approve-btn"
-                  onClick={() => handleApprove(application)}
+        {currentApplications.length > 0 ? (
+          <>
+            <ul className="admin-dashboard__application-list">
+              {currentApplications.map((application) => (
+                <li
+                  key={application.id}
+                  className="admin-dashboard__application-item"
                 >
-                  Approve
-                </button>
+                  <h3 className="admin-dashboard__application-name">
+                    {application.name}
+                  </h3>
+                  <p className="admin-dashboard__application-description">
+                    {application.description}
+                  </p>
+                  <div className="admin-dashboard__application-actions">
+                    <button
+                      className="admin-dashboard__approve-btn"
+                      onClick={() => handleApprove(application)}
+                    >
+                      Approve
+                    </button>
+                    <button
+                      className="admin-dashboard__reject-btn"
+                      onClick={() => handleReject(application)}
+                    >
+                      Reject
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <div className="admin-dashboard__pagination">
+              {Array.from({
+                length: Math.ceil(
+                  charityApplications.length / applicationsPerPage
+                ),
+              }).map((_, index) => (
                 <button
-                  className="admin-dashboard__reject-btn"
-                  onClick={() => handleReject(application)}
+                  key={index}
+                  onClick={() => paginate(index + 1)}
+                  className={`admin-dashboard__pagination-btn ${
+                    currentPage === index + 1 ? "active" : ""
+                  }`}
                 >
-                  Reject
+                  {index + 1}
                 </button>
-              </div>
-            </li>
-          ))}
-        </ul>
-        <div className="admin-dashboard__pagination">
-          {Array.from({
-            length: Math.ceil(charityApplications.length / applicationsPerPage),
-          }).map((_, index) => (
-            <button
-              key={index}
-              onClick={() => paginate(index + 1)}
-              className={`admin-dashboard__pagination-btn ${
-                currentPage === index + 1 ? "active" : ""
-              }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <p className="admin-dashboard__no-applications">
+            No pending applications at the moment.
+          </p>
+        )}
       </section>
 
       <section className="admin-dashboard__rejected-applications">
         <h2 className="admin-dashboard__section-title">
           Rejected Applications
         </h2>
-        <table className="admin-dashboard__rejected-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Description</th>
-              <th>Submission Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rejectedApplications.map((application) => (
-              <tr key={application.id}>
-                <td>{application.name}</td>
-                <td>{application.email}</td>
-                <td>{application.description}</td>
-                <td>
-                  {new Date(application.submission_date).toLocaleDateString()}
-                </td>
+        {rejectedApplications.length > 0 ? (
+          <table className="admin-dashboard__rejected-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Description</th>
+                <th>Submission Date</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {rejectedApplications.map((application) => (
+                <tr key={application.id}>
+                  <td>{application.name}</td>
+                  <td>{application.email}</td>
+                  <td>{application.description}</td>
+                  <td>
+                    {new Date(application.submission_date).toLocaleDateString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p className="admin-dashboard__no-rejected">
+            No rejected applications at the moment.
+          </p>
+        )}
       </section>
 
       <section className="admin-dashboard__charities">
