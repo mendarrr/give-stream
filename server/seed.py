@@ -31,7 +31,7 @@ def seed_data():
                 raised_amount=5000.00,
                 goal_amount=20000.00,
                 donation_count=50,
-                image_url='https://images.pexels.com/photos/9324330/pexels-photo-9324330.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+                image_url='https://images.pexels.com/photos/6646778/pexels-photo-6646778.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
                 organizer='John Doe'
             ),
             Charity(
@@ -91,7 +91,7 @@ def seed_data():
                 raised_amount=5000.00,
                 goal_amount=30000.00,
                 donation_count=60,
-                image_url='https://images.unsplash.com/photo-1504674900247-0877dfd6d9a0',
+                image_url='https://images.pexels.com/photos/6348119/pexels-photo-6348119.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
                 organizer='Robert Brown'
             ),
             Charity(
@@ -103,7 +103,7 @@ def seed_data():
                 raised_amount=20000.00,
                 goal_amount=80000.00,
                 donation_count=70,
-                image_url='https://images.unsplash.com/photo-1568155147-870f3e3e4f7d',
+                image_url='https://images.pexels.com/photos/7470822/pexels-photo-7470822.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
                 organizer='Sara Jones'
             ),
             Charity(
@@ -115,7 +115,7 @@ def seed_data():
                 raised_amount=18000.00,
                 goal_amount=70000.00,
                 donation_count=65,
-                image_url='https://images.unsplash.com/photo-1506748686214e9df14f1',
+                image_url='https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
                 organizer='Carlos Martinez'
             ),
             Charity(
@@ -127,7 +127,7 @@ def seed_data():
                 raised_amount=25000.00,
                 goal_amount=100000.00,
                 donation_count=85,
-                image_url='https://images.unsplash.com/photo-1486210931844-26e8da774b8b',
+                image_url='https://images.pexels.com/photos/7662853/pexels-photo-7662853.jpeg',
                 organizer='Natalie King'
             ),
             Charity(
@@ -139,7 +139,7 @@ def seed_data():
                 raised_amount=9000.00,
                 goal_amount=40000.00,
                 donation_count=50,
-                image_url='https://images.unsplash.com/photo-1506748686214-e9df14f1d8d4',
+                image_url='https://images.pexels.com/photos/3958403/pexels-photo-3958403.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
                 organizer='George White'
             ),
             Charity(
@@ -151,11 +151,11 @@ def seed_data():
                 raised_amount=13000.00,
                 goal_amount=50000.00,
                 donation_count=55,
-                image_url='https://images.unsplash.com/photo-1574158622682-015e3d611c5d',
+                image_url='https://images.pexels.com/photos/2837863/pexels-photo-2837863.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
                 organizer='Emily Clark'
             ),
             Charity(
-                username='youth_entrepreneurship', 
+                username='Youth Program', 
                 email='contact@charity30.org', 
                 name='Youth Entrepreneurship Program', 
                 description='Supporting young entrepreneurs with resources and mentorship.', 
@@ -163,7 +163,7 @@ def seed_data():
                 raised_amount=11000.00,
                 goal_amount=44000.00,
                 donation_count=60,
-                image_url='https://images.unsplash.com/photo-1566245032-7d3e8e07d1f3',
+                image_url='https://images.pexels.com/photos/770099/pexels-photo-770099.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
                 organizer='Jason Adams'
             ),
             Charity(
@@ -175,7 +175,7 @@ def seed_data():
                 raised_amount=8000.00,
                 goal_amount=36000.00,
                 donation_count=45,
-                image_url='https://images.unsplash.com/photo-1536234885652-4b3aa05a278d',
+                image_url='https://images.pexels.com/photos/4099237/pexels-photo-4099237.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
                 organizer='Sophia Green'
             ),
             Charity(
@@ -187,7 +187,7 @@ def seed_data():
                 raised_amount=7000.00,
                 goal_amount=32000.00,
                 donation_count=70,
-                image_url='https://images.unsplash.com/photo-1526747768572-1d0632b0d124',
+                image_url='https://images.pexels.com/photos/6135340/pexels-photo-6135340.jpeg?auto=compress&cs=tinysrgb&w=600',
                 organizer='Owen Lewis'
             ),
             Charity(
@@ -211,7 +211,7 @@ def seed_data():
                 raised_amount=14000.00,
                 goal_amount=56000.00,
                 donation_count=65,
-                image_url='https://images.unsplash.com/photo-1567008510-b9d6657b6182',
+                image_url='https://images.pexels.com/photos/6463404/pexels-photo-6463404.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
                 organizer='Ethan Walker'
             ),
             Charity(
@@ -223,7 +223,7 @@ def seed_data():
                 raised_amount=10000.00,
                 goal_amount=44000.00,
                 donation_count=75,
-                image_url='https://images.unsplash.com/photo-1565208040-8d2d8a4bfc07',
+                image_url='https://images.pexels.com/photos/3044623/pexels-photo-3044623.jpeg?auto=compress&cs=tinysrgb&w=600',
                 organizer='Ava Young'
             ),
             Charity(
@@ -235,7 +235,7 @@ def seed_data():
                 raised_amount=20000.00,
                 goal_amount=70000.00,
                 donation_count=80,
-                image_url='https://images.unsplash.com/photo-1524397595383-3b6b5c0c50d1',
+                image_url='https://images.pexels.com/photos/16135530/pexels-photo-16135530/free-photo-of-a-prohibition-in-a-reservoir.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
                 organizer='Liam Harris'
             ),
             Charity(
@@ -247,7 +247,7 @@ def seed_data():
                 raised_amount=9500.00,
                 goal_amount=40000.00,
                 donation_count=50,
-                image_url='https://images.pexels.com/photos/8060427/pexels-photo-8060427.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+                image_url='https://images.pexels.com/photos/2444852/pexels-photo-2444852.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
                 organizer='Mia Turner'
             ),
             Charity(
@@ -259,7 +259,7 @@ def seed_data():
                 raised_amount=8500.00,
                 goal_amount=36000.00,
                 donation_count=60,
-                image_url='https://images.unsplash.com/photo-1515376792582-00f1b08f8b5d',
+                image_url='https://images.pexels.com/photos/159644/art-supplies-brushes-rulers-scissors-159644.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
                 organizer='James Scott'
             ),
             Charity(
@@ -271,7 +271,7 @@ def seed_data():
                 raised_amount=12000.00,
                 goal_amount=44000.00,
                 donation_count=70,
-                image_url='https://images.pexels.com/photos/6565756/pexels-photo-6565756.jpeg?auto=compress&cs=tinysrgb&w=600',
+                image_url='https://images.pexels.com/photos/592600/pexels-photo-592600.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
                 organizer='Olivia Evans'
             ),
             Charity(
@@ -283,7 +283,7 @@ def seed_data():
                 raised_amount=13000.00,
                 goal_amount=50000.00,
                 donation_count=85,
-                image_url='https://images.pexels.com/photos/8369770/pexels-photo-8369770.jpeg?auto=compress&cs=tinysrgb&w=600',
+                image_url='https://images.pexels.com/photos/6476805/pexels-photo-6476805.jpeg?auto=compress&cs=tinysrgb&w=600',
                 organizer='Henry Lee'
             )
             
