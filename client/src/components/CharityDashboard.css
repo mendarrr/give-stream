@@ -327,16 +327,22 @@
   list-style-type: none;
   padding: 0;
 }
-
 .beneficiary-item {
   background-color: #f9f9f9;
   border-radius: 10px;
   padding: 15px;
   margin-bottom: 15px;
+  border-left: 4px solid #008080;
 }
 
 .beneficiary-item h4 {
   margin: 0 0 10px 0;
+  color: #008080;
+}
+
+.beneficiary-item p {
+  margin: 0;
+  color: #333;
 }
 
 .pagination {
