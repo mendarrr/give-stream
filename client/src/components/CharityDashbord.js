@@ -56,7 +56,7 @@ function CharityDetails() {
       }
     };
 
-    fetchCharityDetails();
+    CharityDetails();
     fetchSuccessStories();
     fetchDonations();
   }, [id]);

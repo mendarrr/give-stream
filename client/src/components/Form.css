@@ -51,6 +51,9 @@
     border-top-right-radius: 60px;
     border-bottom-right-radius: 60px;
     height: 530px;
+    background: url('../assets/CharityHomeBack.png') no-repeat center center / 120%;
+    background-color: rgba(245, 245, 245, 0.9);
+    background-blend-mode: saturation;
   }
 
   .form-container form{

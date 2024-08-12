@@ -54,7 +54,7 @@ def seed_data():
                 raised_amount=20000.00,
                 goal_amount=20000.00,
                 donation_count=50,
-                image_url='https://images.pexels.com/photos/9324330/pexels-photo-9324330.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+                image_url='https://i.pinimg.com/564x/02/52/fe/0252fe07897cc0efddcd4519137ff75d.jpg',
                 organizer='John Doe'
             ),
             Charity(

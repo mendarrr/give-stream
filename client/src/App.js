@@ -23,7 +23,6 @@ import CharityProfile from "./components/CharityProfile";
 import AdminDashboard from "./components/AdminDashboard";
 import CharityDashboard from "./components/AdminDashboard";
 // import CharitiesPage from "./components/CharitiesPage";
-import CharityList from "./components/CharityList";
 import PaymentMethodSelector from "./components/PaymentMethod";
 import CharityApplications from "./components/CharityApplications";
 import CommunitiesSection from './components/CommunitySection';

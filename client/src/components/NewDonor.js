@@ -97,14 +97,6 @@ const NewDonorForm = () => {
         </div>
         <div
           className="form-right"
-          style={{
-            backgroundImage: `url('/photo.jpg')`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundColor: "rgba(255, 255, 255, 0.9)",
-            backgroundBlendMode: "overlay",
-          }}
         >
           <form className="form-container" onSubmit={handleSubmit}>
             <div className="form-text">
