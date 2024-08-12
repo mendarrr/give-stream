@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import './Form.css';
 import { Link } from 'react-router-dom';
 import Switch from 'react-switch';
 import PaymentMethodSelector from './PaymentMethod';
@@ -45,14 +47,13 @@ const DonationForm = () => {
       ...prevData,
       payment_method_id: selectedPaymentMethod.id
     }));
-    setPaymentMethodSelected(true); // Indicate that a payment method has been selected
+    setPaymentMethodSelected(true);
     console.log('Updated donation data:', donationData);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     
-    // Ensure that all required fields are filled and a payment method is selected
     if (!donationData.donor_id || !donationData.charity_id || donationData.amount === 0 || !donationData.date || !donationData.payment_method_id) {
       showMessage('Please fill in all required fields and select a payment method.', true);
       return;
@@ -67,7 +68,6 @@ const DonationForm = () => {
       showMessage('An error occurred. Please try again.', true);
     }
   };
-  
 
   const handlePaymentSubmit = (event) => {
     event.preventDefault();
@@ -75,7 +75,11 @@ const DonationForm = () => {
       showMessage('Please select a payment method before proceeding.', true);
       return;
     }
-    handleSubmit(event); // Submit the form if a payment method is selected
+    handleSubmit(event);
+  };
+
+  const handlePaymentClick = () => {
+    localStorage.setItem('donationAmount', donationData.amount);
   };
 
   return (
@@ -170,9 +174,13 @@ const DonationForm = () => {
         <div>
           <h3>Your Donation</h3>
           <p>Total Due: KSH {donationData.amount}</p>
-          <Link to="/payment" className='payment-btn'>Make Payment</Link>
-          <PaymentMethodSelector userId={donationData.donor_id} amount={donationData.amount} />
-
+          <Link 
+            to="/payment" 
+            className='payment-btn'
+            onClick={handlePaymentClick}
+          >
+            Make Payment
+          </Link>
         </div>
         
         <button 

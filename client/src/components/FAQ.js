@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Question from './Question';
+import Question from "./Question";
 
 const faqData = [
   {
@@ -80,50 +80,51 @@ const faqData = [
 ];
 
 const FAQ = () => {
-    const [activeIndex, setActiveIndex] = useState(null);
-    const [isChatBoxOpen, setIsChatBoxOpen] = useState(false);
-  
-    const toggleAnswer = (index) => {
-      setActiveIndex(activeIndex === index ? null : index);
-    };
-  
-    const toggleChatBox = () => {
-      setIsChatBoxOpen(!isChatBoxOpen);
-    };
-  
-    return (
-      <div className="main-faq-container">
-        <div className="faq-header">
-          <h4>Questions</h4>
-        </div>
-        <div className="faq-container">
-          <div className="card-question-container">
-            {faqData.map((item, index) => (
-              <div
-                key={index}
-                className="faq-item"
-                onClick={() => toggleAnswer(index)}
-              >
-                <div className="faq-question">
-                  <h2>{item.question}</h2>
-                </div>
-                {activeIndex === index && (
-                  <div className="faq-answer">
-                    <p>{item.answer}</p>
-                  </div>
-                )}
+    
+  const [activeIndex, setActiveIndex] = useState(null);
+  const [isChatBoxOpen, setIsChatBoxOpen] = useState(false);
+
+  const toggleAnswer = (index) => {
+    setActiveIndex(activeIndex === index ? null : index);
+  };
+
+  const toggleChatBox = () => {
+    setIsChatBoxOpen(!isChatBoxOpen);
+  };
+
+  return (
+    <div className="main-faq-container">
+      <div className="faq-header">
+        <h4>Questions</h4>
+      </div>
+      <div className="ask-form-icon-btn chat-container">
+        {isChatBoxOpen && <Question onClose={toggleChatBox} />}
+        <button className="chat-button" onClick={toggleChatBox}>
+          <i className="fa-regular fa-message"></i>
+        </button>
+      </div>
+      <div className="faq-container">
+        <div className="card-question-container">
+          {faqData.map((item, index) => (
+            <div
+              key={index}
+              className="faq-item"
+              onClick={() => toggleAnswer(index)}
+            >
+              <div className="faq-question">
+                <h2>{item.question}</h2>
               </div>
-            ))}
-          </div>
-        </div>
-        <div className="ask-form-icon-btn chat-container">
-         {isChatBoxOpen && <Question onClose={toggleChatBox} />}
-          <button className="chat-button" onClick={toggleChatBox}>
-            <i className="fa-regular fa-message"></i>
-          </button>
+              {activeIndex === index && (
+                <div className="faq-answer">
+                  <p>{item.answer}</p>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
-    );
-  };
-  
-  export default FAQ;
+    </div>
+  );
+};
+
+export default FAQ;

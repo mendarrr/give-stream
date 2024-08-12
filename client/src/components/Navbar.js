@@ -24,7 +24,7 @@ function Navbar({ isSticky, isLoggedIn }) {
             <Link to="/create-campaign">Set up a Donation Campaign</Link>
           </li>
           <li>
-            <Link to="/donation">register</Link>
+            <Link to="/donor">register</Link>
           </li>
           <li>
             <Link to="/payment">registe</Link>
@@ -53,10 +53,10 @@ function Navbar({ isSticky, isLoggedIn }) {
                     <Link to="/faq">FAQ</Link>
                   </li>
                   <li>
-                    <Link to="/completed-charities">Communities</Link>
+                    <Link to="/communities">Communities</Link>
                   </li>
                   <li>
-                    <Link to="/givestream-communities">
+                    <Link to="/communities">
                       Give Stream communities
                     </Link>
                   </li>

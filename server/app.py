@@ -14,7 +14,8 @@ import base64
 from json import JSONEncoder
 
 from config import app,db,api
-from models import db, Admin, Donor,Charity, PaymentMethod, Message, Payment
+from models import db, Admin, Donor,Charity, PaymentMethod, Message, Community, Payment
+
 
 class CustomJSONEncoder(JSONEncoder):
     def default(self, obj):
@@ -47,7 +48,7 @@ class checkSession(Resource):
         else:
             return {"message": "Invalid token user not logged in"}, 401
         
-from models import db, Admin, Donor, Donation,Charity,CharityApplication,Beneficiary,Inventory,Story
+from models import db, Admin, Donor, Donation,Charity,CharityApplication,Beneficiary,Inventory,Story, Payment
 
 def admin_required():
     def wrapper(fn):
@@ -122,7 +123,7 @@ class Login(Resource):
                     expires_delta=timedelta(days=4)
                 )
                 session['id'] = donor.id
-                return {'access_token': access_token}, 200
+                return {'access_token': access_token, 'role': 'donor'}, 200
             else:
                 return {'message': 'Invalid password for donor'}, 401
         elif charity:
@@ -132,7 +133,7 @@ class Login(Resource):
                     expires_delta=timedelta(days=4)
                 )
                 session['id'] = charity.id
-                return {'access_token': access_token}, 200
+                return {'access_token': access_token, 'role': 'charity'}, 200
             else:
                 return {'message': 'Invalid password for charity'}, 401    
         elif admin:
@@ -177,6 +178,13 @@ class Charities(Resource):
         else:
             charities = Charity.query.all()
             return jsonify([charity.to_dict_with_stats() for charity in charities])
+
+
+    def to_dict_with_stats(self):
+        donations = Donation.query.filter_by(charity_id=self.id).all()
+        total_raised = sum(donation.amount for donation in donations)
+        donation_count = len(donations)
+        percentage_raised = (total_raised / self.needed_donation) * 100 if self.needed_donation else 0
 
     def post(self):
         try:
@@ -297,21 +305,99 @@ class CharityApplications(Resource):
         return application.to_dict(), 200
 
 # This method should be part of the Charity model
-def to_dict_with_stats(self):
-    donations = Donation.query.filter_by(charity_id=self.id).all()
-    total_raised = sum(donation.amount for donation in donations)
-    donation_count = len(donations)
-    percentage_raised = (total_raised / self.needed_donation) * 100 if self.needed_donation else 0
+    def to_dict_with_stats(self):
+        donations = Donation.query.filter_by(charity_id=self.id).all()
+        total_raised = sum(donation.amount for donation in donations)
+        donation_count = len(donations)
+        percentage_raised = (total_raised / self.needed_donation) * 100 if self.needed_donation else 0
 
-    return {
-        'id': self.id,
-        'name': self.name,
-        'total_raised': total_raised,
-        'donation_count': donation_count,
-        'percentage_raised': percentage_raised,
-        'needed_donation': self.needed_donation
-    }
+        return {
+            'id': self.id,
+            'name': self.name,
+            'total_raised': total_raised,
+            'donation_count': donation_count,
+            'percentage_raised': percentage_raised,
+            'needed_donation': self.needed_donation
+        }
 
+    def post(self):
+        data = request.get_json()
+        new_charity = Charity(
+            username=data['username'],
+            email=data['email'],
+            name=data['name'],
+            description=data.get('description'),
+            needed_donation=data.get('needed_donation'),
+            goal_amount=data.get('goal_amount'),
+            image_url=data.get('image_url'),
+            organizer=data.get('organizer')
+        )
+        new_charity.password_hash = data['password']
+        db.session.add(new_charity)
+        db.session.commit()
+        return new_charity.to_dict(), 201
+
+    def put(self, id):
+        charity = Charity.query.get_or_404(id)
+        data = request.get_json()
+        for key, value in data.items():
+            setattr(charity, key, value)
+        db.session.commit()
+        return charity.to_dict()
+
+    def delete(self, id):
+        charity = Charity.query.get_or_404(id)
+        db.session.delete(charity)
+        db.session.commit()
+        return '', 204
+    
+
+class CharityApplications(Resource):
+    def get(self):
+        applications = CharityApplication.query.all()
+        return jsonify([app.to_dict() for app in applications])
+
+    def post(self):
+        data = request.get_json()
+        new_application = CharityApplication(
+            name=data['name'],
+            email=data['email'],
+            username=data.get('username'),
+            description=data['description'],
+            country=data.get('country'),
+            city=data.get('city'),
+            zipcode=data.get('zipcode'),
+            fundraising_category=data.get('fundraising_category'),
+            target_amount=data.get('target_amount')
+        )
+        db.session.add(new_application)
+        db.session.commit()
+        return new_application.to_dict(), 201
+
+    def put(self, id):
+        application = CharityApplication.query.get_or_404(id)
+        data = request.get_json()
+        application.status = data['status']
+        # application.reviewed_by = get_jwt_identity()['id']  # Comment out this line
+
+        if data['status'] == 'approved':
+            new_charity = Charity(
+                username=application.name.lower().replace(' ', '_'),
+                email=application.email,
+                name=application.name,
+                description=application.description
+            )
+            db.session.add(new_charity)
+            
+        application.country = data.get('country', application.country)
+        application.city = data.get('city', application.city)
+        application.zipcode = data.get('zipcode', application.zipcode)
+        application.fundraising_category = data.get('fundraising_category', application.fundraising_category)
+        application.title = data.get('title', application.title)
+        application.target_amount = data.get('target_amount', application.target_amount)
+
+        db.session.commit()
+        return application.to_dict(), 200
     
 class CommonDashboard(Resource):
     def get(self):
@@ -509,6 +595,7 @@ class DonorResource(Resource):
             email=email,
             is_anonymous=is_anonymous
         )
+        
         new_donor.password_hash = password
 
         db.session.add(new_donor)
@@ -786,6 +873,58 @@ class AnswerMessage(Resource):
         message.is_answered = True
         db.session.commit()
         return message.to_dict()
+    
+class CommunityListResource(Resource):
+    def get(self):
+        search_term = request.args.get('search', '')
+        communities = Community.query.filter(Community.name.ilike(f'%{search_term}%')).all()
+        return [community.to_dict() for community in communities], 200
+
+    def post(self):
+        data = request.json
+        new_community = Community(
+            name=data['name'],
+            description=data['description'],
+            members=data['members'],
+            impact_stories=';'.join(data.get('impact_stories', [])),
+            events=';'.join(data.get('events', [])),
+            banner=data['banner'],
+            category=data.get('category', 'General')
+        )
+        db.session.add(new_community)
+        db.session.commit()
+        return new_community.to_dict(), 201
+
+
+class CommunityResource(Resource):
+    def get(self, id):
+        community = Community.query.get_or_404(id)
+        return community.to_dict(), 200
+
+    def put(self, id):
+        community = Community.query.get_or_404(id)
+        data = request.json
+
+        if data.get('action') == 'join':
+            community.members += 1
+
+        if data.get('action') == 'leave':
+            community.members -= 1
+
+        if 'impact_stories' in data:
+            new_stories = data['impact_stories'].split(';')
+            community.impact_stories.extend(new_stories)
+
+        if 'events' in data:
+            new_events = data['events'].split(';')
+            community.events.extend(new_events)
+
+        if 'category' in data:
+            community.category = data['category']
+
+        db.session.commit()
+        return community.to_dict(), 200
+
 
 
 # Set up logging
@@ -848,6 +987,7 @@ def initiate_payment(phone_number, amount):
         if e.response:
             logging.error(f"Response content: {e.response.content}")
         return {'error': 'Failed to initiate payment'}
+    
 
 class MpesaPaymentResource(Resource):
     def post(self):
@@ -902,6 +1042,8 @@ api.add_resource(CharityDashboard, '/dashboard/charity')
 api.add_resource(DonorDashboard, '/dashboard/donor')   
 api.add_resource(MessageResource, '/messages')
 api.add_resource(AnswerMessage, '/messages/<int:id>/answer')
+api.add_resource(CommunityListResource, '/communities')
+api.add_resource(CommunityResource, '/communities/<int:id>')
 api.add_resource(MpesaPaymentResource, '/mpesa-payment')
 api.add_resource(PaymentsResource, '/payments')
 
