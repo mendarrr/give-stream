@@ -9,7 +9,7 @@ const CharityCard = ({ charity }) => {
         <div>
             <div className='charity-profile'>
                 <img 
-                    src={charity.profilePicture || defaultProfile} 
+                    src={charity.image_url || defaultProfile} 
                     alt={charity.name} 
                     className="charity-logo"
                 />

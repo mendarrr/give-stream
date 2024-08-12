@@ -19,6 +19,8 @@ class Donor(db.Model, SerializerMixin):
     _password_hash = db.Column(db.String)
     is_anonymous = db.Column(db.Boolean, default=False)
     role = db.Column(db.String(20), default='donor')
+
+
     payment_method_id = db.Column(db.Integer, db.ForeignKey('payment_methods.id'))
     donations = db.relationship('Donation', backref='donor', lazy='dynamic')
 
@@ -76,6 +78,8 @@ class Charity(db.Model, SerializerMixin):
     image_url = db.Column(db.String(255))
     organizer = db.Column(db.String(128))
     role = db.Column(db.String(20), default='charity')
+
+
     donations = db.relationship('Donation', backref='charity', lazy='dynamic', cascade='all, delete-orphan')
     stories = db.relationship('Story', backref='charity', lazy='dynamic')
     beneficiaries = db.relationship('Beneficiary', back_populates='charity', cascade='all, delete-orphan')
@@ -151,6 +155,7 @@ class CharityApplication(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
+    _password_hash = db.Column(db.String)
     description = db.Column(db.Text, nullable=False)
     status = db.Column(db.String(20), default='pending')
     submission_date = db.Column(db.DateTime, default=datetime.utcnow)
@@ -338,6 +343,29 @@ class Message(db.Model):
             'timestamp': self.timestamp.isoformat() if self.timestamp else None,
             'is_answered': self.is_answered
         }
+class Community(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(255), nullable=False)
+    members = db.Column(db.Integer, nullable=False)
+    impact_stories = db.Column(db.Text, nullable=False)
+    events = db.Column(db.Text, nullable=False)
+    banner = db.Column(db.String(255), nullable=False)
+    category = db.Column(db.String(255), nullable=False, default='General')
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "members": self.members,
+            "impactStories": self.impact_stories.replace(';', '').split(';;') if self.impact_stories else [],
+            "events": self.events.replace(';', '').split(';;') if self.events else [],
+            "banner": self.banner,
+            "category": self.category
+        }
+
+
 
 class Payment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
