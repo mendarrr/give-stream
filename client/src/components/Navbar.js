@@ -1,11 +1,21 @@
 import React, { useState } from "react";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
+import { useAuth } from "./AuthContext"; 
+import { useNavigate } from "react-router-dom";
 
-function Navbar({ isSticky, isLoggedIn }) {
+function Navbar({ isSticky }) { // Removed isLoggedIn prop
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { logout, isLoggedIn } = useAuth(); // Now destructuring isLoggedIn from useAuth
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout(); // Call the logout function from your AuthContext
+    navigate('/'); // Navigate to the homepage after logout
   };
 
   return (
@@ -24,18 +34,17 @@ function Navbar({ isSticky, isLoggedIn }) {
             <Link to="/create-campaign">Set up a Donation Campaign</Link>
           </li>
           <li>
-            <Link to="/donor">register</Link>
-          </li>
-          <li>
-            <Link to="/payment">registe</Link>
-          </li>
-          <li>
             <Link to="/about">About Us</Link>
           </li>
           {isLoggedIn ? (
-            <li>
-              <Link to="/account">My Account</Link>
-            </li>
+            <>
+              <li>
+                <Link to="/account">My Account</Link>
+              </li>
+              <li>
+                <button onClick={handleLogout}>Logout</button> {/* Functional logout button */}
+              </li>
+            </>
           ) : (
             <li>
               <Link to="/signin">Sign In</Link>
@@ -57,7 +66,7 @@ function Navbar({ isSticky, isLoggedIn }) {
                   </li>
                   <li>
                     <Link to="/communities">
-                      Give Stream communities
+                      Give Stream Communities
                     </Link>
                   </li>
                   <li>

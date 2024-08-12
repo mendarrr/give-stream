@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./AdminDashboard.css";
 import defaultProfileImage from "../assets/defaultProfile.png";
+import Navbar from "./Navbar";
 
 const AdminDashboard = () => {
   const [charityApplications, setCharityApplications] = useState([]);
@@ -180,6 +181,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard">
+      <Navbar />
       <h1 className="admin-dashboard__title">Admin Dashboard</h1>
 
       {message && (

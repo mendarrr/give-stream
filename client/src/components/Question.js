@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Navbar from "./Navbar";
 
 function ChatBox({ onClose }) {
   const [message, setMessage] = useState("");
@@ -25,6 +26,7 @@ function ChatBox({ onClose }) {
 
   return (
     <div className="chat-box">
+      <Navbar/>
       <div>
         <img src={`${process.env.PUBLIC_URL}/GiveStreamLogo.png`} alt="logo" />
       </div>

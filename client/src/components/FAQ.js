@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Question from "./Question";
+import Navbar from "./Navbar";
 
 const faqData = [
   {
@@ -94,6 +95,7 @@ const FAQ = () => {
 
   return (
     <div className="main-faq-container">
+      <Navbar />
       <div className="faq-header">
         <h4>Questions</h4>
       </div>

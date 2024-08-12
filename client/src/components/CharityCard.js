@@ -28,7 +28,7 @@ const CharityCard = ({ charity }) => {
                 </div>
                 <p className='goal'><span className='money'>KES {charity.total_raised}</span> funds raised of <span className='money'>KES {charity.goal_amount}</span> goal</p>
                 <div className='donate-btn'>
-                    <button className="button" style={{ backgroundColor: "#00008B", color: "white" }}> <Link to="/charity-dashboard/:id" >Donate</Link></button>
+                    <button>Donate</button>
                 </div>
             </div>
         </div>
