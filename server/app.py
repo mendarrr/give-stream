@@ -282,7 +282,8 @@ class CharityApplications(Resource):
                 username=application.name.lower().replace(' ', '_'),
                 email=application.email,
                 name=application.name,
-                description=application.description
+                description=application.description,
+                image=data.get('image')
             )
             db.session.add(new_charity)
         
