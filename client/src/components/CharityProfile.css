@@ -1,5 +1,5 @@
 .charity-profile-container {
-  background-color: #f5f5f5a2;
+  background-color: #f5f5f5;
   padding: 2rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -8,21 +8,29 @@
     "stories beneficiaries"
     "inventory inventory";
   gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .charity-info {
   grid-area: info;
-  background-color: #fff;
+  background-color: #ffffff;
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   text-align: center;
+  justify-self: center;
+  align-self: center;
+  width: 100%;
 }
 
-.stories {
+.donation-info {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1rem;
+}
+
+.stories-section {
   grid-area: stories;
   background-color: #fff;
   padding: 2rem;
@@ -34,13 +42,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 1rem;
 }
 
 .story-card {
   flex: 1;
   padding: 1rem;
   background-color: #318e8d;
-  color: #9b802a;
+  color: #83732c;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -62,7 +71,7 @@
   gap: 0.5rem;
 }
 
-.beneficiaries {
+.beneficiaries-section {
   grid-area: beneficiaries;
   background-color: #fff;
   padding: 2rem;
@@ -77,7 +86,7 @@
   gap: 0.5rem;
 }
 
-.inventory {
+.inventory-section {
   grid-area: inventory;
   background-color: #fff;
   padding: 2rem;
@@ -115,6 +124,12 @@ button {
   padding: 0.5rem;
   border: 1px solid #ddd;
   border-radius: 4px;
+  font-size: 1rem;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 100px;
 }
 
 button {
@@ -122,8 +137,68 @@ button {
   color: #fff;
   border: none;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
   background-color: #c05439;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.pagination button {
+  margin: 0 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background-color: #318e8d;
+}
+
+.pagination button.active {
+  background-color: #e66e4e;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-top: 2rem;
+}
+
+.error-message {
+  color: #e66e4e;
+  text-align: center;
+  font-size: 1.2rem;
+  margin-top: 2rem;
+}
+
+.story-date {
+  font-size: 0.9rem;
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .charity-profile-container {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "info"
+      "stories"
+      "beneficiaries"
+      "inventory";
+  }
+
+  .donation-info {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .donation-item {
+    margin: 0;
+  }
+
+  .inventory-form {
+    flex-direction: column;
+  }
 }

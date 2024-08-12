@@ -21,8 +21,11 @@ const CharityProfile = () => {
     quantity: 0,
   });
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
+  const [currentBeneficiaryPage, setCurrentBeneficiaryPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const beneficiariesPerPage = 5;
 
   useEffect(() => {
     const fetchCharityData = async () => {
@@ -150,7 +153,16 @@ const CharityProfile = () => {
     );
   };
 
-  if (loading) return <div>Loading...</div>;
+  const indexOfLastBeneficiary = currentBeneficiaryPage * beneficiariesPerPage;
+  const indexOfFirstBeneficiary = indexOfLastBeneficiary - beneficiariesPerPage;
+  const currentBeneficiaries = beneficiaries.slice(
+    indexOfFirstBeneficiary,
+    indexOfLastBeneficiary
+  );
+
+  const paginate = (pageNumber) => setCurrentBeneficiaryPage(pageNumber);
+
+  if (loading) return <div className="loading">Loading...</div>;
   if (error) return <div className="error-message">{error}</div>;
   if (!charity) return <div>No charity data available</div>;
 
@@ -159,14 +171,23 @@ const CharityProfile = () => {
       <div className="charity-info">
         <h1>{charity.name}</h1>
         <p>{charity.description}</p>
-        <p>
-          Needed Donation: ${parseFloat(charity.needed_donation).toFixed(2)}
-        </p>
-        <p>Total Donations: ${totalDonations.toFixed(2)}</p>
-        <p>Anonymous Donations: ${anonymousDonations.toFixed(2)}</p>
+        <div className="donation-info">
+          <div className="donation-item">
+            <h3>Needed Donation</h3>
+            <p>${parseFloat(charity.needed_donation).toFixed(2)}</p>
+          </div>
+          <div className="donation-item">
+            <h3>Total Donations</h3>
+            <p>${totalDonations.toFixed(2)}</p>
+          </div>
+          <div className="donation-item">
+            <h3>Anonymous Donations</h3>
+            <p>${anonymousDonations.toFixed(2)}</p>
+          </div>
+        </div>
       </div>
 
-      <div className="stories">
+      <div className="stories-section">
         <h2>Stories</h2>
         {stories.length > 0 ? (
           <div className="story-container">
@@ -176,7 +197,7 @@ const CharityProfile = () => {
             <div className="story-card">
               <h3>{stories[currentStoryIndex]?.title || "No Title"}</h3>
               <p>{stories[currentStoryIndex]?.content || "No Content"}</p>
-              <p>
+              <p className="story-date">
                 Posted on:{" "}
                 {stories[currentStoryIndex]?.date_posted
                   ? new Date(
@@ -212,7 +233,7 @@ const CharityProfile = () => {
         </form>
       </div>
 
-      <div className="beneficiaries">
+      <div className="beneficiaries-section">
         <h2>Beneficiaries</h2>
         <table>
           <thead>
@@ -222,7 +243,7 @@ const CharityProfile = () => {
             </tr>
           </thead>
           <tbody>
-            {beneficiaries.map((beneficiary) => (
+            {currentBeneficiaries.map((beneficiary) => (
               <tr key={beneficiary.id}>
                 <td>{beneficiary.name}</td>
                 <td>{beneficiary.description}</td>
@@ -230,6 +251,20 @@ const CharityProfile = () => {
             ))}
           </tbody>
         </table>
+        <div className="pagination">
+          {Array.from(
+            { length: Math.ceil(beneficiaries.length / beneficiariesPerPage) },
+            (_, i) => (
+              <button
+                key={i}
+                onClick={() => paginate(i + 1)}
+                className={currentBeneficiaryPage === i + 1 ? "active" : ""}
+              >
+                {i + 1}
+              </button>
+            )
+          )}
+        </div>
         <form onSubmit={handleBeneficiarySubmit} className="beneficiary-form">
           <input
             type="text"
@@ -253,7 +288,7 @@ const CharityProfile = () => {
         </form>
       </div>
 
-      <div className="inventory">
+      <div className="inventory-section">
         <h2>Inventory</h2>
         <table>
           <thead>
