@@ -363,7 +363,11 @@ function Pagination({
             key={number}
             className={`page-item ${currentPage === number ? "active" : ""}`}
           >
-            <button onClick={() => paginate(number)} className="page-link">
+            <button
+              onClick={() => paginate(number)}
+              className="page-link"
+              aria-current={currentPage === number ? "page" : undefined}
+            >
               {number}
             </button>
           </li>

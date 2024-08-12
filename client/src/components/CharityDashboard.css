@@ -363,9 +363,19 @@
   border-radius: 5px;
   background-color: #fff;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.page-item.active .page-link,
+.page-link:hover {
+  background-color: #080808;
+  color: #fff;
+}
+
+.page-link:hover {
+  transform: scale(1.1);
 }
 
 .page-item.active .page-link {
-  background-color: #008080;
-  color: #fff;
+  font-weight: bold;
 }
