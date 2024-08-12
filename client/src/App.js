@@ -17,7 +17,6 @@ import CompletedCharitiesList from './components/CompletedCharitiesList';
 import LoginPage from './components/LoginForm';
 import NewDonorForm from './components/NewDonor';
 import DonationForm from './components/NewDonation';
-import CharityList from './components/CharityList';
 import Inventory from "./components/Inventory";
 import CharityProfile from "./components/CharityProfile";
 import AdminDashboard from "./components/AdminDashboard";
@@ -28,6 +27,7 @@ import CharityApplications from "./components/CharityApplications";
 import CommunitiesSection from './components/CommunitySection';
 import CharityDetails from './components/CharityDashbord';
 import Error404 from './components/Error404';
+
 
 function App() {
   return (
@@ -62,7 +62,6 @@ function App() {
           <Route path="/charity-dashboard/:id" element={<CharityDashboard />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/create-campaign" element={<CharityApplications />} />
-          <Route path="/charity-page" element={<CharitiesPage />} />
         </Routes>
         <Footer />
       </BrowserRouter>
