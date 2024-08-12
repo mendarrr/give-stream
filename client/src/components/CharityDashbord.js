@@ -15,12 +15,12 @@ function CharityDetails() {
   useEffect(() => {
     const fetchData = async (url, setter, errorMessage) => {
       try {
-        const response = await fetch(`/charities/${id}`);
+        const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        setter(data);
+        setter(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error(`Error fetching ${errorMessage}:`, error);
         setError(`Failed to fetch ${errorMessage}. Please try again later.`);
@@ -71,9 +71,11 @@ function CharityDetails() {
 
   const formatNumber = (number) => (number ? number.toLocaleString() : "0");
 
-  const visibleStories = isMobile
-    ? stories.slice(currentIndex, currentIndex + 1)
-    : stories.slice(currentIndex, currentIndex + 2);
+  const visibleStories = Array.isArray(stories)
+    ? isMobile
+      ? stories.slice(currentIndex, currentIndex + 1)
+      : stories.slice(currentIndex, currentIndex + 2)
+    : [];
 
   return (
     <div className="charity-details">
@@ -212,18 +214,23 @@ function CharityDescription({
       </div>
       <h3>Support Malnourished School Children in Moyale</h3>
       <p>{charity.description}</p>
-      <SuccessStories
-        stories={successStories}
-        formatNumber={formatNumber}
-        moveLeft={moveLeft}
-        moveRight={moveRight}
-        currentIndex={currentIndex}
-        storiesLength={storiesLength}
-        isMobile={isMobile}
-      />
+      {successStories.length > 0 ? (
+        <SuccessStories
+          stories={successStories}
+          formatNumber={formatNumber}
+          moveLeft={moveLeft}
+          moveRight={moveRight}
+          currentIndex={currentIndex}
+          storiesLength={storiesLength}
+          isMobile={isMobile}
+        />
+      ) : (
+        <p>No success stories available.</p>
+      )}
     </div>
   );
 }
+
 function SuccessStories({
   stories,
   formatNumber,
