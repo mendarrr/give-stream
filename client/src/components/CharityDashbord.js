@@ -1,104 +1,126 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import "./CharityDashboard.css";
+import Navbar from "./Navbar";
 
 function CharityDetails() {
   const [charity, setCharity] = useState(null);
-  const [successStories, setSuccessStories] = useState([]);
-  const [donations, setDonations] = useState([]);    
+  const [stories, setStories] = useState([]);
+  const [donations, setDonations] = useState([]);
   const [error, setError] = useState(null);
   const { id } = useParams();
-  const carouselRef = useRef(null);
+  const navigate = useNavigate();
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
     const fetchData = async (url, setter, errorMessage) => {
       try {
-        const response = await fetch(`/charities/${id}`);
+        const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        setter(data);
+        setter(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error(`Error fetching ${errorMessage}:`, error);
         setError(`Failed to fetch ${errorMessage}. Please try again later.`);
       }
     };
 
-    fetchData(`/charities/${id}`, setCharity, "charity details");
-    fetchData("/stories", setSuccessStories, "success stories");
-    fetchData("/donations", setDonations, "donations");
-    const fetchSuccessStories = async () => {
-      try {
-        const response = await fetch("/stories");
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        setSuccessStories(data);
-      } catch (error) {
-        console.error("Error fetching success stories:", error);
-        setError("Failed to fetch success stories. Please try again later.");
-      }
-    };
+    fetchData(
+      `http://127.0.0.1:5000/charities/${id}`,
+      setCharity,
+      "charity details"
+    );
+    fetchData("http://127.0.0.1:5000/stories", setStories, "success stories");
+    fetchData("http://127.0.0.1:5000/donations", setDonations, "donations");
 
-    const fetchDonations = async () => {
-      try {
-        const response = await fetch("/donations");
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        setDonations(data);
-      } catch (error) {
-        console.error("Error fetching donations:", error);
-        setError("Failed to fetch donations. Please try again later.");
-      }
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
     };
-
-    CharityDetails();
-    fetchSuccessStories();
-    fetchDonations();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [id]);
 
-  const scrollCarousel = (direction) => {
-    if (carouselRef.current) {
-      const scrollAmount = carouselRef.current.offsetWidth;
-      carouselRef.current.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth",
-      });
+  const moveLeft = () => {
+    setCurrentIndex((prev) => Math.max(prev - 1, 0));
+  };
+
+  const moveRight = () => {
+    setCurrentIndex((prev) =>
+      Math.min(prev + 1, stories.length - (isMobile ? 1 : 2))
+    );
+  };
+
+  const checkUserLoginStatus = () => {
+    const token = localStorage.getItem("userToken");
+    return !!token;
+  };
+
+  const handleDonateClick = () => {
+    if (checkUserLoginStatus()) {
+      navigate("/payment");
+    } else {
+      navigate("/signin");
     }
   };
 
   if (error) return <div className="error-message">{error}</div>;
-  if (!charity || donations.length === 0 || successStories.length === 0)
+  if (!charity || donations.length === 0 || stories.length === 0)
     return <div>Loading...</div>;
 
   const formatNumber = (number) => (number ? number.toLocaleString() : "0");
 
+  const visibleStories = Array.isArray(stories)
+    ? isMobile
+      ? stories.slice(currentIndex, currentIndex + 1)
+      : stories.slice(currentIndex, currentIndex + 2)
+    : [];
+
   return (
     <div className="charity-details">
+      <Navbar />
       <h2>{charity.name}</h2>
       <div className="charity-content">
-        <CharityInfo charity={charity} donations={donations} formatNumber={formatNumber} />
-        <CharityDescription charity={charity} successStories={successStories} formatNumber={formatNumber} scrollCarousel={scrollCarousel} carouselRef={carouselRef} />
+        <CharityInfo
+          charity={charity}
+          donations={donations}
+          formatNumber={formatNumber}
+          onDonateClick={handleDonateClick}
+        />
+        <CharityDescription
+          charity={charity}
+          successStories={visibleStories}
+          formatNumber={formatNumber}
+          moveLeft={moveLeft}
+          moveRight={moveRight}
+          currentIndex={currentIndex}
+          storiesLength={stories.length}
+          isMobile={isMobile}
+        />
       </div>
     </div>
   );
 }
 
-function CharityInfo({ charity, donations, formatNumber }) {
+function CharityInfo({ charity, donations, formatNumber, onDonateClick }) {
+  const topDonations = donations.slice(0, 10);
+
   return (
     <div className="charity-info">
       <div className="progress-card">
         <h3>KES {formatNumber(charity.raisedAmount)}</h3>
         <p>raised of KES {formatNumber(charity.goalAmount)} goal</p>
-        <ProgressBar progress={(charity.raisedAmount / charity.goalAmount) * 100} />
+        <ProgressBar
+          progress={(charity.raisedAmount / charity.goalAmount) * 100}
+        />
         <p>{formatNumber(charity.donationCount)} donations</p>
-        <button className="donate-button">Donate Now</button>
+        <button className="donate-button" onClick={onDonateClick}>
+          Donate Now
+        </button>
         <RecentActivity recentDonationCount={charity.recentDonationCount} />
-        <RecentDonors donations={donations} formatNumber={formatNumber} />
+        <RecentDonors donations={topDonations} formatNumber={formatNumber} />
         <ShareFundraiser />
         <div className="see-buttons">
           <button className="see-all">See all</button>
@@ -151,46 +173,96 @@ function ShareFundraiser() {
     <div className="share-fundraiser">
       <h4>Share this fundraiser</h4>
       <div className="share-buttons">
-        {['Copy link', 'Facebook', 'X', 'Email', 'More'].map((button, index) => (
-          <button key={index} className={`share-button ${button.toLowerCase()}`}>
-            <i className={`fas fa-${button === 'X' ? 'times' : button.toLowerCase()}`}></i>
-            <span>{button}</span>
-          </button>
-        ))}
+        {["Copy link", "Facebook", "X", "Email", "More"].map(
+          (button, index) => (
+            <button
+              key={index}
+              className={`share-button ${button.toLowerCase()}`}
+            >
+              <i
+                className={`fas fa-${
+                  button === "X" ? "times" : button.toLowerCase()
+                }`}
+              ></i>
+              <span>{button}</span>
+            </button>
+          )
+        )}
       </div>
     </div>
   );
 }
 
-function CharityDescription({ charity, successStories, formatNumber, scrollCarousel, carouselRef }) {
+function CharityDescription({
+  charity,
+  successStories,
+  formatNumber,
+  moveLeft,
+  moveRight,
+  currentIndex,
+  storiesLength,
+  isMobile,
+}) {
   return (
     <div className="charity-description">
-      <img src={charity.imageUrl} alt={charity.name} className="charity-image" />
+      <img
+        src={charity.imageUrl}
+        alt={charity.name}
+        className="charity-image"
+      />
       <p>{charity.organizer} is organizing this fundraiser.</p>
       <div className="donation-protected">
         <span>Donation protected</span>
       </div>
       <h3>Support Malnourished School Children in Moyale</h3>
       <p>{charity.description}</p>
-      <SuccessStories stories={successStories} formatNumber={formatNumber} scrollCarousel={scrollCarousel} carouselRef={carouselRef} />
+      {successStories.length > 0 ? (
+        <SuccessStories
+          stories={successStories}
+          formatNumber={formatNumber}
+          moveLeft={moveLeft}
+          moveRight={moveRight}
+          currentIndex={currentIndex}
+          storiesLength={storiesLength}
+          isMobile={isMobile}
+        />
+      ) : (
+        <p>No success stories available.</p>
+      )}
     </div>
   );
 }
 
-function SuccessStories({ stories, formatNumber, scrollCarousel, carouselRef }) {
+function SuccessStories({
+  stories,
+  formatNumber,
+  moveLeft,
+  moveRight,
+  currentIndex,
+  storiesLength,
+  isMobile,
+}) {
   return (
     <div className="success-stories">
       <h3>Success Stories</h3>
       <div className="stories-carousel-container">
-        <button className="carousel-arrow left" onClick={() => scrollCarousel("left")}>
+        <button
+          className="carousel-arrow left"
+          onClick={moveLeft}
+          disabled={currentIndex === 0}
+        >
           <i className="fas fa-chevron-left"></i>
         </button>
-        <div className="stories-carousel" ref={carouselRef}>
+        <div className="stories-carousel">
           {stories.map((story, index) => (
             <StoryCard key={index} story={story} formatNumber={formatNumber} />
           ))}
         </div>
-        <button className="carousel-arrow right" onClick={() => scrollCarousel("right")}>
+        <button
+          className="carousel-arrow right"
+          onClick={moveRight}
+          disabled={currentIndex >= storiesLength - (isMobile ? 1 : 2)}
+        >
           <i className="fas fa-chevron-right"></i>
         </button>
       </div>
@@ -201,62 +273,40 @@ function SuccessStories({ stories, formatNumber, scrollCarousel, carouselRef }) 
 function StoryCard({ story, formatNumber }) {
   return (
     <div className="story-card">
-      <img src={story.image} alt={story.title} />
       <h4>{story.title}</h4>
-      <p>RAISED: KES {formatNumber(story.raised)}</p>
-      <p>Donations: {formatNumber(story.donations)}</p>
-      <ProgressBar progress={(story.raised / story.goal) * 100} />
-      <BeneficiaryStory story={story} />
+      <p>{story.content}</p>
+      <p>Date Posted: {new Date(story.date_posted).toLocaleDateString()}</p>
     </div>
   );
 }
 
 function BeneficiaryStory({ story }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedTitle, setEditedTitle] = useState(story.title);
-  const [editedContent, setEditedContent] = useState(story.content);
+  const [newStory, setNewStory] = useState(story.story);
 
-  const handleEditClick = () => setIsEditing(true);
-  const handleCancelClick = () => {
-    setIsEditing(false);
-    setEditedTitle(story.title);
-    setEditedContent(story.content);
+  const handleEditClick = () => {
+    setIsEditing(!isEditing);
   };
 
-  const handleSaveClick = async () => {
-    try {
-      const response = await fetch(`http://127.0.0.1:5000/api/stories/${story.id}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: editedTitle, content: editedContent }),
-      });
-
-      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-
-      const updatedStory = await response.json();
-      setEditedTitle(updatedStory.title);
-      setEditedContent(updatedStory.content);
-      setIsEditing(false);
-    } catch (error) {
-      console.error("Error updating story:", error);
-    }
+  const handleSaveClick = () => {
+    // Save logic
+    setIsEditing(false);
   };
 
   return (
     <div className="beneficiary-story">
+      <h5>Beneficiary Story</h5>
       {isEditing ? (
         <>
-          <input value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} placeholder="Edit Title" />
-          <textarea value={editedContent} onChange={(e) => setEditedContent(e.target.value)} placeholder="Edit Content" />
-          <div className="edit-buttons">
-            <button onClick={handleSaveClick}>Save</button>
-            <button onClick={handleCancelClick}>Cancel</button>
-          </div>
+          <textarea
+            value={newStory}
+            onChange={(e) => setNewStory(e.target.value)}
+          />
+          <button onClick={handleSaveClick}>Save</button>
         </>
       ) : (
         <>
-          <h4>{story.title}</h4>
-          <p>{story.content}</p>
+          <p>{story.story}</p>
           <button onClick={handleEditClick}>Edit</button>
         </>
       )}

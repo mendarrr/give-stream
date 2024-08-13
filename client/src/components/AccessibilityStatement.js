@@ -1,9 +1,11 @@
 import React from "react";
 import "./HomePage.css";
+import Navbar from "./Navbar";
 
 const AccessibilityStatement = () => {
   return (
     <div className="accessibility">
+      <Navbar />
       <h4>Accessibility Statement</h4>
       <p>
         Give Stream is committed to ensuring digital accessibility for people

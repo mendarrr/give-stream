@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./AdminDashboard.css";
 import defaultProfileImage from "../assets/defaultProfile.png";
+import Navbar from "./Navbar";
 
 const AdminDashboard = () => {
   const [charityApplications, setCharityApplications] = useState([]);
+  const [rejectedApplications, setRejectedApplications] = useState([]);
   const [charities, setCharities] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -14,6 +16,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     fetchCharityApplications();
+    fetchRejectedApplications();
     fetchCharities();
 
     const handleResize = () => {
@@ -25,7 +28,7 @@ const AdminDashboard = () => {
 
   const fetchCharityApplications = async () => {
     try {
-      const response = await fetch("/charity-applications");
+      const response = await fetch("/charity-applications?status=pending");
       const data = await response.json();
       setCharityApplications(data);
     } catch (error) {
@@ -33,6 +36,20 @@ const AdminDashboard = () => {
       setMessage({
         type: "error",
         text: "Failed to fetch charity applications. Please try again.",
+      });
+    }
+  };
+
+  const fetchRejectedApplications = async () => {
+    try {
+      const response = await fetch("/charity-applications?status=rejected");
+      const data = await response.json();
+      setRejectedApplications(data);
+    } catch (error) {
+      console.error("Error fetching rejected applications:", error);
+      setMessage({
+        type: "error",
+        text: "Failed to fetch rejected applications. Please try again.",
       });
     }
   };
@@ -56,11 +73,24 @@ const AdminDashboard = () => {
       const response = await fetch(`/charity-applications/${application.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "approved" }),
+        body: JSON.stringify({
+          status: "approved",
+          name: application.name,
+          email: application.email,
+          description: application.description,
+          country: application.country,
+          city: application.city,
+          zipcode: application.zipcode,
+          fundraising_category: application.fundraising_category,
+          username: application.username,
+          target_amount: application.target_amount,
+        }),
       });
 
       if (response.ok) {
-        fetchCharityApplications();
+        setCharityApplications(
+          charityApplications.filter((app) => app.id !== application.id)
+        );
         fetchCharities();
         setMessage({
           type: "success",
@@ -87,11 +117,25 @@ const AdminDashboard = () => {
       const response = await fetch(`/charity-applications/${application.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "rejected" }),
+        body: JSON.stringify({
+          status: "rejected",
+          name: application.name,
+          email: application.email,
+          description: application.description,
+          country: application.country,
+          city: application.city,
+          zipcode: application.zipcode,
+          fundraising_category: application.fundraising_category,
+          username: application.username,
+          target_amount: application.target_amount,
+        }),
       });
 
       if (response.ok) {
-        fetchCharityApplications();
+        setCharityApplications(
+          charityApplications.filter((app) => app.id !== application.id)
+        );
+        fetchRejectedApplications();
         setMessage({
           type: "success",
           text: "Application rejected successfully.",
@@ -148,7 +192,6 @@ const AdminDashboard = () => {
     ? charities.slice(currentIndex, currentIndex + 1)
     : charities.slice(currentIndex, currentIndex + 3);
 
-  // Pagination logic
   const indexOfLastApplication = currentPage * applicationsPerPage;
   const indexOfFirstApplication = indexOfLastApplication - applicationsPerPage;
   const currentApplications = charityApplications.slice(
@@ -160,6 +203,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard">
+      <Navbar />
       <h1 className="admin-dashboard__title">Admin Dashboard</h1>
 
       {message && (
@@ -176,50 +220,94 @@ const AdminDashboard = () => {
 
       <section className="admin-dashboard__applications">
         <h2 className="admin-dashboard__section-title">Charity Applications</h2>
-        <ul className="admin-dashboard__application-list">
-          {currentApplications.map((application) => (
-            <li
-              key={application.id}
-              className="admin-dashboard__application-item"
-            >
-              <h3 className="admin-dashboard__application-name">
-                {application.name}
-              </h3>
-              <p className="admin-dashboard__application-description">
-                {application.description}
-              </p>
-              <div className="admin-dashboard__application-actions">
-                <button
-                  className="admin-dashboard__approve-btn"
-                  onClick={() => handleApprove(application)}
+        {currentApplications.length > 0 ? (
+          <>
+            <ul className="admin-dashboard__application-list">
+              {currentApplications.map((application) => (
+                <li
+                  key={application.id}
+                  className="admin-dashboard__application-item"
                 >
-                  Approve
-                </button>
+                  <h3 className="admin-dashboard__application-name">
+                    {application.name}
+                  </h3>
+                  <p className="admin-dashboard__application-description">
+                    {application.description}
+                  </p>
+                  <div className="admin-dashboard__application-actions">
+                    <button
+                      className="admin-dashboard__approve-btn"
+                      onClick={() => handleApprove(application)}
+                    >
+                      Approve
+                    </button>
+                    <button
+                      className="admin-dashboard__reject-btn"
+                      onClick={() => handleReject(application)}
+                    >
+                      Reject
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <div className="admin-dashboard__pagination">
+              {Array.from({
+                length: Math.ceil(
+                  charityApplications.length / applicationsPerPage
+                ),
+              }).map((_, index) => (
                 <button
-                  className="admin-dashboard__reject-btn"
-                  onClick={() => handleReject(application)}
+                  key={index}
+                  onClick={() => paginate(index + 1)}
+                  className={`admin-dashboard__pagination-btn ${
+                    currentPage === index + 1 ? "active" : ""
+                  }`}
                 >
-                  Reject
+                  {index + 1}
                 </button>
-              </div>
-            </li>
-          ))}
-        </ul>
-        <div className="admin-dashboard__pagination">
-          {Array.from({
-            length: Math.ceil(charityApplications.length / applicationsPerPage),
-          }).map((_, index) => (
-            <button
-              key={index}
-              onClick={() => paginate(index + 1)}
-              className={`admin-dashboard__pagination-btn ${
-                currentPage === index + 1 ? "active" : ""
-              }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <p className="admin-dashboard__no-applications">
+            No pending applications at the moment.
+          </p>
+        )}
+      </section>
+
+      <section className="admin-dashboard__rejected-applications">
+        <h2 className="admin-dashboard__section-title">
+          Rejected Applications
+        </h2>
+        {rejectedApplications.length > 0 ? (
+          <table className="admin-dashboard__rejected-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Description</th>
+                <th>Submission Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rejectedApplications.map((application) => (
+                <tr key={application.id}>
+                  <td>{application.name}</td>
+                  <td>{application.email}</td>
+                  <td>{application.description}</td>
+                  <td>
+                    {new Date(application.submission_date).toLocaleDateString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p className="admin-dashboard__no-rejected">
+            No rejected applications at the moment.
+          </p>
+        )}
       </section>
 
       <section className="admin-dashboard__charities">

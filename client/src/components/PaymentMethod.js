@@ -1,11 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import Navbar from './Navbar';
 
-const PaymentMethodSelector = ({ userId, amount, onPaymentInitiated }) => {
+const PaymentMethodSelector = () => {
   const [selectedMethod, setSelectedMethod] = useState(null);
   const [inputValue, setInputValue] = useState('');
   const [paymentStatus, setPaymentStatus] = useState(null);
   const [checkoutRequestId, setCheckoutRequestId] = useState(null);
+  const [amount, setAmount] = useState(0);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedAmount = localStorage.getItem('donationAmount');
+    if (storedAmount) {
+      setAmount(parseInt(storedAmount, 10));
+    } else {
+      navigate('/donation-form');
+    }
+  }, [navigate]);
 
   const paymentMethods = [
     { name: 'PayPal', logo: '/paypal.png' },
@@ -40,13 +53,13 @@ const PaymentMethodSelector = ({ userId, amount, onPaymentInitiated }) => {
         const response = await axios.post('/mpesa-payment', {
           phone_number: inputValue,
           amount: amount,
-          user_id: userId,
         });
         console.log('M-Pesa payment initiated:', response.data);
         if (response.data.CheckoutRequestID) {
           setPaymentStatus('Payment initiated. Please check your phone for the M-Pesa prompt.');
           setCheckoutRequestId(response.data.CheckoutRequestID);
-          onPaymentInitiated();
+          // Start checking payment status
+          //checkPaymentStatus(response.data.CheckoutRequestID);
         } else {
           setPaymentStatus('Failed to initiate payment. Please try again.');
         }
@@ -57,25 +70,10 @@ const PaymentMethodSelector = ({ userId, amount, onPaymentInitiated }) => {
     } else {
       setPaymentStatus('This payment method is not implemented yet.');
     }
+    
   };
   
-  const checkPaymentStatus = async () => {
-    if (!checkoutRequestId) return;
-
-    try {
-      const response = await axios.get(`/payments/${checkoutRequestId}`);
-      if (response.data.status === 'Completed') {
-        setPaymentStatus('Payment was successful');
-      } else if (response.data.status === 'Failed') {
-        setPaymentStatus('Payment was not successful');
-      } else {
-        setPaymentStatus('Payment is still pending. Please try again in a moment.');
-      }
-    } catch (error) {
-      console.error('Error checking payment status:', error);
-      setPaymentStatus('Unable to confirm payment status');
-    }
-  };
+  
 
   const styles = {
     container: {
@@ -168,6 +166,8 @@ const PaymentMethodSelector = ({ userId, amount, onPaymentInitiated }) => {
   };
 
   return (
+    <>
+    <Navbar />
     <div style={styles.container}>
       {!selectedMethod ? (
         <div>
@@ -214,6 +214,7 @@ const PaymentMethodSelector = ({ userId, amount, onPaymentInitiated }) => {
       )}
       {paymentStatus && <p>{paymentStatus}</p>}
     </div>
+    </>
   );
 };
 

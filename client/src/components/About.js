@@ -1,10 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./HomePage.css";
-
+import Navbar from "./Navbar";
 function About() {
   return (
     <div className="about-page">
+      <Navbar />
       <div className="about-text">
         <Link to="/">
           <img

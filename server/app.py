@@ -48,7 +48,7 @@ class checkSession(Resource):
         else:
             return {"message": "Invalid token user not logged in"}, 401
         
-from models import db, Admin, Donor, Donation,Charity,CharityApplication,Beneficiary,Inventory,Story
+from models import db, Admin, Donor, Donation,Charity,CharityApplication,Beneficiary,Inventory,Story, Payment
 
 def admin_required():
     def wrapper(fn):
@@ -123,7 +123,7 @@ class Login(Resource):
                     expires_delta=timedelta(days=4)
                 )
                 session['id'] = donor.id
-                return {'access_token': access_token}, 200
+                return {'access_token': access_token, 'role': 'donor'}, 200
             else:
                 return {'message': 'Invalid password for donor'}, 401
         elif charity:
@@ -133,7 +133,7 @@ class Login(Resource):
                     expires_delta=timedelta(days=4)
                 )
                 session['id'] = charity.id
-                return {'access_token': access_token}, 200
+                return {'access_token': access_token, 'role': 'charity'}, 200
             else:
                 return {'message': 'Invalid password for charity'}, 401    
         elif admin:
@@ -236,7 +236,7 @@ class Charities(Resource):
             return '', 204
         except Exception as e:
             db.session.rollback()
-            return {'error': str(e)}, 500
+            return {'error': str(e)}, 500    
 
 class CharityApplications(Resource):
     def get(self):
@@ -245,41 +245,39 @@ class CharityApplications(Resource):
 
     def post(self):
         data = request.get_json()
+        if isinstance(data, tuple):  # Check if data is a tuple
+            data = data[0]  # Extract the dictionary from the tuple
 
-        email = data.get('email')
-        
-        # Check if the email already exists
-        existing_application = CharityApplication.query.filter_by(email=email).first()
-        
-        if existing_application:
-            return make_response(jsonify({"error": "Email already exists"}), 409)  # 409 Conflict
-        
+        if 'password' not in data:
+            return make_response(jsonify({"error": "Password is required"}), 400)
+    
+        password_hash =data.get('password')
+    
         new_application = CharityApplication(
             name=data.get('name'),
-            email=email,
+            email=data.get('email'),
+            username=data.get('username'),
             description=data.get('description'),
-            status=data.get('status', 'pending'),  # Default to 'pending' if not provided
-            submission_date=data.get('submission_date'),
-            reviewed_by=data.get('reviewed_by'),
-            review_date=data.get('review_date'),
             country=data.get('country'),
             city=data.get('city'),
             zipcode=data.get('zipcode'),
             fundraising_category=data.get('fundraising_category'),
-            username=data.get('username'),
             target_amount=data.get('target_amount'),
-            image=data.get('image')  # Include image field
-        )
-        
+            image=data.get('image'),  # Assuming you're storing the image URL here
+    )
+        new_application.password_hash = password_hash
         db.session.add(new_application)
-        db.session.commit()
-        
-        return make_response(jsonify(new_application.to_dict()), 201)  # 201 Created
-
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            return make_response(jsonify({"error": str(e)}), 500)
+        return new_application.to_dict(), 201
+    
     def put(self, id):
         application = CharityApplication.query.get_or_404(id)
         data = request.get_json()
-        application.status = data['status']
+        application.status = data('status')
 
         if data['status'] == 'approved':
             existing_charity = Charity.query.filter_by(name=application.name).first()
@@ -290,8 +288,12 @@ class CharityApplications(Resource):
                 username=application.name.lower().replace(' ', '_'),
                 email=application.email,
                 name=application.name,
-                description=application.description
+                description=application.description,
+                image=data.get('image'),
+                password_hash=data.get('password')
             )
+            new_charity.password_hash = data('password')
+
             db.session.add(new_charity)
         
         application.country = data.get('country', application.country)
@@ -303,102 +305,8 @@ class CharityApplications(Resource):
 
         db.session.commit()
         return application.to_dict(), 200
-
-# This method should be part of the Charity model
-    def to_dict_with_stats(self):
-        donations = Donation.query.filter_by(charity_id=self.id).all()
-        total_raised = sum(donation.amount for donation in donations)
-        donation_count = len(donations)
-        percentage_raised = (total_raised / self.needed_donation) * 100 if self.needed_donation else 0
-
-        return {
-            'id': self.id,
-            'name': self.name,
-            'total_raised': total_raised,
-            'donation_count': donation_count,
-            'percentage_raised': percentage_raised,
-            'needed_donation': self.needed_donation
-        }
-
-    def post(self):
-        data = request.get_json()
-        new_charity = Charity(
-            username=data['username'],
-            email=data['email'],
-            name=data['name'],
-            description=data.get('description'),
-            needed_donation=data.get('needed_donation'),
-            goal_amount=data.get('goal_amount'),
-            image_url=data.get('image_url'),
-            organizer=data.get('organizer')
-        )
-        new_charity.password_hash = data['password']
-        db.session.add(new_charity)
-        db.session.commit()
-        return new_charity.to_dict(), 201
-
-    def put(self, id):
-        charity = Charity.query.get_or_404(id)
-        data = request.get_json()
-        for key, value in data.items():
-            setattr(charity, key, value)
-        db.session.commit()
-        return charity.to_dict()
-
-    def delete(self, id):
-        charity = Charity.query.get_or_404(id)
-        db.session.delete(charity)
-        db.session.commit()
-        return '', 204
     
 
-class CharityApplications(Resource):
-    def get(self):
-        applications = CharityApplication.query.all()
-        return jsonify([app.to_dict() for app in applications])
-
-    def post(self):
-        data = request.get_json()
-        new_application = CharityApplication(
-            name=data['name'],
-            email=data['email'],
-            username=data.get('username'),
-            description=data['description'],
-            country=data.get('country'),
-            city=data.get('city'),
-            zipcode=data.get('zipcode'),
-            fundraising_category=data.get('fundraising_category'),
-            target_amount=data.get('target_amount')
-        )
-        db.session.add(new_application)
-        db.session.commit()
-        return new_application.to_dict(), 201
-
-    def put(self, id):
-        application = CharityApplication.query.get_or_404(id)
-        data = request.get_json()
-        application.status = data['status']
-        # application.reviewed_by = get_jwt_identity()['id']  # Comment out this line
-
-        if data['status'] == 'approved':
-            new_charity = Charity(
-                username=application.name.lower().replace(' ', '_'),
-                email=application.email,
-                name=application.name,
-                description=application.description
-            )
-            db.session.add(new_charity)
-            
-        application.country = data.get('country', application.country)
-        application.city = data.get('city', application.city)
-        application.zipcode = data.get('zipcode', application.zipcode)
-        application.fundraising_category = data.get('fundraising_category', application.fundraising_category)
-        application.title = data.get('title', application.title)
-        application.target_amount = data.get('target_amount', application.target_amount)
-
-        db.session.commit()
-        return application.to_dict(), 200
-    
 class CommonDashboard(Resource):
     def get(self):
         return {
@@ -595,6 +503,7 @@ class DonorResource(Resource):
             email=email,
             is_anonymous=is_anonymous
         )
+        
         new_donor.password_hash = password
 
         db.session.add(new_donor)
@@ -986,6 +895,7 @@ def initiate_payment(phone_number, amount):
         if e.response:
             logging.error(f"Response content: {e.response.content}")
         return {'error': 'Failed to initiate payment'}
+    
 
 class MpesaPaymentResource(Resource):
     def post(self):

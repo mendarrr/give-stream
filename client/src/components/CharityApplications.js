@@ -4,23 +4,24 @@ import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
 
 const CharityApplications = () => {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [selectedOptions, setSelectedOptions] = useState(new Set());
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    description: "",
-    country: "",
-    city: "",
-    zipcode: "",
-    username: "",
-    target_amount: "",
-    image: "",
-    summary: "",
-  });
-  const [selectedCategory, setSelectedCategory] = useState(new Set());
-  const [selectedDonation, setSelectedDonation] = useState(null);
-  const [errorMessages, setErrorMessages] = useState({});
+    const [currentStep, setCurrentStep] = useState(1);
+    const [selectedOptions, setSelectedOptions] = useState(new Set());
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        description: '',
+        country: '',
+        city: '',
+        zipcode: '',
+        username: '',
+        target_amount: '',
+        image: '',
+        summary: '',
+        password: '',
+    });
+    const [selectedCategory, setSelectedCategory] = useState(new Set());
+    const [selectedDonation, setSelectedDonation] = useState(null);
+    const [errorMessages, setErrorMessages] = useState({});
 
   const navigate = useNavigate();
 
@@ -43,138 +44,133 @@ const CharityApplications = () => {
     setFormData((prevData) => ({ ...prevData, target_amount: amount }));
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prevData => ({
+            ...prevData,
+            [name]: value
+        }));
+    };
 
-  const handleNextClick = () => {
-    let newErrorMessages = {};
 
-    if (currentStep === 1 && selectedOptions.size === 0) {
-      newErrorMessages.step1 = "Please select an option.";
-    } else if (currentStep === 2) {
-      const requiredFields = [
-        "name",
-        "email",
-        "description",
-        "country",
-        "city",
-        "zipcode",
-        "username",
-      ];
-      requiredFields.forEach((field) => {
-        if (!formData[field]) {
-          newErrorMessages[field] = "Please fill this field.";
-        }
-      });
-      if (selectedCategory.size === 0) {
-        newErrorMessages.step2 = "Please select at least one category.";
+    const validateEmail = (email) => {
+      const emailRegex = /\S+@\S+\.\S+/;
+      if (!emailRegex.test(email)) {
+          setErrorMessages(prev => ({ ...prev, email: 'Please enter a valid email address.' }));
+      } else {
+          setErrorMessages(prev => {
+              const { email, ...rest } = prev;
+              return rest;
+          });
       }
-    } else if (
-      currentStep === 3 &&
-      !formData.target_amount &&
-      !selectedDonation
-    ) {
-      newErrorMessages.target_amount = "Please set a target amount.";
-    } else if (currentStep === 4) {
-      if (!formData.image)
-        newErrorMessages.image = "Please provide an image URL.";
-      if (!formData.summary)
-        newErrorMessages.summary = "Please provide a summary.";
-    }
-
-    if (Object.keys(newErrorMessages).length > 0) {
-      setErrorMessages(newErrorMessages);
-      return;
-    }
-
-    switch (currentStep) {
-      case 1:
-        if (selectedOptions.size > 0) setCurrentStep(2);
-        break;
-      case 2:
-        if (selectedCategory.size > 0) setCurrentStep(3);
-        break;
-      case 3:
-        if (selectedDonation || formData.target_amount) setCurrentStep(4);
-        break;
-      case 4:
-        if (formData.image && formData.summary) setCurrentStep(6);
-        break;
-      case 5:
-        handleSubmit();
-        break;
-      default:
-        break;
-    }
   };
+
+  const validatePassword = (password) => {
+      if (password.length < 6) {
+          setErrorMessages(prev => ({ ...prev, password: 'Password must be at least 6 characters long.' }));
+      } else {
+          setErrorMessages(prev => {
+              const { password, ...rest } = prev;
+              return rest;
+          });
+      }
+  };
+
+  const handleEmailBlur = () => {
+      validateEmail(formData.email);
+  };
+
+  const handlePasswordBlur = () => {
+      validatePassword(formData.password);
+  };
+
+
+    const handleNextClick = () => {
+        let newErrorMessages = {};
+
+        if (currentStep === 1 && selectedOptions.size === 0) {
+            newErrorMessages.step1 = 'Please select an option.';
+        } else if (currentStep === 2) {
+            const requiredFields = ['name', 'email', 'description', 'country', 'city', 'zipcode', 'username'];
+            requiredFields.forEach(field => {
+                if (!formData[field]) {
+                    newErrorMessages[field] = 'Please fill this field.';
+                }
+            });
+            if (selectedCategory.size === 0) {
+                newErrorMessages.step2 = 'Please select at least one category.';
+            }
+        } else if (currentStep === 3 && !formData.target_amount && !selectedDonation) {
+            newErrorMessages.target_amount = 'Please set a target amount.';
+        } else if (currentStep === 4) {
+            if (!formData.image) newErrorMessages.image = 'Please provide an image URL.';
+            if (!formData.summary) newErrorMessages.summary = 'Please provide a summary.';
+        }
+
+        if (Object.keys(newErrorMessages).length > 0) {
+            setErrorMessages(newErrorMessages);
+            return;
+        }
+
+        switch (currentStep) {
+            case 1:
+                if (selectedOptions.size > 0) setCurrentStep(2);
+                break;
+            case 2:
+                if (selectedCategory.size > 0) setCurrentStep(3);
+                break;
+            case 3:
+                if (selectedDonation || formData.target_amount) setCurrentStep(4);
+                break;
+            case 4:
+                if (formData.image && formData.summary) setCurrentStep(6);
+                break;
+            case 5:
+                handleSubmit();
+                break;
+            default:
+                break;
+        }
+    };
 
   const handlePreviousClick = () => {
     setCurrentStep((prevStep) => prevStep - 1);
   };
 
-  const handleSubmit = async () => {
-    const requiredFields = [
-      "name",
-      "email",
-      "description",
-      "country",
-      "city",
-      "zipcode",
-      "username",
-      "target_amount",
-      "image",
-      "summary",
-    ];
-    const isFormValid = requiredFields.every(
-      (field) =>
-        formData[field] || (field === "target_amount" && selectedDonation)
-    );
-
-    if (!isFormValid) {
-      setErrorMessages((prev) => ({
-        ...prev,
-        form: "Please fill out all required fields.",
-      }));
-      return;
-    }
-
-    try {
-      const response = await fetch("/charity-applications", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        if (result.emailExists) {
-          setErrorMessages((prev) => ({
-            ...prev,
-            submitError: "Email already exists in the system.",
-          }));
-        } else {
-          setCurrentStep(5);
+    const handleSubmit = async () => {
+        const requiredFields = ['name', 'email', 'description', 'country', 'city', 'zipcode', 'username', 'target_amount', 'image', 'summary', 'password'];
+        const isFormValid = requiredFields.every(field => formData[field] || (field === 'target_amount' && selectedDonation));
+    
+        if (!isFormValid) {
+            setErrorMessages(prev => ({ ...prev, form: 'Please fill out all required fields.' }));
+            return;
         }
-      } else {
-        const error =
-          response.status === 409
-            ? "Email already exists in the system. Please use a different email."
-            : "There was an error submitting your application. Please try again.";
-        setErrorMessages((prev) => ({ ...prev, submitError: error }));
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      setErrorMessages((prev) => ({
-        ...prev,
-        submitError: "An unexpected error occurred. Please try again.",
-      }));
-    }
-  };
+    
+        try {
+            const response = await fetch('/charity-applications', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+    
+            if (response.ok) {
+                const result = await response.json();
+                if (result.emailExists) {
+                    setErrorMessages(prev => ({ ...prev, submitError: 'Email already exists in the system.' }));
+                } else {
+                    setCurrentStep(5);
+                }
+            } else {
+                const error = response.status === 409
+                    ? 'Email already exists in the system. Please use a different email.'
+                    : 'There was an error submitting your application. Please try again.';
+                setErrorMessages(prev => ({ ...prev, submitError: error }));
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            setErrorMessages(prev => ({ ...prev, submitError: 'An unexpected error occurred. Please try again.' }));
+        }
+    };
 
   const handleExit = () => {
     navigate("/"); // Navigate to the main page or any other route

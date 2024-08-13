@@ -1,97 +1,69 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./CharitiesPage.css";
-
-const CharityCard = ({ charity, onClick }) => {
-  const { name, imageUrl, totalRaised, goalAmount } = charity;
-  const percentageRaised =
-    goalAmount > 0 ? (totalRaised / goalAmount) * 100 : 0;
-
-  return (
-    <div className="charity-card" onClick={onClick}>
-      <div className="charity-image-container">
-        <img
-          src={imageUrl || "https://via.placeholder.com/300x200?text=No+Image"}
-          alt={name}
-          className="charity-image"
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src =
-              "https://via.placeholder.com/300x200?text=Image+Not+Found";
-          }}
-        />
-      </div>
-      <div className="charity-info">
-        <h3 className="charity-name">{name || "Unnamed Charity"}</h3>
-        <div className="donation-bar-container">
-          <div
-            className="donation-bar"
-            style={{ width: `${percentageRaised}%` }}
-          ></div>
-        </div>
-        <p className="funds-raised">
-          ${totalRaised?.toLocaleString() || "0"} raised of $
-          {goalAmount?.toLocaleString() || "0"} goal
-        </p>
-      </div>
-    </div>
-  );
-};
 
 const CharitiesPage = () => {
   const [charities, setCharities] = useState([]);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetch("http://localhost:5000/charities")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (!Array.isArray(data)) {
-          throw new Error("API did not return an array of charities");
-        }
-        setCharities(data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching charities:", error);
-        setError(error.message);
-        setIsLoading(false);
-      });
+      .then((response) => response.json())
+      .then((data) => setCharities(data))
+      .catch((error) => console.error("Error fetching charities:", error));
   }, []);
 
-  const handleCharityClick = (charityId) => {
-    navigate(`/charity-dashboard/${charityId}`);
+  const formatCurrency = (amount) => {
+    return typeof amount === "number" ? amount.toLocaleString() : "0";
   };
 
-  if (error) {
-    return <div className="error-message">Error: {error}</div>;
-  }
+  const calculateProgress = (raised, goal) => {
+    if (typeof raised === "number" && typeof goal === "number" && goal > 0) {
+      return Math.min((raised / goal) * 100, 100);
+    }
+    return 0;
+  };
 
   return (
-    <div className="charities-page">
+    <div className="charity-list-container">
       <h1>Charities</h1>
-      {isLoading ? (
-        <div className="loading-spinner">Loading charities...</div>
-      ) : charities.length === 0 ? (
-        <p className="no-charities">No charities found.</p>
-      ) : (
-        <div className="charities-grid">
-          {charities.map((charity) => (
-            <CharityCard
-              key={charity.id}
-              charity={charity}
-              onClick={() => handleCharityClick(charity.id)}
+      <div className="charity-grid">
+        {charities.map((charity) => (
+          <Link
+            to={`/charity-dashboard/${charity.id}`}
+            key={charity.id}
+            className="charity-card"
+          >
+            <img
+              src={charity.image_url || "https://via.placeholder.com/150"}
+              alt={charity.name}
+              className="charity-image"
             />
-          ))}
-        </div>
-      )}
+            <h2>{charity.name || "Unnamed Charity"}</h2>
+            <div className="progress-bar">
+              <div
+                className="progress"
+                style={{
+                  width: `${calculateProgress(
+                    charity.total_raised,
+                    charity.needed_donation
+                  )}%`,
+                }}
+              ></div>
+            </div>
+            <p className="funds-info">
+              <span className="raised-amount">
+                KES {formatCurrency(charity.total_raised)}
+              </span>{" "}
+              raised of
+              <span className="goal-amount">
+                {" "}
+                KES {formatCurrency(charity.needed_donation)}
+              </span>{" "}
+              goal
+            </p>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 };
