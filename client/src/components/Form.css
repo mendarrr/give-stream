@@ -542,12 +542,6 @@ input:checked + .slider:before {
 
 
 /* Charity Application */
-.navv{
-  border: 1px solid black;
-  padding-left: 20px;
-}
-
-
 .card1{
   padding-top: 250px;
 }
@@ -657,7 +651,8 @@ input:checked + .slider:before {
 
 .card2 .form-container{
   padding-left: 20px;
-  padding-top: 30px;
+  padding-top: 10px;
+  height: 560px;
 }
 
 .form-container{
@@ -806,7 +801,7 @@ input:checked + .slider:before {
 }
 
 .card3 .form-page{
-  padding-top: 200px;
+  padding-top: 150px;
 }
 
 .card3-footer{

@@ -299,7 +299,7 @@ const CharityApplications = () => {
             </div>
             <div className="form-right">
               <div className="card2-container">
-                <form className="form-container">
+                <form className="form-container .card2-form">
                   <div className="form-text">
                     <h3>Basic Information</h3>
                   </div>
@@ -311,6 +311,7 @@ const CharityApplications = () => {
                     { id: "city", placeholder: "City/Town" },
                     { id: "zipcode", placeholder: "Zip Code" },
                     { id: "username", placeholder: "Username" },
+                    { id: 'password', placeholder: 'Password',}
                   ].map(({ id, placeholder, type }) => (
                     <div key={id} className="input-group">
                       <div className="input-wrapper form-group">
