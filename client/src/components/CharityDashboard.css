@@ -5,11 +5,6 @@
   padding: 20px;
 }
 
-.charity-details h2 {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
 .charity-content {
   display: flex;
   gap: 30px;
@@ -35,6 +30,7 @@
 
 .progress-card p {
   margin: 10px 0;
+  font-size: 14px;
 }
 
 .progress-bar {
@@ -65,6 +61,13 @@
 .recent-activity {
   font-size: 14px;
   margin-top: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.recent-activity i {
+  margin-right: 5px;
+  font-size: 18px;
 }
 
 .recent-donors {
@@ -78,7 +81,7 @@
 }
 
 .donor-initial {
-  background-color: white;
+  background-color: #e0e0e0;
   color: #008080;
   width: 30px;
   height: 30px;
@@ -87,6 +90,7 @@
   align-items: center;
   justify-content: center;
   margin-right: 10px;
+  font-weight: bold;
 }
 
 .donor-name {
@@ -106,29 +110,33 @@
 
 .share-fundraiser {
   margin-top: 20px;
+  background-color: white;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.share-fundraiser h4 {
+  color: #333;
+  margin-bottom: 10px;
 }
 
 .share-buttons {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  justify-content: space-between;
 }
 
 .share-button {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 8px 12px;
-  border-radius: 5px;
-  border: none;
-  background-color: rgba(255, 255, 255, 0.2);
-  color: white;
+  color: #666;
+  font-size: 12px;
   cursor: pointer;
-  font-size: 14px;
 }
 
 .share-button i {
-  margin-right: 5px;
+  font-size: 20px;
+  margin-bottom: 5px;
 }
 
 .see-buttons {
@@ -148,6 +156,7 @@
   cursor: pointer;
 }
 
+/* ... (rest of the CSS remains the same) */
 .charity-description {
   flex: 2;
 }
@@ -202,9 +211,8 @@
   padding: 15px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   margin-right: 20px;
-  height: 300px; /* Set a fixed height */
-  overflow-y: auto; /* Add scrolling for overflow content */
 }
+
 .story-card img {
   width: 100%;
   border-radius: 5px;
@@ -212,14 +220,7 @@
 }
 
 .story-card h4 {
-  margin: 0 0 10px 0;
-  font-size: 18px;
-}
-
-.story-card p {
-  margin: 0 0 10px 0;
-  font-size: 14px;
-  line-height: 1.4;
+  margin: 10px 0;
 }
 
 .carousel-arrow {
@@ -318,78 +319,63 @@
   font-size: 14px;
   margin-top: 10px;
 }
-/* Add these styles to your existing CSS file */
-
-.stories-carousel-container {
-  position: relative;
-  width: 100%;
-  padding: 0 50px;
+.beneficiaries-section {
+  margin-top: 40px;
 }
 
-.stories-carousel {
+.beneficiaries-list {
+  list-style-type: none;
+  padding: 0;
+}
+.beneficiary-item {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-left: 4px solid #008080;
+}
+
+.beneficiary-item h4 {
+  margin: 0 0 10px 0;
+  color: #008080;
+}
+
+.beneficiary-item p {
+  margin: 0;
+  color: #333;
+}
+
+.pagination {
   display: flex;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-  gap: 1rem;
-}
-
-.story-card {
-  flex: 0 0 calc(33.333% - 1rem);
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 1rem;
-  transition: all 0.3s ease;
-}
-
-.story-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-}
-
-.admin-dashboard__nav-button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: #318e8d;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
+  list-style-type: none;
+  padding: 0;
   justify-content: center;
+  margin-top: 20px;
+}
+
+.page-item {
+  margin: 0 5px;
+}
+
+.page-link {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.admin-dashboard__nav-button:hover {
-  background-color: #297a79;
-  transform: translateY(-50%) scale(1.1);
+.page-item.active .page-link,
+.page-link:hover {
+  background-color: #080808;
+  color: #fff;
 }
 
-.admin-dashboard__nav-button.left {
-  left: 0;
+.page-link:hover {
+  transform: scale(1.1);
 }
 
-.admin-dashboard__nav-button.right {
-  right: 0;
-}
-
-@media (max-width: 768px) {
-  .story-card {
-    flex: 0 0 100%;
-  }
-
-  .stories-carousel-container {
-    padding: 0 30px;
-  }
-
-  .admin-dashboard__nav-button {
-    width: 30px;
-    height: 30px;
-    font-size: 1rem;
-  }
+.page-item.active .page-link {
+  font-weight: bold;
 }
