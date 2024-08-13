@@ -12,8 +12,6 @@ import requests
 from requests.auth import HTTPBasicAuth
 import base64
 from json import JSONEncoder
-from werkzeug.security import generate_password_hash
-import sqlalchemy
 
 from config import app,db,api
 from models import db, Admin, Donor,Charity, PaymentMethod, Message, Community, Payment
@@ -198,7 +196,7 @@ class Charities(Resource):
                 description=data.get('description'),
                 needed_donation=data.get('needed_donation'),
                 goal_amount=data.get('goal_amount'),
-                image=data.get('image'),
+                image_url=data.get('image_url'),
                 organizer=data.get('organizer')
             )
             new_charity.password_hash = data['password']
@@ -238,93 +236,66 @@ class Charities(Resource):
             return '', 204
         except Exception as e:
             db.session.rollback()
-            return {'error': str(e)}, 500    
+            return {'error': str(e)}, 500
 
 class CharityApplications(Resource):
     def get(self):
-        applications = CharityApplication.query.all()
+        status = request.args.get('status', None)
+        if status:
+            applications = CharityApplication.query.filter_by(status=status).all()
+        else:
+            applications = CharityApplication.query.all()
         return jsonify([app.to_dict() for app in applications])
 
     def post(self):
         data = request.get_json()
-        if isinstance(data, tuple):  # Check if data is a tuple
-            data = data[0]  # Extract the dictionary from the tuple
-
-        if 'password' not in data:
-            return make_response(jsonify({"error": "Password is required"}), 400)
-    
-        password_hash = generate_password_hash(data['password'], method='sha256')
-    
         new_application = CharityApplication(
-            name=data.get('name'),
-            email=data.get('email'),
+            name=data['name'],
+            email=data['email'],
             username=data.get('username'),
-            description=data.get('description'),
+            description=data['description'],
             country=data.get('country'),
             city=data.get('city'),
             zipcode=data.get('zipcode'),
             fundraising_category=data.get('fundraising_category'),
             target_amount=data.get('target_amount'),
-            image=data.get('image'),    # Assuming you're storing the image URL here
-            status=data.get('status','pending'),
+            status='pending'  # Set initial status to pending
         )
-        new_application.password_hash = password_hash
         db.session.add(new_application)
-        try:
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            return make_response(jsonify({"error": str(e)}), 500)
+        db.session.commit()
         return new_application.to_dict(), 201
 
     def put(self, id):
-        logging.info(f"Updating charity application with ID: {id}")
-        data = request.get_json()
-        logging.info(f"Incoming data: {data}")
         application = CharityApplication.query.get_or_404(id)
-
-        if 'status' not in data:
-            return make_response(jsonify({"error": "Status is required"}), 400)
-
+        data = request.get_json()
         application.status = data['status']
-
-    # Update application fields
-        for field in ['country', 'city', 'zipcode', 'fundraising_category', 'username', 'target_amount']:
-            if field in data:
-                setattr(application, field, data[field])
-
-        if 'password' in data:
-            application.password_hash = generate_password_hash(data['password'], method='sha256')
 
         if data['status'] == 'approved':
             existing_charity = Charity.query.filter_by(name=application.name).first()
             if existing_charity:
-                return make_response(jsonify({'message': 'A charity with this name already exists'}), 400)
+                return {'message': 'A charity with this name already exists'}, 400
+            
+            new_charity = Charity(
+    username=application.name.lower().replace(' ', '_'),
+    email=application.email,
+    name=application.name,
+    description=application.description,
+    goal_amount=application.target_amount
+)
+            db.session.add(new_charity)
         
-        new_charity = Charity(
-            username=application.username.lower().replace(' ', '_'),
-            email=application.email,
-            name=application.name,
-            description=application.description,
-            image=application.image
-        )
-        if 'password' in data:
-            new_charity.password_hash = generate_password_hash(data['password'], method='sha256')
-        else:
-            return make_response(jsonify({"error": "Password is required for approved charities"}), 400)
-        db.session.add(new_charity)
+        application.country = data.get('country', application.country)
+        application.city = data.get('city', application.city)
+        application.zipcode = data.get('zipcode', application.zipcode)
+        application.fundraising_category = data.get('fundraising_category', application.fundraising_category)
+        application.username = data.get('username', application.username)
+        application.target_amount = data.get('target_amount', application.target_amount)
 
-        try:
-            db.session.commit()
-        except sqlalchemy.exc.IntegrityError as e:
-            db.session.rollback()
-            return make_response(jsonify({"error": "Database integrity error. Possibly duplicate unique field."}), 400)
-        except Exception as e:
-            db.session.rollback()
-            logging.error(f"Error updating application: {str(e)}")
-            return make_response(jsonify({"error": "An unexpected error occurred"}), 500)
-    
+        db.session.commit()
         return application.to_dict(), 200
+    
+
+
     
 
 class CommonDashboard(Resource):
