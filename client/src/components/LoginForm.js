@@ -46,7 +46,7 @@ const LoginPage = () => {
           navigate('/donation-form');
           break;
         case 'charity':
-          navigate('/charity-profile');
+          navigate('/charity-profile/:id');
           break;
         default:
           navigate("/");

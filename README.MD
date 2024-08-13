@@ -4,47 +4,47 @@
 
 ## Table of Contents
 
-Introduction  
+* Introduction  
 
-Problem Statement  
+* Problem Statement  
 
-Key Features  
+* Key Features  
 
-Launching  
+* Launching  
 
-  Endpoints   
+  - Endpoints   
 
-Prerequisites  
+* Prerequisites  
 
-Installations  
+* Installations  
 
-  Backend  
+  - Backend  
 
-  Frontend  
+  - Frontend  
 
-Running GIVE STREAM Locally  
+* Running GIVE STREAM Locally  
 
-Usage  
+* Usage  
 
-Development Notes  
+* Development Notes  
 
-Security Considerations  
+* Security Considerations  
 
-MVPs  
+* MVPs  
 
-  MVP 1: User Authentication  
+  - MVP 1: User Authentication  
 
-  MVP 2: Charity Management  
+  - MVP 2: Charity Management  
 
-  MVP 3: Donation Functionality  
+  - MVP 3: Donation Functionality  
 
-  MVP 4: Beneficiary Stories  
+  - MVP 4: Beneficiary Stories  
 
-Technologies Used  
+* Technologies Used  
 
-License  
+* License  
 
-Contributors
+* Contributors
 
 
 ## Introduction
@@ -102,9 +102,9 @@ POST /api/stories: Create a new beneficiary story.
 GET /api/stories: Retrieve all beneficiary stories.
 
 ### Prerequisites
-Python 3.8 or higher
-Node.js and npm
-An active database connection
+- Python 3.8 or higher
+- Node.js and npm
+- An active database connection
 
 ### Installations
 
@@ -114,11 +114,11 @@ cd server
 Install required packages:
 pip install flask sqlalchemy,flask-jwt-extended
 
-Set up the database: 
- flask db init
- flask db migrate
- flask db upgrade
- python seed.py
+  Set up the database: 
+ - flask db init
+ - flask db migrate
+ - flask db upgrade
+ - python seed.py
 
 #### Frontend
 Navigate to the frontend directory:
@@ -186,18 +186,26 @@ Implement SMS or email notifications for donors.
 ### Technologies Used
 
 #### Backend
-Language: Python
-Framework: Flask
-Database: SQLAlchemy
+Language: Python  
+
+Framework: Flask  
+
+Database: SQLAlchemy  
+
 Authentication: JWT
 
 #### Frontend
-Language: JavaScript
-Framework: React.js
-State Management: Redux
+Language: JavaScript  
+
+Framework: React.js  
+
 Development Tools
-Version Control: Git and GitHub
-Package Management: npm
+Figma  
+
+Version Control: Git and GitHub  
+
+Package Management: npm  
+
 License
 This project is licensed under the MIT License. See the LICENSE file for details.
 

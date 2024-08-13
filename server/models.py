@@ -170,6 +170,16 @@ class CharityApplication(db.Model, SerializerMixin):
     image = db.Column(db.String(255), nullable=True)
     admin = db.relationship('Admin', backref='reviewed_applications')
 
+    @hybrid_property
+    def password_hash(self):
+        raise AttributeError('Password hashes may not be viewed.')
+
+    @password_hash.setter
+    def password_hash(self, password):
+        password_hash = bcrypt.generate_password_hash(password.encode('utf-8'))
+        self._password_hash = password_hash.decode('utf-8')
+
+    
     def to_dict(self):
      return {
         'id': self.id,
@@ -188,6 +198,8 @@ class CharityApplication(db.Model, SerializerMixin):
         'target_amount': self.target_amount,
         'image': self.image
     }
+
+
 
     
 

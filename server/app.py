@@ -249,6 +249,7 @@ class CharityApplications(Resource):
 
     def post(self):
         data = request.get_json()
+        _password_hash = data.get('password')
         new_application = CharityApplication(
             name=data['name'],
             email=data['email'],
@@ -261,6 +262,7 @@ class CharityApplications(Resource):
             target_amount=data.get('target_amount'),
             status='pending'  # Set initial status to pending
         )
+        new_application.password_hash = _password_hash
         db.session.add(new_application)
         db.session.commit()
         return new_application.to_dict(), 201
@@ -276,11 +278,13 @@ class CharityApplications(Resource):
                 return {'message': 'A charity with this name already exists'}, 400
             
             new_charity = Charity(
-    username=application.name.lower().replace(' ', '_'),
+    username=application.username.lower().replace(' ', '_'),
+    _password_hash =application._password_hash,
     email=application.email,
     name=application.name,
     description=application.description,
     goal_amount=application.target_amount
+
 )
             db.session.add(new_charity)
         
