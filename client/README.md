@@ -68,5 +68,57 @@ In many Sub-Saharan countries, access to essential sanitary products and clean w
   - Provide updates on ongoing projects.
 
 
+## Launching
+
+### Endpoints
+
+#### User Authentication and Authorization Endpoints
+
+- **POST `/api/register`**
+  - **Description:** Registers a new donor or admin.
+  - **Request Body:** `{ username, email, password }`
+  - **Response:** `{ success: true, message: "User registered successfully" }`
+
+- **POST `/api/login`**
+  - **Description:** Logs in a user and generates a JWT token.
+  - **Request Body:** `{ username, password }`
+  - **Response:** `{ success: true, token: "jwt_token" }`
+
+- **POST `/api/logout`**
+  - **Description:** Logs out a user by invalidating the JWT token.
+  - **Authorization:** Bearer token in headers.
+  - **Response:** `{ success: true, message: "Logged out successfully" }`
+
+#### Charity Management Endpoints
+
+- **POST `/api/charities`**
+  - **Description:** Creates a new charity.
+  - **Authorization:** Bearer token in headers.
+  - **Request Body:** `{ name, description, contact_info }`
+  - **Response:** `{ success: true, message: "Charity created successfully" }`
+
+- **GET `/api/charities`**
+  - **Description:** Retrieves all charities.
+  - **Authorization:** Bearer token in headers.
+  - **Response:** `{ success: true, charities: [ ... ] }`
+
+- **DELETE `/api/charities/:charity_id`**
+  - **Description:** Deletes a charity.
+  - **Authorization:** Bearer token in headers.
+  - **Response:** `{ success: true, message: "Charity deleted successfully" }`
+
+#### Donation Management Endpoints
+
+- **POST `/api/donations`**
+  - **Description:** Creates a new donation.
+  - **Authorization:** Bearer token in headers.
+  - **Request Body:** `{ donor_id, charity_id, amount, donation_type }`
+  - **Response:** `{ success: true, message: "Donation created successfully" }`
+
+- **GET `/api/donations`**
+  - **Description:** Retrieves all donations.
+  - **Authorization:** Bearer token in headers.
+  - **Response:** `{ success: true, donations: [ ... ] }`
+
 
 
