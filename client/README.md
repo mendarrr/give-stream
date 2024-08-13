@@ -34,3 +34,39 @@
 15. [Contributors](#contributors)
 
 
+
+## Introduction
+
+GIVE STREAM is a platform dedicated to encouraging repeat donations to charities that focus on providing essential services such as sanitary towels, clean water, and sanitation facilities to school-going girls in Sub-Saharan countries. Our goal is to streamline the donation process, provide transparency, and create an engaging platform for donors and charities alike.
+
+## Problem Statement
+
+In many Sub-Saharan countries, access to essential sanitary products and clean water is limited, leading to health issues and missed educational opportunities for young girls. Charities working in these regions often struggle with managing donations and maintaining donor engagement. The GIVE STREAM app aims to address these challenges by providing a user-friendly platform for making and managing donations, and tracking the impact of contributions.
+
+## Key Features
+
+- **User Roles**
+  - **Donor:**
+    - View and donate to charities.
+    - Track donation history.
+    - Receive updates on funded projects.
+  - **Admin:**
+    - Manage charity listings and details.
+    - Monitor and analyze donation statistics.
+    - Manage beneficiary stories and updates.
+
+- **Charity Management:**
+  - Add, view, and update charity profiles.
+  - List and manage donation campaigns.
+
+- **Donation Management:**
+  - Make one-time or recurring donations.
+  - View donation history and impact reports.
+
+- **Beneficiary Story Management:**
+  - Post and manage stories of beneficiaries receiving aid.
+  - Provide updates on ongoing projects.
+
+
+
+
