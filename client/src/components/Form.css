@@ -2,7 +2,8 @@
 .newDonor,
 .login-page,
 .card1,
-.card2{
+.card2,
+.card3{
   background: whitesmoke;
   padding-left: 260px;
   padding-right: 150px;
@@ -541,10 +542,19 @@ input:checked + .slider:before {
 
 
 /* Charity Application */
-.card1{
-  padding-top: 280px;
+.navv{
+  border: 1px solid black;
+  padding-left: 20px;
 }
 
+
+.card1{
+  padding-top: 250px;
+}
+
+.card1 .form-page{
+  height: 70vh;
+}
 
 .card1 .button-container{
   display: flex;
@@ -697,7 +707,8 @@ input:checked + .slider:before {
   margin-left: 36px;
 }
 
-.card2-footer{
+.card2-footer,
+.card3-footer{
   display: flex;
   gap: 30px;
   margin-left: 130px;
@@ -789,7 +800,79 @@ input:checked + .slider:before {
   }
 }
 
+/* Card3 */
+.card3{
+  height: 80vh;
+}
 
+.card3 .form-page{
+  padding-top: 200px;
+}
+
+.card3-footer{
+  margin-top: -180px;
+}
+
+.card3 .form-left,
+.card3 .form-right{
+  height: 500px;
+}
+
+.card3-h3{
+  font-size: 25px;
+  color: #318E8D;
+  font-family: 'Times New Roman', Times, serif;
+  margin-left: 10px;
+  margin-bottom: -10px;
+}
+
+.card3-h4,
+.card3-p{
+  text-align: left;
+  color: black;
+}
+
+.card3-h4{
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.card3-p{
+  font-size: 15px;
+  margin-top: -20px;
+}
+
+.donation-options {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.donation-options h4 {
+  margin-bottom: 15px;
+  font-size: 18px;
+  color: #333;
+}
+
+.select-donation {
+  margin: 5px;
+  width:150px;
+  padding: 10px 15px;
+  background-color: transparent;
+  border: 1px solid #E66E4E;
+  border-radius: 5px;
+  cursor: pointer;
+  color: black;
+  font-weight: 600;
+  
+}
+
+.select-fundraising.selected{
+  background-color: #E66E4E;
+}
+
+.select-fundraising:hover{
+  background-color: #E66E4E;
+}
 
 
 
