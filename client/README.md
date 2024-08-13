@@ -1,38 +1,35 @@
-# GIVE STREAM APP
+# GIVE STREAM
 
-![CareConnect Logo](path/to/careconnect-logo.png)
+![GIVE STREAM Logo](path/to/logo.png)
 
 ## Table of Contents
-1. [Introduction](#introduction)
-2. [Problem Statement](#problem-statement)
-3. [Key Features](#key-features)
-4. [Launching](#launching)
-   - [Endpoints](#endpoints)
-5. [Prerequisites](#prerequisites)
-6. [Installations](#installations)
-   - [Backend](#backend)
-   - [Frontend](#frontend)
-7. [Running CareConnect Locally](#running-careconnect-locally)
-8. [Usage](#usage)
-   - [Patient Workflow](#patient-workflow)
-   - [Admin Workflow](#admin-workflow)
-9. [Development Notes](#development-notes)
-10. [Security Considerations](#security-considerations)
-11. [MVPs](#mvps)
-   - [MVP 1: Service Management](#mvp-1-service-management)
-   - [MVP 2: Patient Management](#mvp-2-patient-management)
-   - [MVP 3: Appointment Management](#mvp-3-appointment-management)
-   - [MVP 4: Patient Login](#mvp-4-patient-login)
-12. [Stretch MVPs](#stretch-mvps)
-   - [MVP 5: Staff Management](#mvp-5-staff-management)
-   - [MVP 6: Billing Services](#mvp-6-billing-services)
-13. [Technologies Used](#technologies-used)
-   - [Backend](#backend-1)
-   - [Frontend](#frontend-1)
-   - [Development Tools](#development-tools)
-14. [License](#license)
-15. [Contributors](#contributors)
-
+- [Introduction](#introduction)
+- [Problem Statement](#problem-statement)
+- [Key Features](#key-features)
+- [Launching](#launching)
+  - [Endpoints](#endpoints)
+    - [User Authentication and Authorization Endpoints](#user-authentication-and-authorization-endpoints)
+    - [Charity Management Endpoints](#charity-management-endpoints)
+    - [Donation Management Endpoints](#donation-management-endpoints)
+- [Prerequisites](#prerequisites)
+- [Installations](#installations)
+  - [Backend](#backend)
+  - [Frontend](#frontend)
+- [Running GIVE STREAM Locally](#running-give-stream-locally)
+- [Usage](#usage)
+- [Development Notes](#development-notes)
+- [Security Considerations](#security-considerations)
+- [MVPs](#mvps)
+  - [MVP 1: Charity Management](#mvp-1-charity-management)
+  - [MVP 2: Donation Management](#mvp-2-donation-management)
+  - [MVP 3: Beneficiary Story Management](#mvp-3-beneficiary-story-management)
+- [Stretch MVPs](#stretch-mvps)
+  - [MVP 4: Admin Dashboard Enhancements](#mvp-4-admin-dashboard-enhancements)
+- [Technologies Used](#technologies-used)
+- [License](#license)
+- [Contributors](#contributors)
+- [Features](#features)
+- [User Roles](#user-roles)
 
 
 ## Introduction
@@ -121,4 +118,19 @@ In many Sub-Saharan countries, access to essential sanitary products and clean w
   - **Response:** `{ success: true, donations: [ ... ] }`
 
 
+## Prerequisites
+
+- **React**
+- **Python 3.8.13**
+- **Flask with SQLAlchemy**
+- **An active database and client-side connection**
+
+## Installations
+
+### Backend
+
+1. Ensure Python 3.8.13 is installed.
+2. Install required packages:
+   ```sh
+   pip install flask-sqlalchemy sqlalchemy_serializer flask_bcrypt flask_jwt_extended faker
 
