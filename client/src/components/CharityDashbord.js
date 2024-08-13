@@ -240,7 +240,7 @@ function CharityDescription({
       <div className="donation-protected">
         <span>Donation protected</span>
       </div>
-      <h3>Support Malnourished School Children in Moyale</h3>
+      <h3>{charity.description}</h3>
       <p>{charity.description}</p>
       <SuccessStories
         stories={successStories}
