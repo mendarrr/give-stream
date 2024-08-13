@@ -84,21 +84,22 @@ Charities can post stories about beneficiaries to showcase the impact of donatio
 ### Endpoints
 
 #### User Authentication and Authorization Endpoints
-POST /api/auth/register: Register a new user (donor, charity, or admin).
-POST /api/auth/login: Log in a user and generate a JWT token.
+POST /api/auth/register: Register a new user (donor, charity, or admin).  
+POST /api/auth/login: Log in a user and generate a JWT token.  
 POST /api/auth/logout: Log out the user by invalidating the current JWT token.
 
 #### Charity Management Endpoints
-POST /api/charities: Create a new charity.
-GET /api/charities: Retrieve all approved charities.
-PATCH /api/charities/{id}: Update charity details.
+POST /api/charities: Create a new charity.  
+GET /api/charities: Retrieve all approved charities.  
+PATCH /api/charities/{id}: Update charity details.  
 DELETE /api/charities/{id}: Delete a charity.
 
 #### Donation Endpoints
-POST /api/donations: Create a new donation.
-GET /api/donations: Retrieve all donations made by a user.
-Beneficiary Stories Endpoints
-POST /api/stories: Create a new beneficiary story.
+POST /api/donations: Create a new donation.  
+GET /api/donations: Retrieve all donations made by a user.  
+
+#### Beneficiary Stories Endpoints
+POST /api/stories: Create a new beneficiary story.  
 GET /api/stories: Retrieve all beneficiary stories.
 
 ### Prerequisites
@@ -155,12 +156,12 @@ Manage charity details and post beneficiary stories.
 Manage charity applications and oversee platform activities.
 
 ### Development Notes
-Backend: Flask for API development, SQLAlchemy for database management.
-Frontend: React.js with Redux for state management.
-Testing: Jest for frontend, Pytest for backend.
-Security Considerations
-Use JWT for secure authentication.
-Validate and sanitize input to prevent security vulnerabilities.
+Backend: Flask for API development, SQLAlchemy for database management.  
+Frontend: React.js with Redux for state management.  
+Testing: Jest for frontend, Pytest for backend.  
+Security Considerations  
+Use JWT for secure authentication.  
+Validate and sanitize input to prevent security vulnerabilities.  
 
 ### MVPs
 
