@@ -225,7 +225,7 @@ const CharityApplications = () => {
 
   return (
     <div className="charity-applications">
-      <div className="navv">
+      <div>
         <Navbar isSticky={true} isLoggedIn={true} />
       </div>
       {/* First Card */}

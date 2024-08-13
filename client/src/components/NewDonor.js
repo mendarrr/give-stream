@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./Form.css";
 import { Link, useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
 
 const NewDonorForm = () => {
   const [formData, setFormData] = useState({
@@ -87,6 +88,9 @@ const NewDonorForm = () => {
 
   return (
     <div className="newDonor">
+      <div>
+        <Navbar isSticky={true} isLoggedIn={true} />
+      </div>
       <div className="form-page">
         <div className="form-left">
           <img
