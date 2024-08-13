@@ -68,6 +68,7 @@ const AdminDashboard = () => {
     }
   };
 
+
   const handleApprove = async (application) => {
     try {
       const response = await fetch(`/charity-applications/${application.id}`, {
@@ -75,22 +76,16 @@ const AdminDashboard = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           status: "approved",
-          name: application.name,
-          email: application.email,
-          description: application.description,
-          country: application.country,
-          city: application.city,
-          zipcode: application.zipcode,
-          fundraising_category: application.fundraising_category,
-          username: application.username,
-          target_amount: application.target_amount,
+          password: "temporary_password", // This should be generated or provided by the admin
         }),
       });
-
+  
       if (response.ok) {
-        setCharityApplications(
-          charityApplications.filter((app) => app.id !== application.id)
+        const approvedCharity = await response.json();
+        setCharityApplications((prev) =>
+          prev.filter((app) => app.id !== application.id)
         );
+        setCharities((prev) => [...prev, approvedCharity]);
         fetchCharities();
         setMessage({
           type: "success",
@@ -100,7 +95,7 @@ const AdminDashboard = () => {
         const errorData = await response.json();
         setMessage({
           type: "error",
-          text: `Failed to approve application: ${errorData.message}`,
+          text: `Failed to approve application: ${errorData.error || errorData.message || "Unknown error"}`,
         });
       }
     } catch (error) {
@@ -111,37 +106,41 @@ const AdminDashboard = () => {
       });
     }
   };
-
+  
   const handleReject = async (application) => {
+    console.log("Attempting to reject application:", application);
     try {
       const response = await fetch(`/charity-applications/${application.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           status: "rejected",
-          name: application.name,
-          email: application.email,
-          description: application.description,
-          country: application.country,
-          city: application.city,
-          zipcode: application.zipcode,
-          fundraising_category: application.fundraising_category,
-          username: application.username,
-          target_amount: application.target_amount,
         }),
       });
-
+  
+      console.log("Response status:", response.status);
+      console.log("Response ok:", response.ok);
+  
+      const responseData = await response.json();
+      console.log("Response data:", responseData);
+  
       if (response.ok) {
-        setCharityApplications(
-          charityApplications.filter((app) => app.id !== application.id)
+        const rejectedApplication = await response.json();
+        setCharityApplications((prev) =>
+          prev.filter((app) => app.id !== application.id)
         );
+        setRejectedApplications((prev) => [...prev, rejectedApplication]);
+        
         fetchRejectedApplications();
         setMessage({
           type: "success",
           text: "Application rejected successfully.",
         });
       } else {
-        setMessage({ type: "error", text: "Failed to reject application" });
+        setMessage({
+          type: "error",
+          text: `Failed to reject application: ${responseData.error || responseData.message || "Unknown error"}`,
+        });
       }
     } catch (error) {
       console.error("Error rejecting application:", error);
@@ -151,7 +150,6 @@ const AdminDashboard = () => {
       });
     }
   };
-
   const handleDeleteCharity = async (charityId) => {
     try {
       const response = await fetch(`/charities/${charityId}`, {
