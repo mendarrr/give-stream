@@ -3,7 +3,9 @@
 .login-page,
 .card1,
 .card2,
-.card3{
+.card3,
+.card4,
+.card6{
   background: whitesmoke;
   padding-left: 260px;
   padding-right: 150px;
@@ -667,6 +669,7 @@ input:checked + .slider:before {
   margin-top: -20px;
   margin-left: 450px;
   font-weight: 600;
+  display: none;
 }
 
 .reason{
@@ -703,7 +706,8 @@ input:checked + .slider:before {
 }
 
 .card2-footer,
-.card3-footer{
+.card3-footer,
+.card4-footer{
   display: flex;
   gap: 30px;
   margin-left: 130px;
@@ -796,7 +800,9 @@ input:checked + .slider:before {
 }
 
 /* Card3 */
-.card3{
+.card3,
+.card4,
+.card6{
   height: 80vh;
 }
 
@@ -806,6 +812,10 @@ input:checked + .slider:before {
 
 .card3-footer{
   margin-top: -180px;
+}
+
+.card4-footer{
+  margin-top: -120px;
 }
 
 .card3 .form-left,
@@ -861,21 +871,61 @@ input:checked + .slider:before {
   
 }
 
-.select-fundraising.selected{
+.select-donation.selected{
   background-color: #E66E4E;
 }
 
-.select-fundraising:hover{
+.select-donation:hover{
   background-color: #E66E4E;
 }
 
+.card3-form-group{
+  border: 2px solid #E66E4E;
+  width: 630px;
+  border-radius: 5px;
+}
 
+.card3-form-input{
+  width: 630px;
+  font-weight: 600;
+  background-color: transparent;
+}
 
+.card4{
+  padding-top: 200px;
+}
 
+.textarea textarea{
+  width: 624px;
+  margin-top: 20px;
+  height: 30vh;
+}
 
+.input-group input{
+  background-color: white;
+  margin-left: -2px;
+  margin-top: -5px;
+}
 
+.card6{
+  padding-top: 240px;
+}
 
+.success-donation{
+  color: #E66E4E;
+  text-align: center;
+  font-size: 25px;
+  font-weight: 600;
+}
 
+.form-text .congragulations{
+  font-family: Times New Roman;
+  font-size: 18px;
+  letter-spacing: 0px;
 
+}
 
-  
+.card6 .form-text{
+  padding-top: 130px;
+  line-height:1.5;
+}

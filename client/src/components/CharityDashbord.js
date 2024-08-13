@@ -37,8 +37,9 @@ function CharityDetails() {
       setCharity,
       "charity details"
     );
-    fetchData("/stories", setStories, "success stories");
+    fetchData("/stories", setSuccessStories, "success stories");
     fetchData("/donations", setDonations, "donations");
+    fetchData("/beneficiaries", setBeneficiaries, "beneficiaries");
 
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);

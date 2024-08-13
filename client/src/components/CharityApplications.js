@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Form.css";
 import Navbar from "./Navbar";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const CharityApplications = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -230,7 +230,7 @@ const CharityApplications = () => {
       </div>
       {/* First Card */}
       {currentStep === 1 && (
-        <div className="card1 responsive-card">
+        <div id="card1" className="card1 responsive-card">
           <div className="form-page">
             <div className="form-left">
               <img
@@ -288,7 +288,7 @@ const CharityApplications = () => {
 
       {/* Second Card */}
       {currentStep === 2 && (
-        <div className="card2">
+        <div id="card2" className="card2">
           <div className="form-page card2-form-page">
             <div className="form-left">
               <img
@@ -311,7 +311,7 @@ const CharityApplications = () => {
                     { id: "city", placeholder: "City/Town" },
                     { id: "zipcode", placeholder: "Zip Code" },
                     { id: "username", placeholder: "Username" },
-                    { id: 'password', placeholder: 'Password',}
+                    { id: "password", placeholder: "Password" },
                   ].map(({ id, placeholder, type }) => (
                     <div key={id} className="input-group">
                       <div className="input-wrapper form-group">
@@ -383,7 +383,7 @@ const CharityApplications = () => {
 
       {/* Third Card */}
       {currentStep === 3 && (
-        <div className="card3">
+        <div id="card3" className="card3">
           <div className="form-page">
             <div className="form-left">
               <img
@@ -394,11 +394,15 @@ const CharityApplications = () => {
             </div>
             <div className="form-right">
               <div classname="form-text">
-                <h3 className="card3-h3">Set a target For Your Donation Campaign</h3>
+                <h3 className="card3-h3">
+                  Set a target For Your Donation Campaign
+                </h3>
               </div>
               <div className="card-content form-container">
                 <div classname="form-text">
-                  <h4 className="card3-h4">Set a target For Your Donation Campaign</h4>
+                  <h4 className="card3-h4">
+                    Set a target For Your Donation Campaign
+                  </h4>
                   <p className="card3-p">Donations to benfit GiveStream</p>
                 </div>
                 <div className="donation-options">
@@ -468,54 +472,63 @@ const CharityApplications = () => {
 
       {/* Fourth Card */}
       {currentStep === 4 && (
-        <div id="card4" className="card">
-          <img src="/GiveStreamLogo.png" alt="Logo" className="card-logo" />
-          <div className="card-content">
-            <h3>Upload an Image and Write a Brief Summary</h3>
-            <div className="input-group">
-              <label htmlFor="image" className="upload-label">
-                Upload Image
-              </label>
-              <input
-                type="text"
-                id="image"
-                name="image"
-                value={formData.image}
-                onChange={handleInputChange}
-                placeholder="Image URL"
+        <div id="card4" className="card4">
+          <div className="form-page">
+            <div className="form-left">
+              <img
+                src="./Screenshot_from_2024-08-06_07-21-51-removebg-preview.png"
+                alt="GiveStream Logo"
+                className="logo"
               />
-              {errorMessages.image && (
-                <div className="error-message">{errorMessages.image}</div>
-              )}
             </div>
-            <div className="input-group">
-              <textarea
-                id="summary"
-                name="summary"
-                value={formData.summary}
-                onChange={handleInputChange}
-                placeholder="Write a brief summary"
-              />
-              {errorMessages.summary && (
-                <div className="error-message">{errorMessages.summary}</div>
-              )}
+            <div className="form-right">
+              <div className="form-container">
+                <div className="form-text">
+                  <h3>Upload an Image and Write a Brief Summary</h3>
+                </div>
+                <div className="form-group">
+                  <input
+                    className="input-group"
+                    id="image"
+                    name="image"
+                    value={formData.image}
+                    onChange={handleInputChange}
+                    placeholder="Image URL"
+                  />
+                  {errorMessages.image && (
+                    <div className="error-message">{errorMessages.image}</div>
+                  )}
+                </div>
+                <div className="textarea">
+                  <textarea
+                    id="summary"
+                    name="summary"
+                    value={formData.summary}
+                    onChange={handleInputChange}
+                    placeholder="Write a brief summary"
+                  />
+                  {errorMessages.summary && (
+                    <div className="error-message">{errorMessages.summary}</div>
+                  )}
+                </div>
+              </div>
+              <div className="card4-footer">
+                <button
+                  className="previous-button"
+                  onClick={handlePreviousClick}
+                  disabled={currentStep === 1}
+                >
+                  Previous
+                </button>
+                <button
+                  className="next-button"
+                  onClick={handleNextClick}
+                  disabled={!formData.image || !formData.summary}
+                >
+                  Next
+                </button>
+              </div>
             </div>
-          </div>
-          <div className="card-footer">
-            <button
-              className="prev-button"
-              onClick={handlePreviousClick}
-              disabled={currentStep === 1}
-            >
-              Previous
-            </button>
-            <button
-              className="next-button"
-              onClick={handleNextClick}
-              disabled={!formData.image || !formData.summary}
-            >
-              Next
-            </button>
           </div>
         </div>
       )}
@@ -579,19 +592,40 @@ const CharityApplications = () => {
 
       {/* Sixth Card */}
       {currentStep === 6 && (
-        <div id="card6" className="card">
-          <img src="/GiveStreamLogo.png" alt="Logo" className="card-logo" />
-          <div className="card-content">
-            <h3>Application Submitted!</h3>
-            <p>
-              Thank you for submitting your application. Our team will review it
-              and get back to you soon.
-            </p>
-          </div>
-          <div className="card-footer">
-            <button className="exit-button" onClick={handleExit}>
-              Exit
-            </button>
+        <div id="card6" className="card6">
+          <div className="form-page">
+            <div className="form-left">
+              <img
+                src="./Screenshot_from_2024-08-06_07-21-51-removebg-preview.png"
+                alt="GiveStream Logo"
+                className="logo"
+              />
+            </div>
+            <div className="form-right">
+              <div className="form-text">
+                <h3 className="success-donation">
+                  Donation Campaign Application was Successful!
+                </h3>
+                <p className="congragulations">
+                  Congragulations! Your fundraising initiative is now live and
+                  awaiting approval in readiness for donations by GiveStream
+                  Donors. Once approved, use the username and password you
+                  provided to sign in to your account so that you can track your
+                  progress and manage your data from your dashboard. If you have
+                  any questions or need assistance, our support team is here to
+                  help.
+                </p>
+                <p className="congragulations">
+                  Thank you for choosing our platform, and best of luck with
+                  your fundraiser!
+                </p>
+              </div>
+              <div>
+                <Link to="/" className="previous-button">
+                  Back to HomePage
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       )}

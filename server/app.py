@@ -186,7 +186,7 @@ class Charities(Resource):
         donations = Donation.query.filter_by(charity_id=self.id).all()
         total_raised = sum(donation.amount for donation in donations)
         donation_count = len(donations)
-        percentage_raised = (total_raised / self.needed_donation) * 100 if self.needed_donation else 0
+        percentage_raised = (total_raised / self.goal_amount) * 100 if self.needed_donation else 0
 
     def post(self):
         try:
