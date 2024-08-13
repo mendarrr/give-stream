@@ -236,12 +236,19 @@ function CharityDescription({
         alt={charity.name}
         className="charity-image"
       />
-      <p>{charity.organizer} is organizing this fundraiser.</p>
+      <p>{charity.organizer} is organizing this fundraiser</p>
       <div className="donation-protected">
         <span>Donation protected</span>
       </div>
       <h3>{charity.description}</h3>
-      <p>{charity.description}</p>
+      <p>
+        {" "}
+        Welcome to {charity.name}'s profile.Scroll down to view success stories,
+        and see our list of beneficiaries. On the left, you'll find our
+        fundraising progress and options to donate or share this campaign. If
+        you have any questions, please don't hesitate to reach out to us
+        directly..
+      </p>
       <SuccessStories
         stories={successStories}
         formatNumber={formatNumber}
