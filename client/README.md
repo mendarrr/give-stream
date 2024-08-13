@@ -1,6 +1,6 @@
 # GIVE STREAM
 
-![GIVE STREAM Logo](path/to/logo.png)
+![GIVE STREAM Logo](/home/erustus/Documents/give-stream/client/public/GiveStreamLogo.png)
 
 ## Table of Contents
 - [Introduction](#introduction)
