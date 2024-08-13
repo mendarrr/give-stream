@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "./CharityProfile.css";
 import Navbar from "./Navbar";
 
 const CharityProfile = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [charity, setCharity] = useState(null);
   const [totalDonations, setTotalDonations] = useState(0);
   const [anonymousDonations, setAnonymousDonations] = useState(0);
@@ -33,16 +34,14 @@ const CharityProfile = () => {
     const fetchCharityData = async () => {
       setLoading(true);
       try {
+        if (!id) {
+          throw new Error("Charity ID is missing");
+        }
         const response = await axios.get(`/charities/${id}`);
         setCharity(response.data);
-
-        const donationsResponse = await axios.get(`/donations/charity/${id}`);
-        const donationsData = donationsResponse.data || {};
-        setTotalDonations(parseFloat(donationsData.total_amount) || 0);
+        setTotalDonations(parseFloat(response.data.total_donations) || 0);
         setAnonymousDonations(
-          (donationsData.donations || [])
-            .filter((donation) => donation.is_anonymous)
-            .reduce((total, donation) => total + (donation.amount || 0), 0)
+          parseFloat(response.data.anonymous_donations) || 0
         );
 
         const storiesResponse = await axios.get(`/stories?charity_id=${id}`);
@@ -60,12 +59,15 @@ const CharityProfile = () => {
       } catch (error) {
         console.error("Error fetching charity data:", error);
         setError("Error fetching charity data. Please try again later.");
+        // Optionally, redirect to an error page
+        // navigate("/error");
       } finally {
         setLoading(false);
       }
     };
+
     fetchCharityData();
-  }, [id]);
+  }, [id, navigate]);
 
   const handleStorySubmit = async (e) => {
     e.preventDefault();

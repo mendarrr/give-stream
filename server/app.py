@@ -123,7 +123,7 @@ class Login(Resource):
                     expires_delta=timedelta(days=4)
                 )
                 session['id'] = donor.id
-                return {'access_token': access_token, 'role': 'donor'}, 200
+                return {'access_token': access_token, 'role': 'donor', 'id': donor.id}, 200
             else:
                 return {'message': 'Invalid password for donor'}, 401
         elif charity:
@@ -133,7 +133,7 @@ class Login(Resource):
                     expires_delta=timedelta(days=4)
                 )
                 session['id'] = charity.id
-                return {'access_token': access_token, 'role': 'charity'}, 200
+                return {'access_token': access_token, 'role': 'charity', 'id': charity.id}, 200
             else:
                 return {'message': 'Invalid password for charity'}, 401    
         elif admin:
@@ -144,7 +144,7 @@ class Login(Resource):
                     identity={'id': admin.id, 'role': 'admin'},
                     expires_delta=timedelta(days=4)
                 )
-                return {'access_token': access_token, 'role': 'admin'}, 200
+                return {'access_token': access_token, 'role': 'admin', 'id': admin.id}, 200
             else:
                 return {'message': 'Invalid password for admin'}, 401
         else:
@@ -155,7 +155,6 @@ from models import db, Charity, Donation
 from datetime import datetime, timedelta
 
 class Charities(Resource):
-    
     def get(self, id=None):
         if id:
             charity = Charity.query.get_or_404(id)
@@ -171,20 +170,31 @@ class Charities(Resource):
                 } for donor in recent_donors
             ]
             
-            # Add recent donation count
-            charity_dict['recentDonationCount'] = Donation.query.filter_by(charity_id=id).filter(Donation.date >= datetime.utcnow() - timedelta(hours=24)).count()
+            # Add recent donation count and total donations
+            recent_donations = Donation.query.filter_by(charity_id=id).filter(Donation.date >= datetime.utcnow() - timedelta(hours=24)).all()
+            charity_dict['recentDonationCount'] = len(recent_donations)
+            charity_dict['total_donations'] = sum(donation.amount for donation in Donation.query.filter_by(charity_id=id).all())
+            charity_dict['anonymous_donations'] = sum(donation.amount for donation in Donation.query.filter_by(charity_id=id, is_anonymous=True).all())
             
             return charity_dict
         else:
             charities = Charity.query.all()
             return jsonify([charity.to_dict_with_stats() for charity in charities])
 
-
     def to_dict_with_stats(self):
         donations = Donation.query.filter_by(charity_id=self.id).all()
         total_raised = sum(donation.amount for donation in donations)
         donation_count = len(donations)
         percentage_raised = (total_raised / self.needed_donation) * 100 if self.needed_donation else 0
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'needed_donation': self.needed_donation,
+            'total_raised': total_raised,
+            'donation_count': donation_count,
+            'percentage_raised': percentage_raised
+        }
 
     def post(self):
         try:
