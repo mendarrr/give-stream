@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Navbar from "./Navbar";
 
 const CommunitiesSection = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -133,6 +134,9 @@ const CommunitiesSection = () => {
 
   return (
     <div className="communities-section">
+      <div>
+        <Navbar isSticky={true} isLoggedIn={true} />
+      </div>
       {!selectedCommunity && (
         <div className="community-categories">
           <h2>Browse by Category</h2>

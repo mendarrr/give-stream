@@ -60,7 +60,9 @@ const LoginPage = () => {
 
   return (
     <div className="login-page">
-      <Navbar />
+      <div>
+        <Navbar isSticky={true} isLoggedIn={true} />
+      </div>
       <div className="form-page">
         <div className="login-logo form-left">
           <Link to="/">

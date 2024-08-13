@@ -33,8 +33,8 @@ function CharityDetails() {
       setCharity,
       "charity details"
     );
-    fetchData("http://127.0.0.1:5000/stories", setStories, "success stories");
-    fetchData("http://127.0.0.1:5000/donations", setDonations, "donations");
+    fetchData("/stories", setStories, "success stories");
+    fetchData("/donations", setDonations, "donations");
 
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -80,7 +80,9 @@ function CharityDetails() {
 
   return (
     <div className="charity-details">
-      <Navbar />
+      <div>
+        <Navbar isSticky={true} isLoggedIn={true} />
+      </div>
       <h2>{charity.name}</h2>
       <div className="charity-content">
         <CharityInfo

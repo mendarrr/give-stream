@@ -167,7 +167,9 @@ const PaymentMethodSelector = () => {
 
   return (
     <>
-    <Navbar />
+    <div>
+        <Navbar isSticky={true} isLoggedIn={true} />
+    </div>
     <div style={styles.container}>
       {!selectedMethod ? (
         <div>

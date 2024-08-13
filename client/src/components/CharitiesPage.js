@@ -6,7 +6,7 @@ const CharitiesPage = () => {
   const [charities, setCharities] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/charities")
+    fetch("/charities")
       .then((response) => response.json())
       .then((data) => setCharities(data))
       .catch((error) => console.error("Error fetching charities:", error));

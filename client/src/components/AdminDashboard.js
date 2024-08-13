@@ -201,9 +201,10 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard">
-      <Navbar />
+      <div>
+        <Navbar isSticky={true} isLoggedIn={true} />
+      </div>
       <h1 className="admin-dashboard__title">Admin Dashboard</h1>
-
       {message && (
         <div className={`admin-dashboard__message ${message.type}`}>
           {message.text}
