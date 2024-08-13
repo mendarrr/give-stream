@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import CharityCard from "./CharityCard";
 import "./CharityCard.css";
 
-const CharityList = ({ searchTerm }) => {
+const CharityList = ({ searchTerm = "" }) => {
   const [charities, setCharities] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -20,15 +21,16 @@ const CharityList = ({ searchTerm }) => {
       .then((response) => response.json())
       .then((data) => {
         const activeCharities = data.filter(
-          (charity) =>
-            (charity.total_raised / charity.goal_amount) * 100 < 100
+          (charity) => (charity.total_raised / charity.goal_amount) * 100 < 100
         );
         setCharities(activeCharities);
-      });
+      })
+      .catch((error) => console.error("Error fetching charities:", error));
   }, []);
 
+  // Safely handle searchTerm prop
   const filteredCharities = charities.filter((charity) =>
-    charity.name.toLowerCase().includes(searchTerm.toLowerCase())
+    typeof searchTerm === 'string' && charity.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const moveLeft = () => {
@@ -56,7 +58,12 @@ const CharityList = ({ searchTerm }) => {
       </button>
       <div className="charity-list">
         {visibleCharities.map((charity) => (
-          <CharityCard key={charity.id} charity={charity} />
+          // Ensure charity.id exists before rendering Link
+          charity.id && (
+            <Link to={`/charity-dashboard/${charity.id}`} key={charity.id} className="card-link">
+              <CharityCard charity={charity} />
+            </Link>
+          )
         ))}
       </div>
       <button

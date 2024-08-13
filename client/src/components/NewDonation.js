@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import './Form.css';
 import { Link } from 'react-router-dom';
+import './Form.css';
 import Switch from 'react-switch';
 import PaymentMethodSelector from './PaymentMethod';
+import Navbar from './Navbar';
 
-const DonationForm = () => {
+const DonationForm = ({ donorId, charityId }) => {
   const [donationData, setDonationData] = useState({
-    donor_id: '',
-    charity_id: '',
+    donor_id: donorId,
+    charity_id: charityId,
     amount: 0,
     date: new Date().toISOString().split('T')[0],
     is_anonymous: false,
@@ -41,16 +41,6 @@ const DonationForm = () => {
     setDonationData(prevData => ({ ...prevData, amount }));
   };
 
-  const handlePaymentMethodChange = (selectedPaymentMethod) => {
-    console.log('Selected payment method:', selectedPaymentMethod);
-    setDonationData(prevData => ({
-      ...prevData,
-      payment_method_id: selectedPaymentMethod.id
-    }));
-    setPaymentMethodSelected(true);
-    console.log('Updated donation data:', donationData);
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     
@@ -60,7 +50,6 @@ const DonationForm = () => {
     }
 
     try {
-      console.log('Submitting donation data:', donationData);
       const response = await axios.post('/donations', donationData);
       showMessage(`Donation submitted successfully! ${JSON.stringify(response.data)}`);
     } catch (error) {
@@ -84,34 +73,14 @@ const DonationForm = () => {
 
   return (
     <>
+    <Navbar />
       {message && (
         <div className={`message-container ${message.includes('error') ? 'error' : 'success'}`}>
           {message}
         </div>
       )}
       <form onSubmit={handlePaymentSubmit}>
-        <div>
-          <label htmlFor="donorId">Donor ID:</label>
-          <input
-            id="donorId"
-            name="donor_id"
-            type="text"
-            value={donationData.donor_id}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="charityId">Charity ID:</label>
-          <input
-            id="charityId"
-            name="charity_id"
-            type="text"
-            value={donationData.charity_id}
-            onChange={handleChange}
-            required
-          />
-        </div>
+        {/* Removed Donor ID and Charity ID input fields */}
         <div>
           <h3>Select Donation Amount</h3>
           {[500, 1000, 2000, 5000, 10000].map(amount => (

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./AdminDashboard.css";
 import defaultProfileImage from "../assets/defaultProfile.png";
+import Navbar from "./Navbar";
 
 const AdminDashboard = () => {
   const [charityApplications, setCharityApplications] = useState([]);
@@ -67,18 +68,24 @@ const AdminDashboard = () => {
     }
   };
 
+
   const handleApprove = async (application) => {
     try {
       const response = await fetch(`/charity-applications/${application.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "approved" }),
+        body: JSON.stringify({
+          status: "approved",
+          password: "temporary_password", // This should be generated or provided by the admin
+        }),
       });
-
+  
       if (response.ok) {
-        setCharityApplications(
-          charityApplications.filter((app) => app.id !== application.id)
+        const approvedCharity = await response.json();
+        setCharityApplications((prev) =>
+          prev.filter((app) => app.id !== application.id)
         );
+        setCharities((prev) => [...prev, approvedCharity]);
         fetchCharities();
         setMessage({
           type: "success",
@@ -88,7 +95,7 @@ const AdminDashboard = () => {
         const errorData = await response.json();
         setMessage({
           type: "error",
-          text: `Failed to approve application: ${errorData.message}`,
+          text: `Failed to approve application: ${errorData.error || errorData.message || "Unknown error"}`,
         });
       }
     } catch (error) {
@@ -99,26 +106,41 @@ const AdminDashboard = () => {
       });
     }
   };
-
+  
   const handleReject = async (application) => {
+    console.log("Attempting to reject application:", application);
     try {
       const response = await fetch(`/charity-applications/${application.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "rejected" }),
+        body: JSON.stringify({
+          status: "rejected",
+        }),
       });
-
+  
+      console.log("Response status:", response.status);
+      console.log("Response ok:", response.ok);
+  
+      const responseData = await response.json();
+      console.log("Response data:", responseData);
+  
       if (response.ok) {
-        setCharityApplications(
-          charityApplications.filter((app) => app.id !== application.id)
+        const rejectedApplication = await response.json();
+        setCharityApplications((prev) =>
+          prev.filter((app) => app.id !== application.id)
         );
+        setRejectedApplications((prev) => [...prev, rejectedApplication]);
+        
         fetchRejectedApplications();
         setMessage({
           type: "success",
           text: "Application rejected successfully.",
         });
       } else {
-        setMessage({ type: "error", text: "Failed to reject application" });
+        setMessage({
+          type: "error",
+          text: `Failed to reject application: ${responseData.error || responseData.message || "Unknown error"}`,
+        });
       }
     } catch (error) {
       console.error("Error rejecting application:", error);
@@ -128,7 +150,6 @@ const AdminDashboard = () => {
       });
     }
   };
-
   const handleDeleteCharity = async (charityId) => {
     try {
       const response = await fetch(`/charities/${charityId}`, {
@@ -180,6 +201,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard">
+      <Navbar />
       <h1 className="admin-dashboard__title">Admin Dashboard</h1>
 
       {message && (

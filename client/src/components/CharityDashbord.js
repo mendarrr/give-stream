@@ -1,13 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./CharityDashboard.css";
+import Navbar from "./Navbar";
 
 function CharityDetails() {
   const [charity, setCharity] = useState(null);
-  const [stories, setStories] = useState([]);
+  const [successStories, setSuccessStories] = useState([]);
   const [donations, setDonations] = useState([]);
+  const [beneficiaries, setBeneficiaries] = useState([]);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [beneficiariesPerPage] = useState(5);
   const { id } = useParams();
+  const carouselRef = useRef(null);
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -15,7 +20,7 @@ function CharityDetails() {
   useEffect(() => {
     const fetchData = async (url, setter, errorMessage) => {
       try {
-        const response = await fetch(`/charities/${id}`);
+        const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -32,8 +37,17 @@ function CharityDetails() {
       setCharity,
       "charity details"
     );
-    fetchData("http://127.0.0.1:5000/stories", setStories, "success stories");
+    fetchData(
+      "http://127.0.0.1:5000/stories",
+      setSuccessStories,
+      "success stories"
+    );
     fetchData("http://127.0.0.1:5000/donations", setDonations, "donations");
+    fetchData(
+      "http://127.0.0.1:5000/beneficiaries",
+      setBeneficiaries,
+      "beneficiaries"
+    );
 
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -48,7 +62,7 @@ function CharityDetails() {
 
   const moveRight = () => {
     setCurrentIndex((prev) =>
-      Math.min(prev + 1, stories.length - (isMobile ? 1 : 2))
+      Math.min(prev + 1, successStories.length - (isMobile ? 1 : 3))
     );
   };
 
@@ -66,17 +80,28 @@ function CharityDetails() {
   };
 
   if (error) return <div className="error-message">{error}</div>;
-  if (!charity || donations.length === 0 || stories.length === 0)
+  if (!charity || donations.length === 0 || successStories.length === 0)
     return <div>Loading...</div>;
 
   const formatNumber = (number) => (number ? number.toLocaleString() : "0");
 
   const visibleStories = isMobile
-    ? stories.slice(currentIndex, currentIndex + 1)
-    : stories.slice(currentIndex, currentIndex + 2);
+    ? successStories.slice(currentIndex, currentIndex + 1)
+    : successStories.slice(currentIndex, currentIndex + 3);
+
+  // Pagination logic for beneficiaries
+  const indexOfLastBeneficiary = currentPage * beneficiariesPerPage;
+  const indexOfFirstBeneficiary = indexOfLastBeneficiary - beneficiariesPerPage;
+  const currentBeneficiaries = beneficiaries.slice(
+    indexOfFirstBeneficiary,
+    indexOfLastBeneficiary
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="charity-details">
+      <Navbar />
       <h2>{charity.name}</h2>
       <div className="charity-content">
         <CharityInfo
@@ -92,10 +117,17 @@ function CharityDetails() {
           moveLeft={moveLeft}
           moveRight={moveRight}
           currentIndex={currentIndex}
-          storiesLength={stories.length}
+          storiesLength={successStories.length}
           isMobile={isMobile}
         />
       </div>
+      <BeneficiariesSection
+        beneficiaries={currentBeneficiaries}
+        beneficiariesPerPage={beneficiariesPerPage}
+        totalBeneficiaries={beneficiaries.length}
+        paginate={paginate}
+        currentPage={currentPage}
+      />
     </div>
   );
 }
@@ -206,12 +238,19 @@ function CharityDescription({
         alt={charity.name}
         className="charity-image"
       />
-      <p>{charity.organizer} is organizing this fundraiser.</p>
+      <p>{charity.organizer} is organizing this fundraiser</p>
       <div className="donation-protected">
         <span>Donation protected</span>
       </div>
-      <h3>Support Malnourished School Children in Moyale</h3>
-      <p>{charity.description}</p>
+      <h3>{charity.description}</h3>
+      <p>
+        {" "}
+        Welcome to {charity.name}'s profile.Scroll down to view success stories,
+        and see our list of beneficiaries. On the left, you'll find our
+        fundraising progress and options to donate or share this campaign. If
+        you have any questions, please don't hesitate to reach out to us
+        directly..
+      </p>
       <SuccessStories
         stories={successStories}
         formatNumber={formatNumber}
@@ -224,6 +263,7 @@ function CharityDescription({
     </div>
   );
 }
+
 function SuccessStories({
   stories,
   formatNumber,
@@ -238,7 +278,7 @@ function SuccessStories({
       <h3>Success Stories</h3>
       <div className="stories-carousel-container">
         <button
-          className="carousel-arrow left"
+          className="admin-dashboard__nav-button left"
           onClick={moveLeft}
           disabled={currentIndex === 0}
         >
@@ -250,7 +290,7 @@ function SuccessStories({
           ))}
         </div>
         <button
-          className="carousel-arrow right"
+          className="admin-dashboard__nav-button right"
           onClick={moveRight}
           disabled={currentIndex >= storiesLength - (isMobile ? 1 : 2)}
         >
@@ -270,38 +310,79 @@ function StoryCard({ story, formatNumber }) {
     </div>
   );
 }
-
-function BeneficiaryStory({ story }) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [newStory, setNewStory] = useState(story.story);
-
-  const handleEditClick = () => {
-    setIsEditing(!isEditing);
-  };
-
-  const handleSaveClick = () => {
-    // Save logic
-    setIsEditing(false);
-  };
+function BeneficiariesSection({
+  beneficiaries,
+  beneficiariesPerPage,
+  totalBeneficiaries,
+  paginate,
+  currentPage,
+}) {
+  if (!beneficiaries || beneficiaries.length === 0) {
+    return <div className="beneficiaries-section">No beneficiaries found.</div>;
+  }
 
   return (
-    <div className="beneficiary-story">
-      <h5>Beneficiary Story</h5>
-      {isEditing ? (
-        <>
-          <textarea
-            value={newStory}
-            onChange={(e) => setNewStory(e.target.value)}
-          />
-          <button onClick={handleSaveClick}>Save</button>
-        </>
-      ) : (
-        <>
-          <p>{story.story}</p>
-          <button onClick={handleEditClick}>Edit</button>
-        </>
-      )}
+    <div className="beneficiaries-section">
+      <h3>Beneficiaries</h3>
+      <ul className="beneficiaries-list">
+        {beneficiaries.map((beneficiary) => (
+          <li key={beneficiary.id} className="beneficiary-item">
+            <h4>{beneficiary.name}</h4>
+            <p>{beneficiary.description}</p>
+          </li>
+        ))}
+      </ul>
+      <Pagination
+        beneficiariesPerPage={beneficiariesPerPage}
+        totalBeneficiaries={totalBeneficiaries}
+        paginate={paginate}
+        currentPage={currentPage}
+      />
     </div>
+  );
+}
+
+function Pagination({
+  beneficiariesPerPage,
+  totalBeneficiaries,
+  paginate,
+  currentPage,
+}) {
+  const pageNumbers = [];
+
+  if (beneficiariesPerPage && totalBeneficiaries) {
+    for (
+      let i = 1;
+      i <= Math.ceil(totalBeneficiaries / beneficiariesPerPage);
+      i++
+    ) {
+      pageNumbers.push(i);
+    }
+  }
+
+  if (pageNumbers.length <= 1) {
+    return null; // Don't render pagination if there's only one page or less
+  }
+
+  return (
+    <nav>
+      <ul className="pagination">
+        {pageNumbers.map((number) => (
+          <li
+            key={number}
+            className={`page-item ${currentPage === number ? "active" : ""}`}
+          >
+            <button
+              onClick={() => paginate(number)}
+              className="page-link"
+              aria-current={currentPage === number ? "page" : undefined}
+            >
+              {number}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 }
 

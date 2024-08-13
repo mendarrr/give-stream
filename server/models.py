@@ -75,7 +75,7 @@ class Charity(db.Model, SerializerMixin):
     raised_amount = db.Column(db.Float, default=0.0)
     goal_amount = db.Column(db.Float)
     donation_count = db.Column(db.Integer, default=0)
-    image_url = db.Column(db.String(255))
+    image = db.Column(db.String(255))
     organizer = db.Column(db.String(128))
     role = db.Column(db.String(20), default='charity')
 
@@ -124,7 +124,7 @@ class Charity(db.Model, SerializerMixin):
             'raisedAmount': self.raised_amount,
             'goalAmount': self.goal_amount,
             'donationCount': self.donation_count,
-            'imageUrl': self.image_url,
+            'image': self.image,
             'organizer': self.organizer
         }
     
@@ -186,7 +186,7 @@ class CharityApplication(db.Model, SerializerMixin):
         'fundraising_category': self.fundraising_category,
         'username': self.username,
         'target_amount': self.target_amount,
-            'image': self.image
+        'image': self.image
     }
 
     

@@ -95,7 +95,7 @@ const HomePage = () => {
               <span className="givestream">GIVE STREAM</span>
             </h1>
           </div>
-          <Link to="/donor"
+          <Link to="/charities"
             id="counter-button"
             className="counter-button"
           >

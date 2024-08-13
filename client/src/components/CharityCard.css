@@ -77,6 +77,15 @@
     display: flex;
     justify-content: center;
     gap: 20px;
+    text-decoration: none;
+}
+
+.charity-list Link{
+    text-decoration: none;
+}
+
+.card-link{
+    text-decoration: none;
 }
 
 .nav-button {
@@ -117,6 +126,7 @@
     margin-bottom: -20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     align-items: center;
+    text-decoration: none;
 }
 
 .charity-card h2{

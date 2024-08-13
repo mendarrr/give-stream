@@ -1,6 +1,7 @@
 import React, { useState , useEffect} from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Navbar from './Navbar';
 
 const PaymentMethodSelector = () => {
   const [selectedMethod, setSelectedMethod] = useState(null);
@@ -165,6 +166,8 @@ const PaymentMethodSelector = () => {
   };
 
   return (
+    <>
+    <Navbar />
     <div style={styles.container}>
       {!selectedMethod ? (
         <div>
@@ -211,6 +214,7 @@ const PaymentMethodSelector = () => {
       )}
       {paymentStatus && <p>{paymentStatus}</p>}
     </div>
+    </>
   );
 };
 

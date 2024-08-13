@@ -1,6 +1,8 @@
 import React from 'react';
 import './CharityCard.css';
 import defaultProfile from '../assets/defaultProfile.png'
+import CharityDetails from './CharityDashbord';
+import { Link } from 'react-router-dom';
 
 const CharityCard = ({ charity }) => {
     const progressPercentage = (charity.total_raised / charity.goal_amount) * 100;
