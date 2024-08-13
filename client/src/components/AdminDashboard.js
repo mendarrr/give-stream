@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "./AdminDashboard.css";
 import defaultProfileImage from "../assets/defaultProfile.png";
-import Navbar from "./Navbar";
 
 const AdminDashboard = () => {
   const [charityApplications, setCharityApplications] = useState([]);
-  const [rejectedApplications, setRejectedApplications] = useState([]);
   const [charities, setCharities] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -16,7 +14,6 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     fetchCharityApplications();
-    fetchRejectedApplications();
     fetchCharities();
 
     const handleResize = () => {
@@ -40,20 +37,6 @@ const AdminDashboard = () => {
     }
   };
 
-  const fetchRejectedApplications = async () => {
-    try {
-      const response = await fetch("/charity-applications?status=rejected");
-      const data = await response.json();
-      setRejectedApplications(data);
-    } catch (error) {
-      console.error("Error fetching rejected applications:", error);
-      setMessage({
-        type: "error",
-        text: "Failed to fetch rejected applications. Please try again.",
-      });
-    }
-  };
-
   const fetchCharities = async () => {
     try {
       const response = await fetch("/charities");
@@ -68,7 +51,6 @@ const AdminDashboard = () => {
     }
   };
 
-
   const handleApprove = async (application) => {
     try {
       const response = await fetch(`/charity-applications/${application.id}`, {
@@ -76,16 +58,22 @@ const AdminDashboard = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           status: "approved",
-          password: "temporary_password", // This should be generated or provided by the admin
+          name: application.name,
+          email: application.email,
+          description: application.description,
+          country: application.country,
+          city: application.city,
+          zipcode: application.zipcode,
+          fundraising_category: application.fundraising_category,
+          username: application.username,
+          target_amount: application.target_amount,
         }),
       });
-  
+
       if (response.ok) {
-        const approvedCharity = await response.json();
-        setCharityApplications((prev) =>
-          prev.filter((app) => app.id !== application.id)
+        setCharityApplications(
+          charityApplications.filter((app) => app.id !== application.id)
         );
-        setCharities((prev) => [...prev, approvedCharity]);
         fetchCharities();
         setMessage({
           type: "success",
@@ -95,7 +83,7 @@ const AdminDashboard = () => {
         const errorData = await response.json();
         setMessage({
           type: "error",
-          text: `Failed to approve application: ${errorData.error || errorData.message || "Unknown error"}`,
+          text: `Failed to approve application: ${errorData.message}`,
         });
       }
     } catch (error) {
@@ -106,41 +94,36 @@ const AdminDashboard = () => {
       });
     }
   };
-  
+
   const handleReject = async (application) => {
-    console.log("Attempting to reject application:", application);
     try {
       const response = await fetch(`/charity-applications/${application.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           status: "rejected",
+          name: application.name,
+          email: application.email,
+          description: application.description,
+          country: application.country,
+          city: application.city,
+          zipcode: application.zipcode,
+          fundraising_category: application.fundraising_category,
+          username: application.username,
+          target_amount: application.target_amount,
         }),
       });
-  
-      console.log("Response status:", response.status);
-      console.log("Response ok:", response.ok);
-  
-      const responseData = await response.json();
-      console.log("Response data:", responseData);
-  
+
       if (response.ok) {
-        const rejectedApplication = await response.json();
-        setCharityApplications((prev) =>
-          prev.filter((app) => app.id !== application.id)
+        setCharityApplications(
+          charityApplications.filter((app) => app.id !== application.id)
         );
-        setRejectedApplications((prev) => [...prev, rejectedApplication]);
-        
-        fetchRejectedApplications();
         setMessage({
           type: "success",
           text: "Application rejected successfully.",
         });
       } else {
-        setMessage({
-          type: "error",
-          text: `Failed to reject application: ${responseData.error || responseData.message || "Unknown error"}`,
-        });
+        setMessage({ type: "error", text: "Failed to reject application" });
       }
     } catch (error) {
       console.error("Error rejecting application:", error);
@@ -150,6 +133,7 @@ const AdminDashboard = () => {
       });
     }
   };
+
   const handleDeleteCharity = async (charityId) => {
     try {
       const response = await fetch(`/charities/${charityId}`, {
@@ -201,7 +185,6 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard">
-      <Navbar />
       <h1 className="admin-dashboard__title">Admin Dashboard</h1>
 
       {message && (
@@ -270,40 +253,6 @@ const AdminDashboard = () => {
         ) : (
           <p className="admin-dashboard__no-applications">
             No pending applications at the moment.
-          </p>
-        )}
-      </section>
-
-      <section className="admin-dashboard__rejected-applications">
-        <h2 className="admin-dashboard__section-title">
-          Rejected Applications
-        </h2>
-        {rejectedApplications.length > 0 ? (
-          <table className="admin-dashboard__rejected-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Description</th>
-                <th>Submission Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rejectedApplications.map((application) => (
-                <tr key={application.id}>
-                  <td>{application.name}</td>
-                  <td>{application.email}</td>
-                  <td>{application.description}</td>
-                  <td>
-                    {new Date(application.submission_date).toLocaleDateString()}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <p className="admin-dashboard__no-rejected">
-            No rejected applications at the moment.
           </p>
         )}
       </section>
