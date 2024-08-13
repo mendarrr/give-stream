@@ -276,16 +276,12 @@ class CharityApplications(Resource):
                 return {'message': 'A charity with this name already exists'}, 400
             
             new_charity = Charity(
-                username=application.name.lower().replace(' ', '_'),
-                email=application.email,
-                name=application.name,
-                description=application.description,
-                country=application.country,
-                city=application.city,
-                zipcode=application.zipcode,
-                fundraising_category=application.fundraising_category,
-                goal_amount=application.target_amount
-            )
+    username=application.name.lower().replace(' ', '_'),
+    email=application.email,
+    name=application.name,
+    description=application.description,
+    goal_amount=application.target_amount
+)
             db.session.add(new_charity)
         
         application.country = data.get('country', application.country)
