@@ -60,7 +60,7 @@ const CharityList = ({ searchTerm = "" }) => {
         {visibleCharities.map((charity) => (
           // Ensure charity.id exists before rendering Link
           charity.id && (
-            <Link to={`/charity-dashboard/${charity.id}`} key={charity.id}>
+            <Link to={`/charity-dashboard/${charity.id}`} key={charity.id} className="card-link">
               <CharityCard charity={charity} />
             </Link>
           )
