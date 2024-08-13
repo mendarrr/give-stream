@@ -1,8 +1,11 @@
 import React from "react";
 import "./HomePage.css";
+import Navbar from "./Navbar";
 
 const TermsOfUse = () => {
   return (
+    <>
+    <Navbar />
     <div className="terms">
       <h3>Effective Date: [2nd August, 2024]</h3>
       <h4>Terms of Use</h4>
@@ -79,6 +82,7 @@ const TermsOfUse = () => {
         principles.
       </p>
     </div>
+    </>
   );
 };
 

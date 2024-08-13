@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./CharityDashboard.css";
+import Navbar from "./Navbar";
 
 function CharityDetails() {
   const [charity, setCharity] = useState(null);
@@ -100,6 +101,7 @@ function CharityDetails() {
 
   return (
     <div className="charity-details">
+      <Navbar />
       <h2>{charity.name}</h2>
       <div className="charity-content">
         <CharityInfo

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import CharityCard from "./CharityCard";
 import "./CharityCard.css";
 
@@ -27,8 +28,9 @@ const CharityList = ({ searchTerm = "" }) => {
       .catch((error) => console.error("Error fetching charities:", error));
   }, []);
 
+  // Safely handle searchTerm prop
   const filteredCharities = charities.filter((charity) =>
-    charity.name.toLowerCase().includes((searchTerm || "").toLowerCase())
+    typeof searchTerm === 'string' && charity.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const moveLeft = () => {
@@ -56,7 +58,12 @@ const CharityList = ({ searchTerm = "" }) => {
       </button>
       <div className="charity-list">
         {visibleCharities.map((charity) => (
-          <CharityCard key={charity.id} charity={charity} />
+          // Ensure charity.id exists before rendering Link
+          charity.id && (
+            <Link to={`/charity-dashboard/${charity.id}`} key={charity.id}>
+              <CharityCard charity={charity} />
+            </Link>
+          )
         ))}
       </div>
       <button

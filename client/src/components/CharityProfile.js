@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import "./CharityProfile.css";
+import Navbar from "./Navbar";
 
 const CharityProfile = () => {
   const { id } = useParams();
@@ -178,6 +179,7 @@ const CharityProfile = () => {
 
   return (
     <div className="charity-profile-container">
+      <Navbar />
       <div className="charity-info">
         <h1>{charity.name}</h1>
         <p>{charity.description}</p>
