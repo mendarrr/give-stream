@@ -7,7 +7,7 @@
 Introduction
 Problem Statement
 Key Features
-Launching
+Launchin
   Endpoints
 Prerequisites
 Installations
