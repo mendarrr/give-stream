@@ -22,7 +22,7 @@
   - [MVP 1:  Donor activitiesManagement](#mvp-1-Donor-activities)
   - [MVP 2: Charity Aplications Management](#mvp-2-charity-application-management)
   - [MVP 3: Stories, beneficiaries and inventory Management](#mvp-3-Stories-beneficiaries-inventory-Management)
-  - [MVP 4: Admin, Donor and Charity Login](#mvp-4-Admin-Donor-Charity-Login)
+  - [MVP 4: Admin, Donor and Charity Login](#mvp-4-Logging-In)
 - [Technologies Used](#technologies-used)
 - [License](#license)
 - [Contributors](#contributors)
