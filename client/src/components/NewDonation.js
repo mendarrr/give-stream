@@ -106,7 +106,7 @@ const DonationForm = ({ donorId, charityId }) => {
         <form onSubmit={handlePaymentSubmit} className="donation-form">
           <div className="select-donations">
             <h3>Select Donation Amount</h3>
-            {[50000, 100000, 150000, 200000, 250000, 500000].map((amount) => (
+            {[100, 50000, 100000, 150000, 200000, 250000, 500000].map((amount) => (
               <button
                 className="select-donation"
                 key={amount}
