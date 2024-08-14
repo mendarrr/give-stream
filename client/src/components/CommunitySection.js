@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
+import "./CharityCard.css"
 
 const CommunitiesSection = () => {
   const [searchTerm, setSearchTerm] = useState("");
