@@ -46,7 +46,9 @@ const PaymentMethodSelector = () => {
       setPaymentStatus('Error selecting payment method. Please try again.');
     }
   };
-
+  const handleExit =()=>{
+     navigate('/')
+  }
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
@@ -120,7 +122,7 @@ const PaymentMethodSelector = () => {
                 placeholder={`Enter your ${selectedMethod.name === 'M-Pesa' ? 'M-Pesa number' : 'details'}`}
                 required
               />
-              <button type="submit" className='pay-btn'>Pay {amount}</button>
+              <button type="submit" className='pay-btn' onClick={handleExit}>Pay {amount}</button>
             </form>
           </div>
         </div>

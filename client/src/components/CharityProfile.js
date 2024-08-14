@@ -267,7 +267,7 @@ const CharityProfile = () => {
         <div className="donation-info">
           <div className="donation-item">
             <h3>Needed Donation</h3>
-            <p>${parseFloat(charity.needed_donation).toFixed(2)}</p>
+            <p>KES {parseFloat(charity.goalAmount).toFixed(2)}</p>
           </div>
           <div className="donation-item">
             <h3>Total Donations</h3>

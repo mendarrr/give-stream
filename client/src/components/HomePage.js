@@ -17,6 +17,13 @@ const HomePage = () => {
     total_users: 0,
   });
 
+  const scrollToCharities = () => {
+    const charitiesSection = document.getElementById('charities-section');
+    if (charitiesSection) {
+      charitiesSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const animateCount = (start, end, duration, setter) => {
     let startTimestamp = null;
     const step = (timestamp) => {
@@ -95,12 +102,13 @@ const HomePage = () => {
               <span className="givestream">GIVE STREAM</span>
             </h1>
           </div>
-          <Link to="/charities"
+          <button
             id="counter-button"
             className="counter-button"
+            onClick={scrollToCharities }
           >
             Donate Now
-          </Link>
+          </button>
         </section>
         <section id="charities-section" className="charities-list">
           <div className="charities-section-text">
