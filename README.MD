@@ -25,7 +25,9 @@ GIVE STREAM is a platform dedicated to encouraging repeat donations to charities
 
 ## Problem Statement
 
-In many Sub-Saharan countries, access to essential sanitary products and clean water is limited, leading to health issues and missed educational opportunities for young girls. Charities working in these regions often struggle with managing donations and maintaining donor engagement. The GIVE STREAM app aims to address these challenges by providing a user-friendly platform for making and managing donations, and tracking the impact of contributions.
+In most sub-saharan countries, school going girls are unable to access pads and other supplies needed for their periods. The year 2016 studies from ministry of education revealed girls from poor families miss 20 % of school days in a year due to lack of sanitary towels the data indicated that a girl in primary school between class 6 and 8 can lose up to 18 weeks out of 108 weeks while those in high school can lose almost 24 weeks out of 144 weeks of learning. An organisation dedicated to dealing with this problem is working on not just providing sanitary towels but also providing clean water and sanitation facilities such as toilets to ensure they are able to meet the guidelines for proper menstrual hygiene as defined by UNICEF.
+
+##Expecte
 
 ## Key Features
 
@@ -38,6 +40,7 @@ In many Sub-Saharan countries, access to essential sanitary products and clean w
     - Manage charity listings and details.
     - Monitor and analyze donation statistics.
     - Manage beneficiary stories and updates.
+ - 
 
 - **Charity Management:**
   - Add, view, and update charity profiles.
