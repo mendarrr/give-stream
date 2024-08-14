@@ -234,7 +234,7 @@ function CharityDescription({
   return (
     <div className="charity-description">
       <img
-        src={charity.imageUrl}
+        src={charity.image}
         alt={charity.name}
         className="charity-image"
       />
