@@ -195,6 +195,7 @@ class Charities(Resource):
             'donation_count': donation_count,
             'percentage_raised': percentage_raised
         }
+        percentage_raised = (total_raised / self.goal_amount) * 100 if self.needed_donation else 0
 
     def post(self):
         try:

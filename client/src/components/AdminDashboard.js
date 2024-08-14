@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./AdminDashboard.css";
+import Navbar from "./Navbar";
 import defaultProfileImage from "../assets/defaultProfile.png";
 
 const AdminDashboard = () => {
@@ -185,8 +186,10 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard">
+      <div>
+        <Navbar isSticky={true} isLoggedIn={true} />
+      </div>
       <h1 className="admin-dashboard__title">Admin Dashboard</h1>
-
       {message && (
         <div className={`admin-dashboard__message ${message.type}`}>
           {message.text}

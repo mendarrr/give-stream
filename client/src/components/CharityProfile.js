@@ -258,7 +258,9 @@ const CharityProfile = () => {
 
   return (
     <div className="charity-profile-container">
-      <Navbar />
+      <div>
+        <Navbar isSticky={true} isLoggedIn={true} />
+      </div>
       <div className="charity-info">
         <h1>{charity.name}</h1>
         <p>{charity.description}</p>

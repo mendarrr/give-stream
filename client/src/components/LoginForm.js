@@ -60,7 +60,9 @@ const LoginPage = () => {
 
   return (
     <div className="login-page">
-      <Navbar />
+      <div>
+        <Navbar isSticky={true} isLoggedIn={true} />
+      </div>
       <div className="form-page">
         <div className="login-logo form-left">
           <Link to="/">
@@ -73,7 +75,7 @@ const LoginPage = () => {
         <div className="form-right">
           <form onSubmit={handleSubmit} className="form-container">
             <div className="form-header">
-              <h3>Enter Your Account Details</h3>
+              <h3 className="login-dts">Enter Your Account Details</h3>
             </div>
             <div className="form-group">
               <input

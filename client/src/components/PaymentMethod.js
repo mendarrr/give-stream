@@ -1,7 +1,8 @@
-import React, { useState , useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
+import './NewDonation.css';
 
 const PaymentMethodSelector = () => {
   const [selectedMethod, setSelectedMethod] = useState(null);
@@ -9,6 +10,8 @@ const PaymentMethodSelector = () => {
   const [paymentStatus, setPaymentStatus] = useState(null);
   const [checkoutRequestId, setCheckoutRequestId] = useState(null);
   const [amount, setAmount] = useState(0);
+  const [showMethodsModal, setShowMethodsModal] = useState(true);
+  const [showInputModal, setShowInputModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,6 +39,8 @@ const PaymentMethodSelector = () => {
       setSelectedMethod(method);
       setInputValue('');
       setPaymentStatus(null);
+      setShowMethodsModal(false);
+      setShowInputModal(true);
     } catch (error) {
       console.error('Error adding payment method:', error);
       setPaymentStatus('Error selecting payment method. Please try again.');
@@ -58,8 +63,6 @@ const PaymentMethodSelector = () => {
         if (response.data.CheckoutRequestID) {
           setPaymentStatus('Payment initiated. Please check your phone for the M-Pesa prompt.');
           setCheckoutRequestId(response.data.CheckoutRequestID);
-          // Start checking payment status
-          //checkPaymentStatus(response.data.CheckoutRequestID);
         } else {
           setPaymentStatus('Failed to initiate payment. Please try again.');
         }
@@ -70,150 +73,59 @@ const PaymentMethodSelector = () => {
     } else {
       setPaymentStatus('This payment method is not implemented yet.');
     }
-    
+    setShowInputModal(false);
   };
-  
-  
 
-  const styles = {
-    container: {
-      maxWidth: '500px',
-      margin: '0 auto',
-      padding: '20px',
-      boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-      borderRadius: '8px',
-      fontFamily: 'Arial, sans-serif',
-    },
-    title: {
-      fontSize: '18px',
-      marginBottom: '10px',
-      textAlign: 'center',
-    },
-    amount: {
-      fontSize: '16px',
-      marginBottom: '15px',
-      textAlign: 'center',
-      fontWeight: 'bold',
-    },
-    methodsGrid: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '10px',
-    },
-    methodRow: {
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-    methodButton: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      padding: '10px',
-      border: '1px solid #e0e0e0',
-      borderRadius: '4px',
-      background: 'none',
-      cursor: 'pointer',
-      width: 'calc(50% - 5px)',
-      transition: 'background-color 0.3s',
-    },
-    methodImage: {
-      width: '100px',
-      height: '40px',
-      marginBottom: '5px',
-      objectFit: 'contain',
-    },
-    methodName: {
-      fontSize: '12px',
-    },
-    selectedMethodHeader: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginBottom: '15px',
-    },
-    selectedMethodLogo: {
-      width: '60px',
-      height: '30px',
-      marginRight: '10px',
-      objectFit: 'contain',
-    },
-    form: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '10px',
-    },
-    input: {
-      padding: '8px',
-      borderRadius: '4px',
-      border: '1px solid #ccc',
-    },
-    button: {
-      padding: '10px',
-      backgroundColor: '#007bff',
-      color: 'white',
-      border: 'none',
-      borderRadius: '4px',
-      cursor: 'pointer',
-    },
-    backButton: {
-      marginTop: '10px',
-      padding: '8px',
-      backgroundColor: '#f8f9fa',
-      border: '1px solid #ccc',
-      borderRadius: '4px',
-      cursor: 'pointer',
-    },
+  const closeModal = () => {
+    setShowMethodsModal(false);
+    setShowInputModal(false);
   };
 
   return (
     <>
-    <Navbar />
-    <div style={styles.container}>
-      {!selectedMethod ? (
-        <div>
-          <h2 style={styles.title}>Select Payment Method</h2>
-          <div style={styles.methodsGrid}>
-            {[...Array(Math.ceil(paymentMethods.length / 2))].map((_, rowIndex) => (
-              <div key={rowIndex} style={styles.methodRow}>
-                {paymentMethods.slice(rowIndex * 2, rowIndex * 2 + 2).map((method) => (
-                  <button
-                    key={method.name}
-                    style={styles.methodButton}
-                    onClick={() => handleMethodClick(method)}
-                  >
-                    <img src={method.logo} alt={method.name} style={styles.methodImage} />
-                    <span style={styles.methodName}>{method.name}</span>
-                  </button>
-                ))}
-              </div>
-            ))}
+      <div>
+        <Navbar isSticky={true} isLoggedIn={true} />
+      </div>
+      {showMethodsModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeModal}>&times;</span>
+            <h2>Select Payment Method</h2>
+            <div className="payment-methods">
+              {paymentMethods.map((method) => (
+                <button
+                  key={method.name}
+                  className="method-button"
+                  onClick={() => handleMethodClick(method)}
+                >
+                  <img src={method.logo} alt={method.name} className="method-image" />
+                  <span className="method-name">{method.name}</span>
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-      ) : (
-        <div>
-          <div style={styles.selectedMethodHeader}>
-            <img src={selectedMethod.logo} alt={selectedMethod.name} style={styles.selectedMethodLogo} />
-            <h2 style={styles.title}>{selectedMethod.name}</h2>
-          </div>
-          <p style={styles.amount}>Total Amount: {amount}</p>
-          <form onSubmit={handleSubmit} style={styles.form}>
-            <input
-              type="text"
-              value={inputValue}
-              onChange={handleInputChange}
-              placeholder={`Enter your ${selectedMethod.name === 'M-Pesa' ? 'M-Pesa number' : 'details'}`}
-              required
-              style={styles.input}
-            />
-            <button type="submit" style={styles.button}>Pay {amount}</button>
-          </form>
-          <button onClick={() => setSelectedMethod(null)} style={styles.backButton}>
-            Back to Methods
-          </button>
         </div>
       )}
-      {paymentStatus && <p>{paymentStatus}</p>}
-    </div>
+      {showInputModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeModal}>&times;</span>
+            <h2>{selectedMethod.name}</h2>
+            <form onSubmit={handleSubmit} className='pay-form'>
+              <input
+                className='pay-input'
+                type="text"
+                value={inputValue}
+                onChange={handleInputChange}
+                placeholder={`Enter your ${selectedMethod.name === 'M-Pesa' ? 'M-Pesa number' : 'details'}`}
+                required
+              />
+              <button type="submit" className='pay-btn'>Pay {amount}</button>
+            </form>
+          </div>
+        </div>
+      )}
+      {paymentStatus && <p className="payment-status">{paymentStatus}</p>}
     </>
   );
 };
