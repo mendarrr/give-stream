@@ -1,12 +1,10 @@
-# Charity App
-
+# give stream
 ## Table of Contents
 - [Introduction](#introduction)
 - [Problem Statement](#problem-statement)
 - [Key Features](#key-features)
 - [Launching](#launching)
-- [Endpoints](#endpoints)
-- [Prerequisites](#prerequisites)
+-[Prerequisites](#prerequisites)
 - [Installations](#installations)
 - [Running the Charity App Locally](#running-the-charity-app-locally)
 - [Usage](#usage)
@@ -17,4 +15,3 @@
 - [Technologies Used](#technologies-used)
 - [License](#license)
 - [Contributors](#contributors)
-
