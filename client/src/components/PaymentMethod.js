@@ -122,7 +122,7 @@ const PaymentMethodSelector = () => {
                 placeholder={`Enter your ${selectedMethod.name === 'M-Pesa' ? 'M-Pesa number' : 'details'}`}
                 required
               />
-              <button type="submit" className='pay-btn' onClick={handleExit}>Pay {amount}</button>
+              <button type="submit" className='pay-btn'>Pay {amount}</button>
             </form>
           </div>
         </div>
