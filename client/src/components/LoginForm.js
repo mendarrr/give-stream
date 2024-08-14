@@ -75,7 +75,7 @@ const LoginPage = () => {
         <div className="form-right">
           <form onSubmit={handleSubmit} className="form-container">
             <div className="form-header">
-              <h3>Enter Your Account Details</h3>
+              <h3 className="login-dts">Enter Your Account Details</h3>
             </div>
             <div className="form-group">
               <input

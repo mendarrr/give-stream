@@ -263,11 +263,13 @@ function CharityDescription({
 }) {
   return (
     <div className="charity-description">
+      <div className="img-container">
       <img
-        src={charity.imageUrl}
+        src={charity.image}
         alt={charity.name}
         className="charity-image"
       />
+      </div>
       <p className="organiser"><span className="organiser-name">{charity.organizer}</span> is organizing this fundraiser</p>
       <div className="donation-protected">
         <span><i className="fa-solid fa-shield"></i> Donation protected</span>
