@@ -1,8 +1,8 @@
-"""reinitializing database
+"""Reinitialising the database
 
-Revision ID: 63b180a45412
+Revision ID: 7932004248c5
 Revises: 
-Create Date: 2024-08-13 14:50:38.571461
+Create Date: 2024-08-14 08:09:51.167119
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '63b180a45412'
+revision = '7932004248c5'
 down_revision = None
 branch_labels = None
 depends_on = None
