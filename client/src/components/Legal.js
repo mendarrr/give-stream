@@ -1,6 +1,7 @@
 import React from "react";
 import "./HomePage.css";
 
+
 const Legal = () => {
   return (
     <div className="legal">

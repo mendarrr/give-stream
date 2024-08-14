@@ -5,54 +5,54 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import Navbar from "./Navbar";
 
-
-
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { setIsLoggedIn } = useAuth(); // Destructure setIsLoggedIn from useAuth
+  const { setIsLoggedIn } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
-      // Send login request to the backend
       const response = await axios.post("/login", {
         username,
         password,
       });
 
-      // Extract the access token and user role from the response
-      const { access_token, role } = response.data;
+      const { access_token, role, id } = response.data;
 
-      // Store the access token and user role in localStorage
       localStorage.setItem("token", access_token);
       localStorage.setItem("role", role);
+      localStorage.setItem("userId", id);
 
-      console.log('Response data:', response.data);
-      console.log('Extracted role:', role);
+      console.log("Response data:", response.data);
+      console.log("Extracted role:", role);
+      console.log("Extracted id:", id);
 
-      setIsLoggedIn(true); // Update authentication state to indicate user is logged in
+      setIsLoggedIn(true);
 
-      // Redirect based on the user role
       switch (role) {
         case "admin":
           navigate("/admin-dashboard");
           break;
-        case 'donor':
-          navigate('/donation-form');
+        case "donor":
+          navigate("/donation-form");
           break;
-        case 'charity':
-          navigate('/charity-profile/:id');
+        case "charity":
+          if (id) {
+            navigate(`/charity-profile/${id}`);
+          } else {
+            console.error("Charity ID is missing in the response");
+            setError("An error occurred during login. Please try again.");
+          }
           break;
         default:
           navigate("/");
       }
     } catch (err) {
-      // Handle errors, providing feedback to the user
       setError("Invalid credentials. Please try again.");
       console.error("Login error:", err);
     }
@@ -60,7 +60,9 @@ const LoginPage = () => {
 
   return (
     <div className="login-page">
-      <Navbar />
+      <div>
+        <Navbar isSticky={true} isLoggedIn={true} />
+      </div>
       <div className="form-page">
         <div className="login-logo form-left">
           <Link to="/">
@@ -73,7 +75,7 @@ const LoginPage = () => {
         <div className="form-right">
           <form onSubmit={handleSubmit} className="form-container">
             <div className="form-header">
-              <h3>Enter Your Account Details</h3>
+              <h3 className="login-dts">Enter Your Account Details</h3>
             </div>
             <div className="form-group">
               <input
@@ -96,19 +98,35 @@ const LoginPage = () => {
               />
             </div>
             <div className="login">
-              <p><Link to="" className="llink">Forgot your password?</Link></p>
+              <p>
+                <Link to="" className="llink">
+                  Forgot your password?
+                </Link>
+              </p>
               <p>
                 You don't have an account?
-                <Link to="/donor" className="link">Sign Up</Link>
+                <Link to="/donor" className="link">
+                  Sign Up
+                </Link>
               </p>
             </div>
             <div className="accept">
-                <p>
-                  By clicking the Sign In button below, you agree to the Give Stream
-                  <Link to="/terms" className="link">Terms of Service</Link> and acknowledge the <Link to="/privacy" className="link">Privacy Notice</Link>.
-                </p>
+              <p>
+                By clicking the Sign In button below, you agree to the Give
+                Stream
+                <Link to="/terms" className="link">
+                  Terms of Service
+                </Link>{" "}
+                and acknowledge the{" "}
+                <Link to="/privacy" className="link">
+                  Privacy Notice
+                </Link>
+                .
+              </p>
             </div>
-            <button type="submit" className="login-btn">Login</button>
+            <button type="submit" className="login-btn">
+              Login
+            </button>
           </form>
         </div>
       </div>

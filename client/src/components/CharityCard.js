@@ -11,7 +11,7 @@ const CharityCard = ({ charity }) => {
         <div>
             <div className='charity-profile'>
                 <img 
-                    src={charity.image_url || defaultProfile} 
+                    src={charity.image || defaultProfile} 
                     alt={charity.name} 
                     className="charity-logo"
                 />

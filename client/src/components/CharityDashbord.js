@@ -15,6 +15,8 @@ function CharityDetails() {
   const carouselRef = useRef(null);
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentDonationPage, setCurrentDonationPage] = useState(1);
+  const [donationsPerPage] = useState(3);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
@@ -33,21 +35,13 @@ function CharityDetails() {
     };
 
     fetchData(
-      `http://127.0.0.1:5000/charities/${id}`,
+      `/charities/${id}`,
       setCharity,
       "charity details"
     );
-    fetchData(
-      "http://127.0.0.1:5000/stories",
-      setSuccessStories,
-      "success stories"
-    );
-    fetchData("http://127.0.0.1:5000/donations", setDonations, "donations");
-    fetchData(
-      "http://127.0.0.1:5000/beneficiaries",
-      setBeneficiaries,
-      "beneficiaries"
-    );
+    fetchData("/stories", setSuccessStories, "success stories");
+    fetchData("/donations", setDonations, "donations");
+    fetchData("/beneficiaries", setBeneficiaries, "beneficiaries");
 
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -99,56 +93,90 @@ function CharityDetails() {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  // ... existing code ...
+
+  const indexOfLastDonation = currentDonationPage * donationsPerPage;
+  const indexOfFirstDonation = indexOfLastDonation - donationsPerPage;
+  const currentDonations = donations.slice(indexOfFirstDonation, indexOfLastDonation);
+
+  const paginateDonations = (pageNumber) => setCurrentDonationPage(pageNumber);
+
+
   return (
     <div className="charity-details">
-      <Navbar />
-      <h2>{charity.name}</h2>
+      <div>
+        <Navbar isSticky={true} isLoggedIn={true} />
+      </div>
+      <h2 className="charityname">{charity.name}</h2>
       <div className="charity-content">
-        <CharityInfo
+      <div className="charity-left-column">
+      <CharityInfo
           charity={charity}
-          donations={donations}
+          donations={currentDonations}
           formatNumber={formatNumber}
           onDonateClick={handleDonateClick}
-        />
-        <CharityDescription
-          charity={charity}
-          successStories={visibleStories}
-          formatNumber={formatNumber}
-          moveLeft={moveLeft}
-          moveRight={moveRight}
-          currentIndex={currentIndex}
-          storiesLength={successStories.length}
-          isMobile={isMobile}
+          donationsPerPage={donationsPerPage}
+          totalDonations={donations.length}
+          paginateDonations={paginateDonations}
+          currentDonationPage={currentDonationPage}
         />
       </div>
-      <BeneficiariesSection
-        beneficiaries={currentBeneficiaries}
-        beneficiariesPerPage={beneficiariesPerPage}
-        totalBeneficiaries={beneficiaries.length}
-        paginate={paginate}
-        currentPage={currentPage}
-      />
+
+        <div className="charity-right-column">
+          <CharityDescription
+            charity={charity}
+            successStories={visibleStories}
+            formatNumber={formatNumber}
+            moveLeft={moveLeft}
+            moveRight={moveRight}
+            currentIndex={currentIndex}
+            storiesLength={successStories.length}
+            isMobile={isMobile}
+          />
+          <BeneficiariesSection
+            beneficiaries={currentBeneficiaries}
+            beneficiariesPerPage={beneficiariesPerPage}
+            totalBeneficiaries={beneficiaries.length}
+            paginate={paginate}
+            currentPage={currentPage}
+          />
+        </div>
+      </div>
     </div>
   );
+  
 }
-
-function CharityInfo({ charity, donations, formatNumber, onDonateClick }) {
-  const topDonations = donations.slice(0, 10);
-
+function CharityInfo({ 
+  charity, 
+  donations, 
+  formatNumber, 
+  onDonateClick, 
+  donationsPerPage, 
+  totalDonations, 
+  paginateDonations, 
+  currentDonationPage 
+}) {
   return (
     <div className="charity-info">
       <div className="progress-card">
         <h3>KES {formatNumber(charity.raisedAmount)}</h3>
-        <p>raised of KES {formatNumber(charity.goalAmount)} goal</p>
+        <p className="raised">raised of<span> KES {formatNumber(charity.goalAmount)} </span> goal</p>
         <ProgressBar
           progress={(charity.raisedAmount / charity.goalAmount) * 100}
         />
-        <p>{formatNumber(charity.donationCount)} donations</p>
+        <p className="donations">{formatNumber(charity.donationCount)} donations</p>
         <button className="donate-button" onClick={onDonateClick}>
           Donate Now
         </button>
         <RecentActivity recentDonationCount={charity.recentDonationCount} />
-        <RecentDonors donations={topDonations} formatNumber={formatNumber} />
+        <RecentDonors 
+          donations={donations} 
+          formatNumber={formatNumber}
+          donationsPerPage={donationsPerPage}
+          totalDonations={totalDonations}
+          paginateDonations={paginateDonations}
+          currentDonationPage={currentDonationPage}
+        />
         <ShareFundraiser />
         <div className="see-buttons">
           <button className="see-all">See all</button>
@@ -172,7 +200,7 @@ function ProgressBar({ progress }) {
 function RecentActivity({ recentDonationCount }) {
   return (
     <div className="recent-activity">
-      <p>{recentDonationCount} people just donated</p>
+      <p className="recents">{recentDonationCount} people just donated</p>
     </div>
   );
 }
@@ -198,26 +226,28 @@ function RecentDonors({ donations, formatNumber }) {
 
 function ShareFundraiser() {
   return (
-    <div className="share-fundraiser">
-      <h4>Share this fundraiser</h4>
-      <div className="share-buttons">
-        {["Copy link", "Facebook", "X", "Email", "More"].map(
-          (button, index) => (
-            <button
-              key={index}
-              className={`share-button ${button.toLowerCase()}`}
-            >
-              <i
-                className={`fas fa-${
-                  button === "X" ? "times" : button.toLowerCase()
-                }`}
-              ></i>
-              <span>{button}</span>
-            </button>
-          )
-        )}
-      </div>
-    </div>
+<div className="share-fundraiser">
+  <h4>Share this fundraiser</h4>
+  <div className="share-buttons">
+    <button className="share-button copy-link">
+      <i className="fas fa-link"></i>
+      <span>Copy link</span>
+    </button>
+    <button className="share-button facebook">
+      <i className="fab fa-facebook-f"></i>
+      <span>Facebook</span>
+    </button>
+    <button className="share-button instagram">
+      <i className="fab fa-instagram"></i>
+      <span>Instagram</span>
+    </button>
+    <button className="share-button x">
+      <i className="fab fa-x-twitter"></i>
+      <span>X</span>
+    </button>
+  </div>
+</div>
+
   );
 }
 
@@ -233,19 +263,21 @@ function CharityDescription({
 }) {
   return (
     <div className="charity-description">
+      <div className="img-container">
       <img
-        src={charity.imageUrl}
+        src={charity.image}
         alt={charity.name}
         className="charity-image"
       />
-      <p>{charity.organizer} is organizing this fundraiser</p>
-      <div className="donation-protected">
-        <span>Donation protected</span>
       </div>
-      <h3>{charity.description}</h3>
-      <p>
+      <p className="organiser"><span className="organiser-name">{charity.organizer}</span> is organizing this fundraiser</p>
+      <div className="donation-protected">
+        <span><i className="fa-solid fa-shield"></i> Donation protected</span>
+      </div>
+      <h3 className="description">{charity.description}</h3>
+      <p className="description-paragraph">
         {" "}
-        Welcome to {charity.name}'s profile.Scroll down to view success stories,
+        Welcome to <span className="charity-name">{charity.name}'s</span> profile. Scroll down to view success stories,
         and see our list of beneficiaries. On the left, you'll find our
         fundraising progress and options to donate or share this campaign. If
         you have any questions, please don't hesitate to reach out to us
@@ -275,7 +307,7 @@ function SuccessStories({
 }) {
   return (
     <div className="success-stories">
-      <h3>Success Stories</h3>
+      <h3 className="success">Success Stories</h3>
       <div className="stories-carousel-container">
         <button
           className="admin-dashboard__nav-button left"
