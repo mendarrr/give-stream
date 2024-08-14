@@ -59,8 +59,6 @@ const CharityProfile = () => {
       } catch (error) {
         console.error("Error fetching charity data:", error);
         setError("Error fetching charity data. Please try again later.");
-        // Optionally, redirect to an error page
-        // navigate("/error");
       } finally {
         setLoading(false);
       }
@@ -76,11 +74,22 @@ const CharityProfile = () => {
       return;
     }
     try {
-      const response = await axios.post("/stories", {
-        ...newStory,
-        charity_id: id,
-      });
-      setStories([...stories, response.data]);
+      if (newStory.id) {
+        // Update existing story
+        const response = await axios.put(`/stories/${newStory.id}`, newStory);
+        setStories(
+          stories.map((story) =>
+            story.id === newStory.id ? response.data : story
+          )
+        );
+      } else {
+        // Create new story
+        const response = await axios.post("/stories", {
+          ...newStory,
+          charity_id: id,
+        });
+        setStories([...stories, response.data]);
+      }
       setNewStory({ title: "", content: "" });
       setError("");
     } catch (error) {
@@ -96,11 +105,25 @@ const CharityProfile = () => {
       return;
     }
     try {
-      const response = await axios.post("/beneficiaries", {
-        ...newBeneficiary,
-        charity_id: id,
-      });
-      setBeneficiaries([...beneficiaries, response.data]);
+      if (newBeneficiary.id) {
+        // Update existing beneficiary
+        const response = await axios.put(
+          `/beneficiaries/${newBeneficiary.id}`,
+          newBeneficiary
+        );
+        setBeneficiaries(
+          beneficiaries.map((b) =>
+            b.id === newBeneficiary.id ? response.data : b
+          )
+        );
+      } else {
+        // Create new beneficiary
+        const response = await axios.post("/beneficiaries", {
+          ...newBeneficiary,
+          charity_id: id,
+        });
+        setBeneficiaries([...beneficiaries, response.data]);
+      }
       setNewBeneficiary({ name: "", description: "" });
       setError("");
     } catch (error) {
@@ -125,23 +148,27 @@ const CharityProfile = () => {
       quantity: parseInt(newInventoryItem.quantity, 10),
     };
     try {
-      const response = await axios.post("/inventory", data);
-      setInventory([...inventory, response.data]);
+      if (newInventoryItem.id) {
+        // Update existing inventory item
+        const response = await axios.put(
+          `/inventory/${newInventoryItem.id}`,
+          data
+        );
+        setInventory(
+          inventory.map((item) =>
+            item.id === newInventoryItem.id ? response.data : item
+          )
+        );
+      } else {
+        // Create new inventory item
+        const response = await axios.post("/inventory", data);
+        setInventory([...inventory, response.data]);
+      }
       setNewInventoryItem({ item_name: "", quantity: 0 });
       setError("");
     } catch (error) {
       console.error("Error submitting inventory item:", error);
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        setError(
-          `Error submitting inventory item: ${error.response.data.message}`
-        );
-      } else {
-        setError("Error submitting inventory item. Please try again later.");
-      }
+      setError("Error submitting inventory item. Please try again later.");
     }
   };
 
@@ -155,6 +182,56 @@ const CharityProfile = () => {
     setCurrentStoryIndex((prevIndex) =>
       prevIndex === stories.length - 1 ? 0 : prevIndex + 1
     );
+  };
+
+  const handleEditStory = (story) => {
+    setNewStory({ id: story.id, title: story.title, content: story.content });
+  };
+
+  const handleDeleteStory = async (storyId) => {
+    try {
+      await axios.delete(`/stories/${storyId}`);
+      setStories(stories.filter((story) => story.id !== storyId));
+    } catch (error) {
+      console.error("Error deleting story:", error);
+      setError("Error deleting story. Please try again later.");
+    }
+  };
+
+  const handleEditBeneficiary = (beneficiary) => {
+    setNewBeneficiary({
+      id: beneficiary.id,
+      name: beneficiary.name,
+      description: beneficiary.description,
+    });
+  };
+
+  const handleDeleteBeneficiary = async (beneficiaryId) => {
+    try {
+      await axios.delete(`/beneficiaries/${beneficiaryId}`);
+      setBeneficiaries(beneficiaries.filter((b) => b.id !== beneficiaryId));
+    } catch (error) {
+      console.error("Error deleting beneficiary:", error);
+      setError("Error deleting beneficiary. Please try again later.");
+    }
+  };
+
+  const handleEditInventoryItem = (item) => {
+    setNewInventoryItem({
+      id: item.id,
+      item_name: item.item_name,
+      quantity: item.quantity,
+    });
+  };
+
+  const handleDeleteInventoryItem = async (itemId) => {
+    try {
+      await axios.delete(`/inventory/${itemId}`);
+      setInventory(inventory.filter((item) => item.id !== itemId));
+    } catch (error) {
+      console.error("Error deleting inventory item:", error);
+      setError("Error deleting inventory item. Please try again later.");
+    }
   };
 
   const indexOfLastBeneficiary = currentBeneficiaryPage * itemsPerPage;
@@ -219,6 +296,16 @@ const CharityProfile = () => {
                     ).toLocaleString()
                   : "Unknown Date"}
               </p>
+              <button
+                onClick={() => handleEditStory(stories[currentStoryIndex])}
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => handleDeleteStory(stories[currentStoryIndex].id)}
+              >
+                Delete
+              </button>
             </div>
             <button className="story-nav-btn" onClick={handleNextStory}>
               &gt;
@@ -243,7 +330,9 @@ const CharityProfile = () => {
               setNewStory({ ...newStory, content: e.target.value })
             }
           ></textarea>
-          <button type="submit">Submit Story</button>
+          <button type="submit">
+            {newStory.id ? "Update Story" : "Submit Story"}
+          </button>
         </form>
       </div>
 
@@ -254,6 +343,7 @@ const CharityProfile = () => {
             <tr>
               <th>Name</th>
               <th>Description</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -261,6 +351,16 @@ const CharityProfile = () => {
               <tr key={beneficiary.id}>
                 <td>{beneficiary.name}</td>
                 <td>{beneficiary.description}</td>
+                <td>
+                  <button onClick={() => handleEditBeneficiary(beneficiary)}>
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDeleteBeneficiary(beneficiary.id)}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -298,7 +398,9 @@ const CharityProfile = () => {
               })
             }
           ></textarea>
-          <button type="submit">Add Beneficiary</button>
+          <button type="submit">
+            {newBeneficiary.id ? "Update Beneficiary" : "Add Beneficiary"}
+          </button>
         </form>
       </div>
 
@@ -310,6 +412,7 @@ const CharityProfile = () => {
               <th>Item Name</th>
               <th>Quantity</th>
               <th>Last Updated</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -318,6 +421,14 @@ const CharityProfile = () => {
                 <td>{item.item_name}</td>
                 <td>{item.quantity}</td>
                 <td>{new Date(item.last_updated).toLocaleString()}</td>
+                <td>
+                  <button onClick={() => handleEditInventoryItem(item)}>
+                    Edit
+                  </button>
+                  <button onClick={() => handleDeleteInventoryItem(item.id)}>
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -359,11 +470,12 @@ const CharityProfile = () => {
               })
             }
           />
-          <button type="submit">Add Inventory Item</button>
+          <button type="submit">
+            {newInventoryItem.id ? "Update Item" : "Add Item"}
+          </button>
         </form>
       </div>
     </div>
   );
 };
-
 export default CharityProfile;

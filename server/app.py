@@ -546,7 +546,11 @@ class StoryResource(Resource):
     def get(self, id=None):
         try:
             if id is None:
-                stories = Story.query.all()
+                charity_id = request.args.get('charity_id')
+                if charity_id:
+                    stories = Story.query.filter_by(charity_id=charity_id).all()
+                else:
+                    stories = Story.query.all()
                 return make_response(jsonify([story.to_dict() for story in stories]), 200)
             else:
                 story = Story.query.get(id)
@@ -560,12 +564,11 @@ class StoryResource(Resource):
     def post(self):
         try:
             data = request.get_json()
-            # Parse the date_posted string to a datetime object
             date_posted_str = data.get('date_posted')
             if date_posted_str:
                 date_posted = datetime.strptime(date_posted_str, "%a, %d %b %Y %H:%M:%S GMT")
             else:
-                date_posted = datetime.utcnow()  # default to current time if not provided
+                date_posted = datetime.utcnow()
 
             new_story = Story(
                 title=data['title'],
@@ -585,8 +588,8 @@ class StoryResource(Resource):
             data = request.get_json()
             story = Story.query.get(id)
             if story:
-                story.title = data['title']
-                story.content = data['content']
+                story.title = data.get('title', story.title)
+                story.content = data.get('content', story.content)
                 db.session.commit()
                 return make_response(story.to_dict(), 200)
             return make_response(jsonify({"error": "Story not found"}), 404)
@@ -622,66 +625,89 @@ class StoryResource(Resource):
             print(f"Error during DELETE: {e}")
             return make_response(jsonify({"error": "An error occurred during DELETE"}), 500)
 
-
 class Beneficiaries(Resource):
-    # Retrieve all beneficiaries
     def get(self, beneficiary_id=None):
-        if beneficiary_id:
-            beneficiary = Beneficiary.query.get_or_404(beneficiary_id)
-            return beneficiary.to_dict()
-        else:
-            beneficiaries = Beneficiary.query.all()
-            return [beneficiary.to_dict() for beneficiary in beneficiaries]
-        
-    # Create a beneficiary
+        try:
+            if beneficiary_id:
+                beneficiary = Beneficiary.query.get_or_404(beneficiary_id)
+                return make_response(jsonify(beneficiary.to_dict()), 200)
+            else:
+                charity_id = request.args.get('charity_id')
+                if charity_id:
+                    beneficiaries = Beneficiary.query.filter_by(charity_id=charity_id).all()
+                else:
+                    beneficiaries = Beneficiary.query.all()
+                return make_response(jsonify([beneficiary.to_dict() for beneficiary in beneficiaries]), 200)
+        except Exception as e:
+            print(f"Error during GET: {e}")
+            return make_response(jsonify({"error": "An error occurred during GET"}), 500)
+
     def post(self):
-        data = request.get_json()
-        new_beneficiary = Beneficiary(
-            charity_id=data['charity_id'],
-            name=data['name'],
-            description=data.get('description')
-        )
-        db.session.add(new_beneficiary)
-        db.session.commit()
-        return new_beneficiary.to_dict(), 201
-    
-    # Update a beneficiary
+        try:
+            data = request.get_json()
+            new_beneficiary = Beneficiary(
+                charity_id=data['charity_id'],
+                name=data['name'],
+                description=data.get('description')
+            )
+            db.session.add(new_beneficiary)
+            db.session.commit()
+            return make_response(jsonify(new_beneficiary.to_dict()), 201)
+        except Exception as e:
+            print(f"Error during POST: {e}")
+            return make_response(jsonify({"error": "An error occurred during POST"}), 500)
+
     def put(self, beneficiary_id):
-        beneficiary = Beneficiary.query.get_or_404(beneficiary_id)
-        data = request.get_json()
-        beneficiary.charity_id = data.get('charity_id', beneficiary.charity_id)
-        beneficiary.name = data.get('name', beneficiary.name)
-        beneficiary.description = data.get('description', beneficiary.description)
-        db.session.commit()
-        return beneficiary.to_dict()
-    
-    # Delete a beneficiary
+        try:
+            beneficiary = Beneficiary.query.get_or_404(beneficiary_id)
+            data = request.get_json()
+            beneficiary.charity_id = data.get('charity_id', beneficiary.charity_id)
+            beneficiary.name = data.get('name', beneficiary.name)
+            beneficiary.description = data.get('description', beneficiary.description)
+            db.session.commit()
+            return make_response(jsonify(beneficiary.to_dict()), 200)
+        except Exception as e:
+            print(f"Error during PUT: {e}")
+            return make_response(jsonify({"error": "An error occurred during PUT"}), 500)
+
     def delete(self, beneficiary_id):
-        beneficiary = Beneficiary.query.get_or_404(beneficiary_id)
-        db.session.delete(beneficiary)
-        db.session.commit()
-        return '', 204
+        try:
+            beneficiary = Beneficiary.query.get_or_404(beneficiary_id)
+            db.session.delete(beneficiary)
+            db.session.commit()
+            return make_response('', 204)
+        except Exception as e:
+            print(f"Error during DELETE: {e}")
+            return make_response(jsonify({"error": "An error occurred during DELETE"}), 500)
 
 class InventoryResource(Resource):
     def get(self, id=None):
-        if id:
-            inventory_item = Inventory.query.get(id)
-            if inventory_item:
-                return jsonify(inventory_item.to_dict())
-            return {'message': 'Inventory item not found'}, 404
-        else:
-            inventory_list = Inventory.query.all()
-            return jsonify([item.to_dict() for item in inventory_list])
+        try:
+            if id:
+                inventory_item = Inventory.query.get(id)
+                if inventory_item:
+                    return make_response(jsonify(inventory_item.to_dict()), 200)
+                return make_response(jsonify({"error": "Inventory item not found"}), 404)
+            else:
+                charity_id = request.args.get('charity_id')
+                if charity_id:
+                    inventory_list = Inventory.query.filter_by(charity_id=charity_id).all()
+                else:
+                    inventory_list = Inventory.query.all()
+                return make_response(jsonify([item.to_dict() for item in inventory_list]), 200)
+        except Exception as e:
+            print(f"Error during GET: {e}")
+            return make_response(jsonify({"error": "An error occurred during GET"}), 500)
 
     def post(self):
-        data = request.get_json()
         try:
+            data = request.get_json()
             if not data.get('item_name'):
-                return {'message': 'Item name is required'}, 400
+                return make_response(jsonify({"error": "Item name is required"}), 400)
             if not isinstance(data.get('quantity'), int) or data.get('quantity') < 0:
-                return {'message': 'Quantity must be a non-negative integer'}, 400
+                return make_response(jsonify({"error": "Quantity must be a non-negative integer"}), 400)
             if not data.get('charity_id'):
-                return {'message': 'Charity ID is required'}, 400
+                return make_response(jsonify({"error": "Charity ID is required"}), 400)
 
             new_item = Inventory(
                 charity_id=data['charity_id'],
@@ -691,49 +717,46 @@ class InventoryResource(Resource):
             )
             db.session.add(new_item)
             db.session.commit()
-            return new_item.to_dict(), 201
-        except KeyError as e:
-            return {'message': f'Missing required field: {str(e)}'}, 400
-        except ValueError as e:
-            return {'message': f'Invalid data: {str(e)}'}, 400
+            return make_response(jsonify(new_item.to_dict()), 201)
         except Exception as e:
             db.session.rollback()
-            return {'message': 'Failed to create item', 'error': str(e)}, 500
+            print(f"Error during POST: {e}")
+            return make_response(jsonify({"error": "An error occurred during POST"}), 500)
 
     def put(self, id):
-        data = request.get_json()
-        inventory_item = Inventory.query.get(id)
-        if inventory_item:
-            try:
+        try:
+            data = request.get_json()
+            inventory_item = Inventory.query.get(id)
+            if inventory_item:
                 if 'item_name' in data:
                     inventory_item.item_name = data['item_name']
                 if 'quantity' in data:
                     if not isinstance(data['quantity'], int) or data['quantity'] < 0:
-                        return {'message': 'Quantity must be a non-negative integer'}, 400
+                        return make_response(jsonify({"error": "Quantity must be a non-negative integer"}), 400)
                     inventory_item.quantity = data['quantity']
                 if 'charity_id' in data:
                     inventory_item.charity_id = data['charity_id']
                 inventory_item.last_updated = datetime.now()
                 db.session.commit()
-                return inventory_item.to_dict()
-            except Exception as e:
-                db.session.rollback()
-                return {'message': 'Failed to update item', 'error': str(e)}, 500
-        else:
-            return {'message': 'Inventory item not found'}, 404
+                return make_response(jsonify(inventory_item.to_dict()), 200)
+            return make_response(jsonify({"error": "Inventory item not found"}), 404)
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error during PUT: {e}")
+            return make_response(jsonify({"error": "An error occurred during PUT"}), 500)
 
     def delete(self, id):
-        inventory_item = Inventory.query.get(id)
-        if inventory_item:
-            try:
+        try:
+            inventory_item = Inventory.query.get(id)
+            if inventory_item:
                 db.session.delete(inventory_item)
                 db.session.commit()
-                return {'message': 'Item deleted successfully'}, 200
-            except Exception as e:
-                db.session.rollback()
-                return {'message': 'Failed to delete item', 'error': str(e)}, 500
-        else:
-            return {'message': 'Inventory item not found'}, 404
+                return make_response(jsonify({"message": "Item deleted successfully"}), 200)
+            return make_response(jsonify({"error": "Inventory item not found"}), 404)
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error during DELETE: {e}")
+            return make_response(jsonify({"error": "An error occurred during DELETE"}), 500)
             
 class PaymentMethods(Resource):
     def get(self, id=None):

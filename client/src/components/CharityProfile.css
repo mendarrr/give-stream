@@ -179,6 +179,30 @@ button:hover {
   margin-top: 0.5rem;
 }
 
+/* New styles for edit and delete buttons */
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.edit-btn,
+.delete-btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+  border-radius: 4px;
+}
+
+.edit-btn {
+  background-color: #318e8d;
+  margin-right: 0.5rem;
+}
+
+.delete-btn {
+  background-color: #e66e4e;
+}
+
 @media (max-width: 768px) {
   .charity-profile-container {
     grid-template-columns: 1fr;
@@ -200,5 +224,15 @@ button:hover {
 
   .inventory-form {
     flex-direction: column;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .edit-btn,
+  .delete-btn {
+    margin: 0.25rem 0;
   }
 }
