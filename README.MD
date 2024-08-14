@@ -1,70 +1,120 @@
-# Getting Started with Create React App
+# GIVE STREAM
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![GIVE STREAM Logo](/home/erustus/Documents/give-stream/client/public/GiveStreamLogo.png)
 
-## Available Scripts
+## Table of Contents
+- [Introduction](#introduction)
+- [Problem Statement](#problem-statement)
+- [Key Features](#key-features)
+- [Launching](#launching)
+- [Prerequisites](#prerequisites)
+- [Installations](#installations)
+- [Running the Charity App Locally](#running-the-charity-app-locally)
+- [Usage](#usage)
+- [Development Notes](#development-notes)
+- [Security Considerations](#security-considerations)
+- [MVPs](#mvps)
+- [Stretch MVPs](#stretch-mvps)
+- [Technologies Used](#technologies-used)
+- [License](#license)
+- [Contributors](#contributors)
 
-In the project directory, you can run:
+## Introduction
 
-### `npm start`
+GIVE STREAM is a platform dedicated to encouraging repeat donations to charities that focus on providing essential services such as sanitary towels, clean water, and sanitation facilities to school-going girls in Sub-Saharan countries. Our goal is to streamline the donation process, provide transparency, and create an engaging platform for donors and charities alike.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Problem Statement
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+In many Sub-Saharan countries, access to essential sanitary products and clean water is limited, leading to health issues and missed educational opportunities for young girls. Charities working in these regions often struggle with managing donations and maintaining donor engagement. The GIVE STREAM app aims to address these challenges by providing a user-friendly platform for making and managing donations, and tracking the impact of contributions.
 
-### `npm test`
+## Key Features
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **User Roles**
+  - **Donor:**
+    - View and donate to charities.
+    - Track donation history.
+    - Receive updates on funded projects.
+  - **Admin:**
+    - Manage charity listings and details.
+    - Monitor and analyze donation statistics.
+    - Manage beneficiary stories and updates.
 
-### `npm run build`
+- **Charity Management:**
+  - Add, view, and update charity profiles.
+  - List and manage donation campaigns.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Donation Management:**
+  - Make one-time or recurring donations.
+  - View donation history and impact reports.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Beneficiary Story Management:**
+  - Post and manage stories of beneficiaries receiving aid.
+  - Provide updates on ongoing projects.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Launching
 
-### `npm run eject`
+### Endpoints
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+#### User Authentication and Authorization Endpoints
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **POST `/api/register`**
+  - **Description:** Registers a new donor or admin.
+  - **Request Body:** `{ username, email, password }`
+  - **Response:** `{ success: true, message: "User registered successfully" }`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- **POST `/api/login`**
+  - **Description:** Logs in a user and generates a JWT token.
+  - **Request Body:** `{ username, password }`
+  - **Response:** `{ success: true, token: "jwt_token" }`
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- **POST `/api/logout`**
+  - **Description:** Logs out a user by invalidating the JWT token.
+  - **Authorization:** Bearer token in headers.
+  - **Response:** `{ success: true, message: "Logged out successfully" }`
 
-## Learn More
+#### Charity Management Endpoints
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **POST `/api/charities`**
+  - **Description:** Creates a new charity.
+  - **Authorization:** Bearer token in headers.
+  - **Request Body:** `{ name, description, contact_info }`
+  - **Response:** `{ success: true, message: "Charity created successfully" }`
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- **GET `/api/charities`**
+  - **Description:** Retrieves all charities.
+  - **Authorization:** Bearer token in headers.
+  - **Response:** `{ success: true, charities: [ ... ] }`
 
-### Code Splitting
+- **DELETE `/api/charities/:charity_id`**
+  - **Description:** Deletes a charity.
+  - **Authorization:** Bearer token in headers.
+  - **Response:** `{ success: true, message: "Charity deleted successfully" }`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+#### Donation Management Endpoints
 
-### Analyzing the Bundle Size
+- **POST `/api/donations`**
+  - **Description:** Creates a new donation.
+  - **Authorization:** Bearer token in headers.
+  - **Request Body:** `{ donor_id, charity_id, amount, donation_type }`
+  - **Response:** `{ success: true, message: "Donation created successfully" }`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- **GET `/api/donations`**
+  - **Description:** Retrieves all donations.
+  - **Authorization:** Bearer token in headers.
+  - **Response:** `{ success: true, donations: [ ... ] }`
 
-### Making a Progressive Web App
+## Prerequisites
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- **React**
+- **Python 3.8.13**
+- **Flask with SQLAlchemy**
+- **An active database and client-side connection**
 
-### Advanced Configuration
+## Installations
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Backend
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Ensure Python 3.8.13 is installed.
+2. Install required packages:
+   ```sh
+   pip install flask-sqlalchemy sqlalchemy_serializer flask_bcrypt flask_jwt_extended faker
