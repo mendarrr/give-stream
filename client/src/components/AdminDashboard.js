@@ -263,13 +263,6 @@ const AdminDashboard = () => {
       <section className="admin-dashboard__charities">
         <h2 className="admin-dashboard__section-title">Approved Charities</h2>
         <div className="admin-dashboard__charity-list-container">
-          <button
-            className="admin-dashboard__nav-button left"
-            onClick={moveLeft}
-            disabled={currentIndex === 0}
-          >
-            &lt;
-          </button>
           <div className="admin-dashboard__charity-list">
             {visibleCharities.map((charity) => (
               <div key={charity.id} className="admin-dashboard__charity-card">
@@ -288,13 +281,22 @@ const AdminDashboard = () => {
               </div>
             ))}
           </div>
+            <div className="admin-dashboard__nav-buttons">
+            <button
+            className="admin-dashboard__nav-button-left"
+            onClick={moveLeft}
+            disabled={currentIndex === 0}
+          >
+            &lt;
+          </button>
           <button
-            className="admin-dashboard__nav-button right"
+            className="admin-dashboard__nav-button-right"
             onClick={moveRight}
             disabled={currentIndex >= charities.length - (isMobile ? 1 : 3)}
           >
             &gt;
           </button>
+            </div>
         </div>
       </section>
 

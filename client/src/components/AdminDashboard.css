@@ -125,6 +125,8 @@
   background-color: #318E8D;
   color: white;
   font-weight: 600;
+  font-size: 20px;
+  transition: all ease-in-out 1s;
 }
 
 .admin-dashboard__reject-btn,
@@ -132,18 +134,22 @@
   background-color: #E66E4E;
   color: white;
   font-weight: 600;
+  font-size: 20px;
+  transition: all ease-in-out 1s;
 }
 
 .admin-dashboard__delete-btn{
   margin-left: 70px;
-  margin-top: 100px;
+  margin-top: 60px;
   width: 200px;
+  transition: all ease-in-out 1s;
 }
 
 .admin-dashboard__approve-btn:hover,
 .admin-dashboard__reject-btn:hover,
 .admin-dashboard__delete-btn:hover {
   opacity: 0.9;
+  transform: scale(1.06);
 }
 
 .admin-dashboard__pagination {
@@ -179,9 +185,19 @@
   gap: 20px;
 }
 
-.admin-dashboard__charity-card {
-  flex: 0 0 calc(33.333% - 20px);
-  max-width: calc(33.333% - 20px);
+.admin-dashboard__charity-card{
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 15px;
+  position: relative;
+  width: 400px;
+  transition: all ease-in-out 15;
+}
+.admin-dashboard__charity-card:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
 }
 
 .admin-dashboard__charity-image {
@@ -214,14 +230,6 @@
 
 .admin-dashboard__nav-button:hover {
   background-color: #E66E4E;
-}
-
-.admin-dashboard__nav-button.left {
-  left: 10px;
-}
-
-.admin-dashboard__nav-button.right {
-  right: 10px;
 }
 
 .admin-dashboard__modal {
@@ -260,8 +268,9 @@
 }
 
 .admin-dashboard__modal-actions button:first-child {
-  background-color: #dc3545;
+  background-color: #E66E4E;
   color: white;
+  font-weight: 600;
 }
 
 .admin-dashboard__modal-actions button:last-child {
@@ -269,17 +278,213 @@
   color: white;
 }
 
-@media (max-width: 768px) {
+.admin-dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  padding-top: 100px;
+  font-family: 'Arial', sans-serif;
+}
+
+.admin-dashboard__title {
+  font-size: 2.5rem;
+  color: black;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.admin-dashboard__section-title {
+  font-size: 25px;
+  color: #444;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #318E8D;
+  padding-bottom: 10px;
+  margin-top: -10px;
+}
+
+.admin-dashboard__nav-button-left{
+  margin-left: 520px;
+  font-size: 25px;
+  top: 80%;
+  background-color: #318E8D;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.admin-dashboard__nav-button-left:hover {
+  background-color: #E66E4E;
+  transform: translateY(-10%);
+}
+
+.admin-dashboard__nav-button-right{
+  margin-right: 520px;
+  font-size: 25px;
+  top: 80%;
+  background-color: #318E8D;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.admin-dashboard__nav-button-right:hover {
+  background-color: #E66E4E;
+  transform: translateY(-10%);
+}
+
+.admin-dashboard__nav-buttons{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 1200px) {
+  .admin-dashboard {
+    padding: 15px;
+    padding-top: 80px;
+  }
+
+  .admin-dashboard__title {
+    font-size: 2rem;
+  }
+
+  .admin-dashboard__section-title {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 992px) {
+  .admin-dashboard__charity-list {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
   .admin-dashboard__charity-card {
-    flex: 0 0 100%;
-    max-width: 100%;
+    width: calc(50% - 20px);
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-dashboard__title {
+    font-size: 1.8rem;
+  }
+
+  .admin-dashboard__section-title {
+    font-size: 20px;
+  }
+
+  .admin-dashboard__charity-card {
+    width: 100%;
   }
 
   .admin-dashboard__nav-button {
     display: none;
   }
 
-  .admin-dashboard__charity-list {
+  .admin-dashboard__application-actions {
     flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-dashboard__approve-btn,
+  .admin-dashboard__reject-btn,
+  .admin-dashboard__delete-btn {
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .admin-dashboard {
+    padding: 10px;
+    padding-top: 60px;
+  }
+
+  .admin-dashboard__title {
+    font-size: 1.5rem;
+  }
+
+  .admin-dashboard__section-title {
+    font-size: 18px;
+  }
+
+  .admin-dashboard__application-name,
+  .admin-dashboard__charity-name {
+    font-size: 20px;
+  }
+
+  .admin-dashboard__application-description,
+  .admin-dashboard__charity-description {
+    font-size: 14px;
+  }
+
+  .admin-dashboard__approve-btn,
+  .admin-dashboard__reject-btn,
+  .admin-dashboard__delete-btn {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-dashboard {
+    padding: 8px;
+    padding-top: 50px;
+  }
+
+  .admin-dashboard__title {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    margin-top: 130px;
+  }
+
+  .admin-dashboard__section-title {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .admin-dashboard__application-name,
+  .admin-dashboard__charity-name {
+    font-size: 18px;
+  }
+
+  .admin-dashboard__application-description,
+  .admin-dashboard__charity-description {
+    font-size: 13px;
+  }
+
+  .admin-dashboard__approve-btn,
+  .admin-dashboard__reject-btn,
+  .admin-dashboard__delete-btn {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+
+  .admin-dashboard__delete-btn{
+    margin-left: 22px;
+  }
+
+  .admin-dashboard__pagination-btn {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  .admin-dashboard__nav-button {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+
+  .admin-dashboard__nav-buttons{
+    width: 20%;
   }
 }
