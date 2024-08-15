@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import "./CharityDashboard.css";
 import Navbar from "./Navbar";
 
@@ -179,7 +179,9 @@ function CharityInfo({
         />
         <ShareFundraiser />
         <div className="see-buttons">
-          <button className="see-all">See all</button>
+        <Link to={`/charity-profile/${charity.id}`} key={charity.id} className="my-profile">
+          <i className="fa-solid fa-user"></i> View Profile
+          </Link>
           <button className="see-top">
             <i className="fas fa-star"></i> See top
           </button>
@@ -321,13 +323,22 @@ function SuccessStories({
             <StoryCard key={index} story={story} formatNumber={formatNumber} />
           ))}
         </div>
+        <div className="nav-butons">
         <button
-          className="admin-dashboard__nav-button right"
+          className="nav-button-left"
+          onClick={moveLeft}
+          disabled={currentIndex === 0}
+        >
+          <i className="fas fa-chevron-left"></i>
+        </button>
+        <button
+          className="nav-button-right"
           onClick={moveRight}
           disabled={currentIndex >= storiesLength - (isMobile ? 1 : 2)}
         >
           <i className="fas fa-chevron-right"></i>
         </button>
+        </div>
       </div>
     </div>
   );

@@ -286,7 +286,7 @@ const CharityProfile = () => {
               </div>
             </div>
             <div>
-            <Link to={`/charity-dashboard/${charity.id}`} key={charity.id} className="card-link">
+            <Link to={`/charity-dashboard/${charity.id}`} key={charity.id} className="my-dashboard">
               My Dashboard
             </Link>
             </div>
