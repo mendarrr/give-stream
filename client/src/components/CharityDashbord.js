@@ -335,7 +335,7 @@ function SuccessStories({
 
 function StoryCard({ story, formatNumber }) {
   return (
-    <div className="story-card">
+    <div className="story-card1">
       <h4>{story.title}</h4>
       <p>{story.content}</p>
       <p>Date Posted: {new Date(story.date_posted).toLocaleDateString()}</p>

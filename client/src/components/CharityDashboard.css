@@ -1,15 +1,15 @@
 .charity-details{
   padding-top: 80px;
-  padding-left: 200px;
-  padding-right: 200px;
+  padding-left: 100px;
+  padding-right: 100px;
   font-family: 'Roboto', sans-serif;
   background-color: whitesmoke;
 }
 
 .charity-content {
   display: flex;
-  gap: 120px;
-  height: calc(100vh - 150px); /* Adjust this value based on your navbar and charity name height */
+  gap: 30px;
+  height: calc(100vh - 150px);
   overflow: hidden;
 }
 
@@ -19,6 +19,10 @@
   max-width: 450px;
   height: 700px;
   background: rgb(241, 239, 239);
+  padding-left: 80px;
+  padding-right: 80px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .charity-left-column {
@@ -35,6 +39,7 @@
   text-align: left;
   margin-bottom: 10px;
   color: #266e6ddd;
+  padding-top: 50px;
 }
 
 .progress-card h3{
@@ -202,13 +207,6 @@
   font-size: 18px;
 }
 
-.charity-details {
-  padding-top: 100px;
-  padding-left: 200px;
-  padding-right: 200px;
-  font-family: 'Roboto', sans-serif;
-  background-color: whitesmoke;
-}
 
 .charity-content {
   display: flex;
@@ -302,6 +300,15 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
+.story-card1{
+  border: 1px solid black;
+  padding: 20px;
+  margin: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  background-color: #F9F9F9;
+}
+
 .story-card h4 {
   margin: 10px 0;
   color: black;
@@ -311,7 +318,7 @@
 
 .story-card p{
   font-size: 16px;
-  color: white;
+  color: black;
   font-weight: 600;
   text-align: center;
 }
@@ -365,16 +372,6 @@
   padding: 20px;
   margin-left: 42px;
   margin-right: 42px;
-}
-
-.story-card{
-  flex: 0 0 300px;
-  margin: 0 10px;
-  padding: 20px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
 }
 
 .beneficiaries-section {

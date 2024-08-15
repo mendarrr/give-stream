@@ -145,12 +145,13 @@ const DonationForm = ({ donorId, charityId, user }) => {
           </div>
           <div className="anonymous">
             <Switch
+              className="switch"
               name="is_anonymous"
               checked={donationData.is_anonymous}
               onChange={handleToggleAnonymous}
               color="default"
             />
-            <label>Display my name publicly on the fundraiser</label>
+            <label>Display name publicly?</label>
           </div>
           <div className="anonymous checkbox">
             <input
@@ -184,13 +185,15 @@ const DonationForm = ({ donorId, charityId, user }) => {
           <div className="dues">
             <h3>Your Total Donation is: </h3>
             <p>Total Due: KSH {donationData.amount}</p>
+            <div className="payment-container">
             <Link
               to="/payment"
-              className="next-button payment-btn"
+              className="payment-btn"
               onClick={handlePaymentClick}
             >
               Make Payment
             </Link>
+            </div>
           </div>
         </form>
       </div>
