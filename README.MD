@@ -1,4 +1,4 @@
-# CARECONNECT APP
+# GIVESTREAM AUTOMATED DONATION PLATFORM APP.
 
 <p align="center">
   <img src="client/public/GiveStreamLogo.png" alt="GIVESTREAM-LOGO" width="300" height="200">
