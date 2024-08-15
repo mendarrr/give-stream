@@ -175,7 +175,7 @@ const PaymentMethodSelector = () => {
       )}
       {showThankYouModal && (
         <div className="modal">
-          <div className="modal-content thanks">
+          <div className="modal-content thankss">
             <h2>Thank You for Your Donation!</h2>
             <p>Your generosity makes a difference.</p>
           </div>

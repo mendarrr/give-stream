@@ -1,6 +1,7 @@
 from app import app
-from models import db, Donor, Charity, Admin, CharityApplication, Donation, Story, Beneficiary, Inventory, PaymentMethod, Community
+from models import db, Donor, Charity, Admin, CharityApplication, Donation, Story, Beneficiary, Inventory, PaymentMethod, Community, Reminder
 from datetime import datetime
+from random import choice, randint, uniform
 
 def seed_data():
     with app.app_context():
@@ -12,8 +13,7 @@ def seed_data():
         admin = Admin(username='admingivestream', email='admin@example.com')  # Add an email here
         admin.password_hash = 'admingivestream'
         db.session.add(admin)
-        
-        
+
         # Create sample donors
         donors = [
             Donor(
@@ -996,13 +996,15 @@ def seed_data():
                 banner='https://i.pinimg.com/564x/02/52/fe/0252fe07897cc0efddcd4519137ff75d.jpg',
                 category='animals'
             )
-    ]
+            ]
 
         db.session.add_all(communities)
 
         # Commit all changes
         db.session.commit()
         print('Seed data successfully added.')
+
+
 
 if __name__ == '__main__':
     seed_data()

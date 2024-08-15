@@ -2,7 +2,7 @@ from models import db
 from functools import wraps
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, verify_jwt_in_request
 from flask import Flask, make_response,jsonify,session,request, current_app, jsonify
-from flask_restful import Resource, Api
+from flask_restful import Api, Resource, reqparse
 import bcrypt
 from datetime import datetime, timedelta
 from flask_apscheduler import APScheduler
@@ -14,7 +14,7 @@ import base64
 from json import JSONEncoder
 
 from config import app,db,api
-from models import db, Admin, Donor,Charity, PaymentMethod, Message, Community, Payment
+from models import db, Admin, Donor,Charity, PaymentMethod, Message, Community, Payment, Reminder
 
 
 class CustomJSONEncoder(JSONEncoder):
@@ -962,6 +962,36 @@ class PaymentsResource(Resource):
         return [payment.to_dict() for payment in payments]            
 
 
+class ReminderResource(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('donorId', type=int, required=True)
+        parser.add_argument('frequency', type=str, required=True)
+        parser.add_argument('amount', type=float, required=True)
+        parser.add_argument('charityId', type=int, required=True)
+        args = parser.parse_args()
+
+        donor = Donor.query.get_or_404(args['donorId'])
+
+        new_reminder = Reminder(
+            donor_id=args['donorId'],
+            frequency=args['frequency'],
+            amount=args['amount'],
+            charity_id=args['charityId']
+        )
+        db.session.add(new_reminder)
+        db.session.commit()
+
+        return {"message": "Reminder created successfully"}, 201
+
+
+    def get(self, frequency=None):
+        if frequency:
+            reminders = Reminder.query.filter_by(frequency=frequency).all()
+            return [reminder.to_dict() for reminder in reminders]
+        else:
+            reminders = Reminder.query.all()
+            return [reminder.to_dict() for reminder in reminders]
 # # Routes
 api.add_resource(Index, '/')
 api.add_resource(Login, '/login');    
@@ -983,6 +1013,8 @@ api.add_resource(CommunityListResource, '/communities')
 api.add_resource(CommunityResource, '/communities/<int:id>')
 api.add_resource(MpesaPaymentResource, '/mpesa-payment')
 api.add_resource(PaymentsResource, '/payments')
+api.add_resource(ReminderResource, '/reminders', '/reminders/<string:frequency>')
+
 
 if __name__ == '__main__':
     app.run(debug=True)

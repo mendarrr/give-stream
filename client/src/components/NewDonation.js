@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./NewDonation.css";
 import Switch from "react-switch";
-import PaymentMethodSelector from "./PaymentMethod";
 import Navbar from "./Navbar";
 
-const DonationForm = ({ donorId, charityId }) => {
+const DonationForm = ({ donorId, charityId, user }) => {
   const [donationData, setDonationData] = useState({
     donor_id: donorId,
     charity_id: charityId,
@@ -19,6 +18,7 @@ const DonationForm = ({ donorId, charityId }) => {
   });
   const [message, setMessage] = useState("");
   const [paymentMethodSelected, setPaymentMethodSelected] = useState(false);
+  const navigate = useNavigate();
 
   const showMessage = (messageText, isError = false) => {
     setMessage(messageText);
@@ -66,6 +66,18 @@ const DonationForm = ({ donorId, charityId }) => {
       showMessage(
         `Donation submitted successfully! ${JSON.stringify(response.data)}`
       );
+
+      if (donationData.is_recurring) {
+        const reminderResponse = await axios.post('/reminders', {
+          donor_id: donorId,
+          frequency: donationData.recurring_frequency,
+          amount: donationData.amount,
+          charity_id: charityId
+        });
+        console.log('Reminder set:', reminderResponse.data);
+      }      
+
+      navigate("/payment");
     } catch (error) {
       console.error(
         "There was an error!",
@@ -149,7 +161,6 @@ const DonationForm = ({ donorId, charityId }) => {
               onChange={handleChange}
               className="large-checkbox"
             />
-
             <label>Recurring Donation?</label>
           </div>
           {donationData.is_recurring && (
