@@ -20,7 +20,6 @@ class Donor(db.Model, SerializerMixin):
     is_anonymous = db.Column(db.Boolean, default=False)
     role = db.Column(db.String(20), default='donor')
 
-
     payment_method_id = db.Column(db.Integer, db.ForeignKey('payment_methods.id'))
     donations = db.relationship('Donation', backref='donor', lazy='dynamic')
 
@@ -78,7 +77,6 @@ class Charity(db.Model, SerializerMixin):
     image = db.Column(db.String(255))
     organizer = db.Column(db.String(128))
     role = db.Column(db.String(20), default='charity')
-
 
     donations = db.relationship('Donation', backref='charity', lazy='dynamic', cascade='all, delete-orphan')
     stories = db.relationship('Story', backref='charity', lazy='dynamic')
@@ -397,5 +395,26 @@ class Payment(db.Model):
             'status': self.status,
             'user_id': self.user_id,
             'timestamp': self.timestamp.isoformat()
-        }    
+        } 
+
+class Reminder(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    donor_id = db.Column(db.Integer, db.ForeignKey('donors.id'), nullable=False)
+    frequency = db.Column(db.String(50), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    charity_id = db.Column(db.Integer, db.ForeignKey('charities.id'), nullable=False)
+    donor = db.relationship('Donor', backref='reminders')
+    charity = db.relationship('Charity', backref='reminders')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'donor_id': self.donor_id,
+            'email': self.donor.email,
+            'frequency': self.frequency,
+            'amount': self.amount,
+            'charity_id': self.charity_id
+        }
+
+
 

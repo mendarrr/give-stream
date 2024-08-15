@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./AdminDashboard.css";
 import Navbar from "./Navbar";
-import defaultProfileImage from "../assets/defaultProfile.png";
+import defaultProfile from "../assets/defaultProfile.png";
 
 const AdminDashboard = () => {
   const [charityApplications, setCharityApplications] = useState([]);
@@ -273,16 +273,6 @@ const AdminDashboard = () => {
           <div className="admin-dashboard__charity-list">
             {visibleCharities.map((charity) => (
               <div key={charity.id} className="admin-dashboard__charity-card">
-                <div className="admin-dashboard__charity-image">
-                  <img
-                    src={charity.image_url || defaultProfileImage}
-                    alt={charity.name}
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = defaultProfileImage;
-                    }}
-                  />
-                </div>
                 <h3 className="admin-dashboard__charity-name">
                   {charity.name}
                 </h3>
