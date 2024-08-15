@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Clicker+Script&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 .newdonation-container{
     border: 1px solid black;
     height: 100vh;
@@ -264,11 +267,44 @@
   }
   
   .payment-status {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #f8f9fa;
-    border-radius: 6px;
+    font-size: 20px;
+    font-weight: 600;
     text-align: center;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+  }
+  
+  .payment-status.success {
+    background-color: transparent;
+    color: black;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+  }
+  
+  .payment-status.error {
+    background-color: transparent;
+    font-weight: 600;
+    color: black;
+    box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+  }
+
+  .thanks{
+    font-family: 'Dancing Script', cursive;
+    text-align: center;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+  }
+  
+  .thanks h2{
+    font-size: 30px;
+    color: black;
+  }
+
+  .thanks p{
+    font-size: 18px;
+    color: black;
   }
   
   
