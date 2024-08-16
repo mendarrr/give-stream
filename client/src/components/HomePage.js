@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
-import CommunitiesSection from "./CommunitySection";
 import CharityList from "./CharityList";
 import CompletedCharitiesList from "./CompletedCharitiesList";
 import "./HomePage.css";
 import "./CharityApplications";
+import Modal from "react-modal";
 
 const HomePage = () => {
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const openModal = () => setModalIsOpen(true);
+  const closeModal = () => setModalIsOpen(false);
   const [isLoggedIn] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isSticky, setIsSticky] = useState(false);
@@ -18,9 +21,9 @@ const HomePage = () => {
   });
 
   const scrollToCharities = () => {
-    const charitiesSection = document.getElementById('charities-section');
+    const charitiesSection = document.getElementById("charities-section");
     if (charitiesSection) {
-      charitiesSection.scrollIntoView({ behavior: 'smooth' });
+      charitiesSection.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -36,6 +39,10 @@ const HomePage = () => {
     };
     window.requestAnimationFrame(step);
   };
+
+  useEffect(() => {
+    Modal.setAppElement("#root");
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -69,7 +76,6 @@ const HomePage = () => {
         );
       });
   }, []);
-  
 
   return (
     <div className="main-home-container">
@@ -105,7 +111,7 @@ const HomePage = () => {
           <button
             id="counter-button"
             className="counter-button"
-            onClick={scrollToCharities }
+            onClick={scrollToCharities}
           >
             Donate Now
           </button>
@@ -167,10 +173,26 @@ const HomePage = () => {
             <h4>How Give Stream Works</h4>
           </div>
           <div className="tutorial-btn">
-            <button play-btn>
-              <i class="fa-solid fa-play"></i> Play 1 min Video
+            <button onClick={openModal}>
+              <i className="fa-solid fa-play"></i> Play 1 min Video
             </button>
           </div>
+
+          <Modal
+            isOpen={modalIsOpen}
+            onRequestClose={closeModal}
+            contentLabel="Tutorial Video"
+          >
+            <h2>Tutorial Video</h2>
+            <button onClick={closeModal}>Close</button>
+            <video width="60%" controls className="">
+              <source
+                src={require("../assets/givestream final video.mp4")}
+                type="video/mp4"
+              />
+              Your browser does not support the video tag.
+            </video>
+          </Modal>
         </section>
         <section className="communities"></section>
         <section className="homepage-footer">
