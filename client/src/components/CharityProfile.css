@@ -92,6 +92,17 @@
   margin-left: 310px;
 }
 
+.story-card{
+  border: 1px solid black;
+  padding: 20px;
+  margin: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  background-color: white;
+  color: black;
+  font-weight: 600;
+}
+
 .nav-btns button{
   padding: 10px;
   border: none;
