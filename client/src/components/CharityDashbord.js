@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import "./CharityDashboard.css";
 import Navbar from "./Navbar";
 
@@ -34,11 +34,7 @@ function CharityDetails() {
       }
     };
 
-    fetchData(
-      `/charities/${id}`,
-      setCharity,
-      "charity details"
-    );
+    fetchData(`/charities/${id}`, setCharity, "charity details");
     fetchData("/stories", setSuccessStories, "success stories");
     fetchData("/donations", setDonations, "donations");
     fetchData("/beneficiaries", setBeneficiaries, "beneficiaries");
@@ -97,10 +93,12 @@ function CharityDetails() {
 
   const indexOfLastDonation = currentDonationPage * donationsPerPage;
   const indexOfFirstDonation = indexOfLastDonation - donationsPerPage;
-  const currentDonations = donations.slice(indexOfFirstDonation, indexOfLastDonation);
+  const currentDonations = donations.slice(
+    indexOfFirstDonation,
+    indexOfLastDonation
+  );
 
   const paginateDonations = (pageNumber) => setCurrentDonationPage(pageNumber);
-
 
   return (
     <div className="charity-details">
@@ -109,18 +107,18 @@ function CharityDetails() {
       </div>
       <h2 className="charityname">{charity.name}</h2>
       <div className="charity-content">
-      <div className="charity-left-column">
-      <CharityInfo
-          charity={charity}
-          donations={currentDonations}
-          formatNumber={formatNumber}
-          onDonateClick={handleDonateClick}
-          donationsPerPage={donationsPerPage}
-          totalDonations={donations.length}
-          paginateDonations={paginateDonations}
-          currentDonationPage={currentDonationPage}
-        />
-      </div>
+        <div className="charity-left-column">
+          <CharityInfo
+            charity={charity}
+            donations={currentDonations}
+            formatNumber={formatNumber}
+            onDonateClick={handleDonateClick}
+            donationsPerPage={donationsPerPage}
+            totalDonations={donations.length}
+            paginateDonations={paginateDonations}
+            currentDonationPage={currentDonationPage}
+          />
+        </div>
 
         <div className="charity-right-column">
           <CharityDescription
@@ -144,33 +142,36 @@ function CharityDetails() {
       </div>
     </div>
   );
-  
 }
-function CharityInfo({ 
-  charity, 
-  donations, 
-  formatNumber, 
-  onDonateClick, 
-  donationsPerPage, 
-  totalDonations, 
-  paginateDonations, 
-  currentDonationPage 
+function CharityInfo({
+  charity,
+  donations,
+  formatNumber,
+  onDonateClick,
+  donationsPerPage,
+  totalDonations,
+  paginateDonations,
+  currentDonationPage,
 }) {
   return (
     <div className="charity-info">
       <div className="progress-card">
         <h3>KES {formatNumber(charity.raisedAmount)}</h3>
-        <p className="raised">raised of<span> KES {formatNumber(charity.goalAmount)} </span> goal</p>
+        <p className="raised">
+          raised of<span> KES {formatNumber(charity.goalAmount)} </span> goal
+        </p>
         <ProgressBar
           progress={(charity.raisedAmount / charity.goalAmount) * 100}
         />
-        <p className="donations">{formatNumber(charity.donationCount)} donations</p>
+        <p className="donations">
+          {formatNumber(charity.donationCount)} donations
+        </p>
         <button className="donate-button" onClick={onDonateClick}>
           Donate Now
         </button>
         <RecentActivity recentDonationCount={charity.recentDonationCount} />
-        <RecentDonors 
-          donations={donations} 
+        <RecentDonors
+          donations={donations}
           formatNumber={formatNumber}
           donationsPerPage={donationsPerPage}
           totalDonations={totalDonations}
@@ -179,7 +180,9 @@ function CharityInfo({
         />
         <ShareFundraiser />
         <div className="see-buttons">
-          <button className="see-all">See all</button>
+          <button className="see-top">
+            <i className="fa-solid fa-list"></i> See all
+          </button>
           <button className="see-top">
             <i className="fas fa-star"></i> See top
           </button>
@@ -226,28 +229,27 @@ function RecentDonors({ donations, formatNumber }) {
 
 function ShareFundraiser() {
   return (
-<div className="share-fundraiser">
-  <h4>Share this fundraiser</h4>
-  <div className="share-buttons">
-    <button className="share-button copy-link">
-      <i className="fas fa-link"></i>
-      <span>Copy link</span>
-    </button>
-    <button className="share-button facebook">
-      <i className="fab fa-facebook-f"></i>
-      <span>Facebook</span>
-    </button>
-    <button className="share-button instagram">
-      <i className="fab fa-instagram"></i>
-      <span>Instagram</span>
-    </button>
-    <button className="share-button x">
-      <i className="fab fa-x-twitter"></i>
-      <span>X</span>
-    </button>
-  </div>
-</div>
-
+    <div className="share-fundraiser">
+      <h4>Share this fundraiser</h4>
+      <div className="share-buttons">
+        <button className="share-button copy-link">
+          <i className="fas fa-link"></i>
+          <span>Copy link</span>
+        </button>
+        <button className="share-button facebook">
+          <i className="fab fa-facebook-f"></i>
+          <span>Facebook</span>
+        </button>
+        <button className="share-button instagram">
+          <i className="fab fa-instagram"></i>
+          <span>Instagram</span>
+        </button>
+        <button className="share-button x">
+          <i className="fab fa-x-twitter"></i>
+          <span>X</span>
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -264,24 +266,25 @@ function CharityDescription({
   return (
     <div className="charity-description">
       <div className="img-container">
-      <img
-        src={charity.image}
-        alt={charity.name}
-        className="charity-image"
-      />
+        <img src={charity.image} alt={charity.name} className="charity-image" />
       </div>
-      <p className="organiser"><span className="organiser-name">{charity.organizer}</span> is organizing this fundraiser</p>
+      <p className="organiser">
+        <span className="organiser-name">{charity.organizer}</span> is
+        organizing this fundraiser
+      </p>
       <div className="donation-protected">
-        <span><i className="fa-solid fa-shield"></i> Donation protected</span>
+        <span>
+          <i className="fa-solid fa-shield"></i> Donation protected
+        </span>
       </div>
       <h3 className="description">{charity.description}</h3>
       <p className="description-paragraph">
         {" "}
-        Welcome to <span className="charity-name">{charity.name}'s</span> profile. Scroll down to view success stories,
-        and see our list of beneficiaries. On the left, you'll find our
-        fundraising progress and options to donate or share this campaign. If
-        you have any questions, please don't hesitate to reach out to us
-        directly..
+        Welcome to <span className="charity-name">{charity.name}'s</span>{" "}
+        profile. Scroll down to view success stories, and see our list of
+        beneficiaries. On the left, you'll find our fundraising progress and
+        options to donate or share this campaign. If you have any questions,
+        please don't hesitate to reach out to us directly..
       </p>
       <SuccessStories
         stories={successStories}
@@ -321,13 +324,22 @@ function SuccessStories({
             <StoryCard key={index} story={story} formatNumber={formatNumber} />
           ))}
         </div>
-        <button
-          className="admin-dashboard__nav-button right"
-          onClick={moveRight}
-          disabled={currentIndex >= storiesLength - (isMobile ? 1 : 2)}
-        >
-          <i className="fas fa-chevron-right"></i>
-        </button>
+        <div className="nav-butons">
+          <button
+            className="nav-button-left"
+            onClick={moveLeft}
+            disabled={currentIndex === 0}
+          >
+            <i className="fas fa-chevron-left"></i>
+          </button>
+          <button
+            className="nav-button-right"
+            onClick={moveRight}
+            disabled={currentIndex >= storiesLength - (isMobile ? 1 : 2)}
+          >
+            <i className="fas fa-chevron-right"></i>
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -335,7 +347,7 @@ function SuccessStories({
 
 function StoryCard({ story, formatNumber }) {
   return (
-    <div className="story-card">
+    <div className="story-card1">
       <h4>{story.title}</h4>
       <p>{story.content}</p>
       <p>Date Posted: {new Date(story.date_posted).toLocaleDateString()}</p>

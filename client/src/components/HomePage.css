@@ -75,9 +75,9 @@
     margin-top: -40px;
 }
 
-.counter-text2 {
-    margin-top: -10px;
-    font-size: 30px;
+.counter-text2 h1 {
+    margin-top: 20px;
+    font-size: 40px;
     font-weight: 700;
     color: white;
 }
@@ -94,12 +94,12 @@
     color: white;
     font-size: 25px;
     font-weight: 700;
-    border-bottom: 1px solid #318E8D;
-    border-left: 1px solid #318E8D;
-    margin-bottom: 10px;
+    border: 2px solid black;
+    margin-bottom: 20px;
     background-color: #E66E4E;
     border-radius: 20px;
-    padding: 15px 20px;
+    padding: 10px;
+    cursor: pointer;
     transition: all ease-in-out 1s;
 }
 
@@ -107,8 +107,6 @@
     transform: scale(1.09);
     background-color: #318E8D;
     color: white;
-    border-top: 1px solid #E66E4E;
-    border-right: 1px solid #E66E4E;
     box-shadow: #E66E4E;
 }
 

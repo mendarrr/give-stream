@@ -112,7 +112,7 @@ const PaymentMethodSelector = () => {
             <span className="close" onClick={closeModal}>
               &times;
             </span>
-            <h2>Select Payment Method</h2>
+            <h2 className="payment-title">Select Payment Method</h2>
             <div className="payment-methods">
               {paymentMethods.map((method) => (
                 <button
@@ -138,7 +138,7 @@ const PaymentMethodSelector = () => {
             <span className="close" onClick={closeModal}>
               &times;
             </span>
-            <h2>{selectedMethod.name}</h2>
+            <h2 className="selectedmethod-title">{selectedMethod.name}</h2>
             <form onSubmit={handleSubmit} className="pay-form">
               <input
                 className="pay-input"

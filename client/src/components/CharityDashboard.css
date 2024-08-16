@@ -8,8 +8,8 @@
 
 .charity-content {
   display: flex;
-  gap: 120px;
-  height: calc(100vh - 150px); /* Adjust this value based on your navbar and charity name height */
+  gap: 30px;
+  height: calc(100vh - 150px);
   overflow: hidden;
 }
 
@@ -19,6 +19,10 @@
   max-width: 450px;
   height: 700px;
   background: rgb(241, 239, 239);
+  padding-left: 80px;
+  padding-right: 80px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .charity-left-column {
@@ -35,6 +39,7 @@
   text-align: left;
   margin-bottom: 10px;
   color: #266e6ddd;
+  padding-top: 50px;
 }
 
 .progress-card h3{
@@ -192,7 +197,6 @@
 .see-buttons{
   display: flex;
   gap: 40px;
-  margin-left: 60px;
   margin-top: 10px;
 }
 
@@ -200,14 +204,17 @@
   width: 150px;
   font-weight: 600;
   font-size: 18px;
+  background-color: #E66E4E;
+  padding: 10px;
+  border-radius: 10px;
+  transition: all ease-in-out 1s;
+  cursor: pointer;
 }
 
-.charity-details {
-  padding-top: 100px;
-  padding-left: 200px;
-  padding-right: 200px;
-  font-family: 'Roboto', sans-serif;
-  background-color: whitesmoke;
+.see-buttons button:hover{
+  transform: scale(1.09);
+  background-color: #2e8785;
+  color: white;
 }
 
 .charity-content {
@@ -302,14 +309,24 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
-.story-card h4 {
+.story-card1{
+  width: 400px;
+  border: 1px solid black;
+  padding: 20px;
+  margin: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  background-color: #2e8785;
+}
+
+.story-card1 h4 {
   margin: 10px 0;
   color: black;
   text-align: center;
-  font-size: 18px;
+  font-size: 20px;
 }
 
-.story-card p{
+.story-card1 p{
   font-size: 16px;
   color: white;
   font-weight: 600;
@@ -365,16 +382,6 @@
   padding: 20px;
   margin-left: 42px;
   margin-right: 42px;
-}
-
-.story-card{
-  flex: 0 0 300px;
-  margin: 0 10px;
-  padding: 20px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
 }
 
 .beneficiaries-section {
@@ -453,6 +460,35 @@
 .page-link:hover {
   background-color: #E66E4E;
   color: #ffffff;
+}
+
+.nav-buttons{
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.nav-button-left,
+.nav-button-right {
+  background-color: transparent;
+  border: none;
+  color: black;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 1s ease-in-out;
+}
+
+.nav-button-left:hover,
+.nav-button-right:hover {
+  transform: scale(1.26);
+}
+
+.nav-button-left{
+  margin-right: 200px;
+}
+
+.nav-button-left{
+  margin-left: 280px;
 }
 
 

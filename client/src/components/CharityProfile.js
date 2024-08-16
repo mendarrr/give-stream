@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import "./CharityProfile.css";
 import Navbar from "./Navbar";
 
@@ -257,225 +257,261 @@ const CharityProfile = () => {
   if (!charity) return <div>No charity data available</div>;
 
   return (
-    <div className="charity-profile-container">
-      <div>
-        <Navbar isSticky={true} isLoggedIn={true} />
-      </div>
-      <div className="charity-info">
-        <h1>{charity.name}</h1>
-        <p>{charity.description}</p>
-        <div className="donation-info">
-          <div className="donation-item">
-            <h3>Needed Donation</h3>
-            <p>KES {parseFloat(charity.goalAmount).toFixed(2)}</p>
-          </div>
-          <div className="donation-item">
-            <h3>Total Donations</h3>
-            <p>${totalDonations.toFixed(2)}</p>
-          </div>
-          <div className="donation-item">
-            <h3>Anonymous Donations</h3>
-            <p>${anonymousDonations.toFixed(2)}</p>
+    <div className="charity-details1">
+      <Navbar isSticky={true} isLoggedIn={true} />
+      <div className="charity-content">
+        <div className="charity-left-column">
+          <div className="charity-info1">
+            <div className="profile-img">
+            <img
+              src={require("../assets/defaultProfilePic.png")}
+              alt={charity.name}
+              className="charity-profile-image"
+            />
+            </div>
+            <h1 className="profile-name">{charity.name}</h1>
+            <p className="profile-description">{charity.description}</p>
+            <div className="donation-info">
+              <div className="donation-item">
+                <h3>Needed Donation</h3>
+                <p className="needed">KES {parseFloat(charity.goalAmount).toFixed(2)}</p>
+              </div>
+              <div className="donation-item">
+                <h3>Total Donations</h3>
+                <p>KES {totalDonations.toFixed(2)}</p>
+              </div>
+              <div className="donation-item">
+                <h3>Anonymous Donations</h3>
+                <p>KES {anonymousDonations.toFixed(2)}</p>
+              </div>
+            </div>
+            <div>
+            <Link to={`/charity-dashboard/${charity.id}`} key={charity.id} className="my-dashboard">
+              My Dashboard
+            </Link>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div className="stories-section">
-        <h2>Stories</h2>
-        {stories.length > 0 ? (
-          <div className="story-container">
-            <button className="story-nav-btn" onClick={handlePreviousStory}>
-              &lt;
-            </button>
-            <div className="story-card">
-              <h3>{stories[currentStoryIndex]?.title || "No Title"}</h3>
-              <p>{stories[currentStoryIndex]?.content || "No Content"}</p>
-              <p className="story-date">
-                Posted on:{" "}
-                {stories[currentStoryIndex]?.date_posted
-                  ? new Date(
-                      stories[currentStoryIndex].date_posted
-                    ).toLocaleString()
-                  : "Unknown Date"}
-              </p>
-              <button
-                onClick={() => handleEditStory(stories[currentStoryIndex])}
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => handleDeleteStory(stories[currentStoryIndex].id)}
-              >
-                Delete
-              </button>
-            </div>
-            <button className="story-nav-btn" onClick={handleNextStory}>
-              &gt;
-            </button>
-          </div>
-        ) : (
-          <p>No stories available</p>
-        )}
-        <form onSubmit={handleStorySubmit} className="story-form">
-          <input
-            type="text"
-            placeholder="Story Title"
-            value={newStory.title}
-            onChange={(e) =>
-              setNewStory({ ...newStory, title: e.target.value })
-            }
-          />
-          <textarea
-            placeholder="Story Content"
-            value={newStory.content}
-            onChange={(e) =>
-              setNewStory({ ...newStory, content: e.target.value })
-            }
-          ></textarea>
-          <button type="submit">
-            {newStory.id ? "Update Story" : "Submit Story"}
-          </button>
-        </form>
-      </div>
-
-      <div className="beneficiaries-section">
-        <h2>Beneficiaries</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentBeneficiaries.map((beneficiary) => (
-              <tr key={beneficiary.id}>
-                <td>{beneficiary.name}</td>
-                <td>{beneficiary.description}</td>
-                <td>
-                  <button onClick={() => handleEditBeneficiary(beneficiary)}>
-                    Edit
+        <div className="charity-right-column">
+          <div className="stories-section1">
+            <h2>Stories</h2>
+            {stories.length > 0 ? (
+              <div className="story-container">
+                <div className="story-card">
+                  <h3>{stories[currentStoryIndex]?.title || "No Title"}</h3>
+                  <p>{stories[currentStoryIndex]?.content || "No Content"}</p>
+                  <p className="story-date">
+                    Posted on:{" "}
+                    {stories[currentStoryIndex]?.date_posted
+                      ? new Date(
+                          stories[currentStoryIndex].date_posted
+                        ).toLocaleString()
+                      : "Unknown Date"}
+                  </p>
+                  <div className="manage-btns">
+                  <button
+                    onClick={() => handleEditStory(stories[currentStoryIndex])}
+                    className="story-btns"
+                  >
+                    <i className="fa-solid fa-pen-to-square"></i>
                   </button>
                   <button
-                    onClick={() => handleDeleteBeneficiary(beneficiary.id)}
+                    onClick={() =>
+                      handleDeleteStory(stories[currentStoryIndex].id)
+                    }
                   >
-                    Delete
+                   <i class="fa-solid fa-trash-can"></i>
                   </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className="pagination">
-          {Array.from(
-            { length: Math.ceil(beneficiaries.length / itemsPerPage) },
-            (_, i) => (
-              <button
-                key={i}
-                onClick={() => paginateBeneficiaries(i + 1)}
-                className={currentBeneficiaryPage === i + 1 ? "active" : ""}
-              >
-                {i + 1}
+                  </div>
+                </div>
+                <div className="nav-btns">
+                <button className="story-nav-btn" onClick={handlePreviousStory}>
+                  &lt;
+                </button>
+                <button className="story-nav-btn" onClick={handleNextStory}>
+                  &gt;
+                </button>
+                </div>
+              </div>
+            ) : (
+              <p>No stories available</p>
+            )}
+            <form onSubmit={handleStorySubmit} className="story-form">
+              <input
+                type="text"
+                placeholder="Story Title"
+                value={newStory.title}
+                onChange={(e) =>
+                  setNewStory({ ...newStory, title: e.target.value })
+                }
+              />
+              <textarea
+                placeholder="Story Content"
+                value={newStory.content}
+                onChange={(e) =>
+                  setNewStory({ ...newStory, content: e.target.value })
+                }
+              ></textarea>
+              <button type="submit" className="submit-story">
+                {newStory.id ? "Update Story" : "Submit Story"}
               </button>
-            )
-          )}
-        </div>
-        <form onSubmit={handleBeneficiarySubmit} className="beneficiary-form">
-          <input
-            type="text"
-            placeholder="Beneficiary Name"
-            value={newBeneficiary.name}
-            onChange={(e) =>
-              setNewBeneficiary({ ...newBeneficiary, name: e.target.value })
-            }
-          />
-          <textarea
-            placeholder="Beneficiary Description"
-            value={newBeneficiary.description}
-            onChange={(e) =>
-              setNewBeneficiary({
-                ...newBeneficiary,
-                description: e.target.value,
-              })
-            }
-          ></textarea>
-          <button type="submit">
-            {newBeneficiary.id ? "Update Beneficiary" : "Add Beneficiary"}
-          </button>
-        </form>
-      </div>
+            </form>
+          </div>
 
-      <div className="inventory-section">
-        <h2>Inventory</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Item Name</th>
-              <th>Quantity</th>
-              <th>Last Updated</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentInventoryItems.map((item) => (
-              <tr key={item.id}>
-                <td>{item.item_name}</td>
-                <td>{item.quantity}</td>
-                <td>{new Date(item.last_updated).toLocaleString()}</td>
-                <td>
-                  <button onClick={() => handleEditInventoryItem(item)}>
-                    Edit
+          <div className="beneficiaries-section1">
+            <h2>Beneficiaries</h2>
+            <table className="beneficiary-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentBeneficiaries.map((beneficiary) => (
+                  <tr key={beneficiary.id}>
+                    <td>{beneficiary.name}</td>
+                    <td>{beneficiary.description}</td>
+                    <td>
+                      <div className="manage-beneficiary">
+                      <button
+                        onClick={() => handleEditBeneficiary(beneficiary)}
+                      >
+                        <i className="fa-solid fa-pen-to-square"></i>
+                      </button>
+                      <button
+                        onClick={() => handleDeleteBeneficiary(beneficiary.id)}
+                      >
+                        <i class="fa-solid fa-trash-can"></i>
+                      </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="pagination">
+              {Array.from(
+                { length: Math.ceil(beneficiaries.length / itemsPerPage) },
+                (_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => paginateBeneficiaries(i + 1)}
+                    className={currentBeneficiaryPage === i + 1 ? "active" : ""}
+                  >
+                    {i + 1}
                   </button>
-                  <button onClick={() => handleDeleteInventoryItem(item.id)}>
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className="pagination">
-          {Array.from(
-            { length: Math.ceil(inventory.length / itemsPerPage) },
-            (_, i) => (
-              <button
-                key={i}
-                onClick={() => paginateInventory(i + 1)}
-                className={currentInventoryPage === i + 1 ? "active" : ""}
-              >
-                {i + 1}
+                )
+              )}
+            </div>
+            <form
+              onSubmit={handleBeneficiarySubmit}
+              className="beneficiary-form"
+            >
+              <input
+                type="text"
+                placeholder="Beneficiary Name"
+                value={newBeneficiary.name}
+                onChange={(e) =>
+                  setNewBeneficiary({ ...newBeneficiary, name: e.target.value })
+                }
+              />
+              <textarea
+                placeholder="Beneficiary Description"
+                value={newBeneficiary.description}
+                onChange={(e) =>
+                  setNewBeneficiary({
+                    ...newBeneficiary,
+                    description: e.target.value,
+                  })
+                }
+              ></textarea>
+              <button type="submit" className="submit-beneficiary">
+                {newBeneficiary.id ? "Update Beneficiary" : "Add Beneficiary"}
               </button>
-            )
-          )}
+            </form>
+          </div>
+
+          <div className="inventory-section1">
+            <h2>Inventory</h2>
+            <table className="beneficiary-table">
+              <thead>
+                <tr>
+                  <th>Item Name</th>
+                  <th>Quantity</th>
+                  <th>Last Updated</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentInventoryItems.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.item_name}</td>
+                    <td>{item.quantity}</td>
+                    <td>{new Date(item.last_updated).toLocaleString()}</td>
+                    <td>
+                    <div className="manage-beneficiary">
+                      <button
+                        onClick={() => handleEditInventoryItem(inventory)}
+                      >
+                        <i className="fa-solid fa-pen-to-square"></i>
+                      </button>
+                      <button
+                        onClick={() => handleDeleteBeneficiary(inventory.id)}
+                      >
+                        <i class="fa-solid fa-trash-can"></i>
+                      </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="pagination">
+              {Array.from(
+                { length: Math.ceil(inventory.length / itemsPerPage) },
+                (_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => paginateInventory(i + 1)}
+                    className={currentInventoryPage === i + 1 ? "active" : ""}
+                  >
+                    {i + 1}
+                  </button>
+                )
+              )}
+            </div>
+            <form onSubmit={handleInventorySubmit} className="inventory-form">
+              <input
+                type="text"
+                placeholder="Item Name"
+                value={newInventoryItem.item_name}
+                onChange={(e) =>
+                  setNewInventoryItem({
+                    ...newInventoryItem,
+                    item_name: e.target.value,
+                  })
+                }
+              />
+              <input
+                className="input-quantity"
+                type="number"
+                placeholder="Quantity"
+                value={newInventoryItem.quantity}
+                onChange={(e) =>
+                  setNewInventoryItem({
+                    ...newInventoryItem,
+                    quantity: e.target.value,
+                  })
+                }
+              />
+              <button type="submit" className="invent">
+                {newInventoryItem.id ? "Update Item" : "Add Item"}
+              </button>
+            </form>
+          </div>
         </div>
-        <form onSubmit={handleInventorySubmit} className="inventory-form">
-          <input
-            type="text"
-            placeholder="Item Name"
-            value={newInventoryItem.item_name}
-            onChange={(e) =>
-              setNewInventoryItem({
-                ...newInventoryItem,
-                item_name: e.target.value,
-              })
-            }
-          />
-          <input
-            type="number"
-            placeholder="Quantity"
-            value={newInventoryItem.quantity}
-            onChange={(e) =>
-              setNewInventoryItem({
-                ...newInventoryItem,
-                quantity: e.target.value,
-              })
-            }
-          />
-          <button type="submit">
-            {newInventoryItem.id ? "Update Item" : "Add Item"}
-          </button>
-        </form>
       </div>
     </div>
   );

@@ -39,7 +39,7 @@ function Navbar({ isSticky }) { // Removed isLoggedIn prop
           {isLoggedIn ? (
             <>
               <li>
-                <button onClick={handleLogout}>Logout</button> {/* Functional logout button */}
+                <button onClick={handleLogout} className="logout-btn">Logout</button> {/* Functional logout button */}
               </li>
             </>
           ) : (
